@@ -468,19 +468,16 @@ main {
 </main>
 
 <script>
-const dot = '<span style="color:var(--gold);letter-spacing:.05em">.</span>';
-const frames = [
-  `SOON${dot}`,
-  `SOON${dot}${dot}`,
-  `SOON${dot}${dot}${dot}`,
-  `SOON${dot}${dot}${dot}${dot}`,
-];
-let fi = 0;
 const line3 = document.querySelector('.line3');
-line3.innerHTML = frames[0];
+line3.innerHTML = 'SOON<span id="dots" style="position:absolute;color:var(--gold);letter-spacing:.05em"></span>';
+line3.style.position = 'relative';
+
+const dotFrames = ['.', '..', '...', '....'];
+let fi = 0;
+const dotsEl = document.getElementById('dots');
 setInterval(() => {
-  fi = (fi + 1) % frames.length;
-  line3.innerHTML = frames[fi];
+  fi = (fi + 1) % dotFrames.length;
+  dotsEl.textContent = dotFrames[fi];
 }, 600);
 
 const form = document.getElementById('mc-form');
