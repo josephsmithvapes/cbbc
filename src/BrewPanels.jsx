@@ -5,15 +5,17 @@ const css = `
     width: 100%;
     background: #f2ede0;
     border-bottom: 6px solid #0f0c06;
-    padding-right: 64px;
+    padding-inline: 64px;
     box-sizing: border-box;
   }
 
-  /* always 3 columns — never collapses */
+  /* responsive: auto-fit columns with a sensible min width */
   .bp-panels {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0;
     width: 100%;
+    align-items: stretch;
   }
 
   .bp-panel {
@@ -122,8 +124,14 @@ const css = `
   }
   .bp-dot { width:3px;height:3px;border-radius:50%;background:#0f0c06;opacity:.15; }
 
+  @media (max-width: 900px) {
+    /* Collapse borders and reduce horizontal padding on smaller viewports */
+    .bp-section { padding-inline: 20px; }
+    .bp-panel { border-right: none; }
+  }
+
   @media (max-width: 600px) {
-    .bp-section { padding-right: 0; }
+    .bp-section { padding-inline: 0; }
   }
 `
 
