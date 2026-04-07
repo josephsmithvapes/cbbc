@@ -9,15 +9,12 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --ink:    #0f0c06;
-  --cream:  #f2ede0;
-  --gold:   #c9a84c;
-  --tan:    #e8dfc8;
+  --ink:   #0f0c06;
+  --cream: #f2ede0;
+  --gold:  #c9a84c;
 }
 
-html, body {
-  height: 100%;
-}
+html, body { height: 100%; }
 
 body {
   background: var(--cream);
@@ -29,7 +26,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── thick border frame ── */
+/* border frame */
 body::before {
   content: '';
   position: fixed;
@@ -39,7 +36,7 @@ body::before {
   z-index: 100;
 }
 
-/* ── gold vertical stripe right ── */
+/* gold stripe right */
 .stripe-r {
   position: fixed;
   top: 0; right: 0; bottom: 0;
@@ -56,11 +53,10 @@ body::before {
   letter-spacing: .4em;
   color: var(--ink);
   writing-mode: vertical-rl;
-  text-transform: uppercase;
   opacity: .7;
 }
 
-/* ── top bar ── */
+/* top bar */
 .top-bar {
   background: var(--ink);
   height: 54px;
@@ -82,64 +78,44 @@ body::before {
   line-height: 1;
 }
 
-/* ── main ── */
+/* main */
 main {
   flex: 1;
   padding: 52px 96px 52px 32px;
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: 0;
+  grid-template-rows: auto auto 1fr auto;
   position: relative;
   z-index: 2;
 }
 
-/* ── headline ── */
-.headline {
-  line-height: .85;
-  letter-spacing: -.02em;
-}
-.headline .line1 {
-  font-size: clamp(5rem, 16vw, 13rem);
-  color: var(--ink);
-  display: block;
-}
-.headline .line2 {
-  font-size: clamp(5rem, 16vw, 13rem);
-  color: var(--gold);
-  display: block;
-}
-.headline .line3 {
-  font-size: clamp(5rem, 16vw, 13rem);
-  color: var(--ink);
-  display: block;
-}
+/* headline */
+.headline { line-height: .85; letter-spacing: -.02em; }
+.headline .line1 { font-size: clamp(5rem, 16vw, 13rem); color: var(--ink); display: block; }
+.headline .line2 { font-size: clamp(5rem, 16vw, 13rem); color: var(--gold); display: block; }
+.headline .line3 { font-size: clamp(5rem, 16vw, 13rem); color: var(--ink); display: block; }
 
-/* ── divider ── */
-.h-rule {
-  height: 6px;
-  background: var(--ink);
-  margin: 32px 0;
-}
-.h-rule.thin {
-  height: 1px;
-  background: var(--ink);
-  opacity: .2;
-  margin: 20px 0;
-}
+/* rules */
+.h-rule      { height: 6px; background: var(--ink); margin: 24px 0; }
+.h-rule.thin { height: 1px; background: var(--ink); opacity: .2; margin: 20px 0; }
 
-/* ── middle row ── */
+/* mid grid */
 .mid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
   align-items: start;
+  padding-bottom: 32px;
 }
 
-.tag-block {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.tag-block { display: flex; flex-direction: column; gap: 16px; }
+
+.fleur-big {
+  font-size: 80px;
+  color: var(--ink);
+  line-height: 1;
+  display: block;
 }
+
 .tag {
   font-family: 'Syne Mono', monospace;
   font-size: .7rem;
@@ -148,29 +124,19 @@ main {
   opacity: .45;
   line-height: 1.7;
 }
-.fleur-big {
-  font-size: 96px;
-  color: var(--ink);
-  line-height: 1;
-  display: block;
-}
 
-.right-block {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
+.right-block { display: flex; flex-direction: column; gap: 24px; }
+
 .right-block p {
   font-family: 'Syne Mono', monospace;
   font-size: .82rem;
   line-height: 1.9;
   color: var(--ink);
   opacity: .55;
-  font-weight: 400;
   letter-spacing: .04em;
 }
 
-/* ── email form ── */
+/* form */
 .form-label {
   font-family: 'Syne Mono', monospace;
   font-size: .6rem;
@@ -178,11 +144,11 @@ main {
   color: var(--ink);
   opacity: .4;
   margin-bottom: 10px;
+  text-align: center;
 }
 
-.form {
-  display: flex;
-}
+.form { display: flex; }
+
 .form input {
   flex: 1;
   padding: 16px 18px;
@@ -194,13 +160,16 @@ main {
   color: var(--ink);
   outline: none;
   letter-spacing: .05em;
-  transition: background .15s;
+  transition: background .15s, border-color .15s;
+  -webkit-appearance: none;
+  border-radius: 0;
 }
-.form input::placeholder { color: rgba(15,12,6,.25); }
+.form input::placeholder { color: rgba(15,12,6,.3); }
 .form input:focus { background: #fff; }
+.form input.error { border-color: #c0392b; }
 
 .form button {
-  padding: 16px 28px;
+  padding: 16px 24px;
   font-family: 'Alfa Slab One', serif;
   font-size: 1rem;
   border: 3px solid var(--ink);
@@ -209,18 +178,11 @@ main {
   cursor: pointer;
   letter-spacing: .04em;
   white-space: nowrap;
-  transition: background .15s, color .15s;
+  transition: background .15s, color .15s, border-color .15s;
+  border-radius: 0;
 }
-.form button:hover {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--ink);
-}
-.form button.done {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--ink);
-}
+.form button:hover  { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+.form button.done   { background: var(--gold); border-color: var(--gold); color: var(--ink); }
 
 .note {
   font-family: 'Syne Mono', monospace;
@@ -229,51 +191,103 @@ main {
   color: var(--ink);
   opacity: .25;
   margin-top: 10px;
+  text-align: center;
 }
 
-/* ── bottom bar ── */
+/* bottom bar */
 .bottom-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-top: 32px;
+  justify-content: center;
+  padding-top: 20px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 4px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 .bottom-bar .est {
   font-family: 'Syne Mono', monospace;
-  font-size: .58rem;
-  letter-spacing: .3em;
+  font-size: .55rem;
+  letter-spacing: .25em;
   color: var(--ink);
   opacity: .3;
+  text-align: center;
 }
 .bottom-bar .social {
   font-family: 'Syne Mono', monospace;
-  font-size: .55rem;
+  font-size: .52rem;
   letter-spacing: .2em;
   color: var(--ink);
   opacity: .25;
+  text-align: center;
 }
 
-/* ── entrance animations ── */
+/* entrance animations */
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+.headline   { animation: slide-up .5s ease both; }
+.h-rule     { animation: slide-up .5s .12s ease both; }
+.mid        { animation: slide-up .5s .22s ease both; }
+.bottom-bar { animation: slide-up .5s .32s ease both; }
 
-.headline  { animation: slide-up .5s ease both; }
-.h-rule    { animation: slide-up .5s .15s ease both; }
-.mid       { animation: slide-up .5s .25s ease both; }
-.bottom-bar{ animation: slide-up .5s .35s ease both; }
-
-/* ── responsive ── */
+/* ── RESPONSIVE ── */
 @media (max-width: 700px) {
+  body::before { border-width: 8px; }
+
   .stripe-r { display: none; }
-  main { padding: 40px 32px 40px 24px; }
-  .mid { grid-template-columns: 1fr; }
+
+  .top-bar {
+    padding: 0 16px;
+    height: 46px;
+  }
+
+  main {
+    padding: 28px 20px 36px 20px;
+  }
+
   .headline .line1,
   .headline .line2,
-  .headline .line3 { font-size: clamp(4rem, 18vw, 7rem); }
+  .headline .line3 {
+    font-size: clamp(3.8rem, 20vw, 6rem);
+  }
+
+  .h-rule { margin: 16px 0; }
+  .h-rule.thin { margin: 16px 0; }
+
+  .mid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .fleur-big { font-size: 56px; }
+
+  .right-block p { font-size: .75rem; }
+
+  /* stack form vertically */
+  .form { flex-direction: column; }
+
+  .form input {
+    border-right: 3px solid var(--ink);
+    border-bottom: none;
+    font-size: .9rem;
+    padding: 15px 16px;
+  }
+
+  .form button {
+    padding: 15px 20px;
+    font-size: .95rem;
+    width: 100%;
+  }
+
+  .bottom-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding-top: 16px;
+  }
 }
 </style>
 </head>
@@ -283,16 +297,13 @@ main {
   <span>Cold Brew Bold Crew · Est. 2019</span>
 </div>
 
-<!-- top bar -->
 <div class="top-bar">
   <div class="logo">Cold Brew Bold Crew</div>
   <div class="fleur">⚜</div>
 </div>
 
-<!-- main content -->
 <main>
 
-  <!-- headline -->
   <div class="headline">
     <span class="line1">BREW</span>
     <span class="line2">ING</span>
@@ -301,13 +312,12 @@ main {
 
   <div class="h-rule"></div>
 
-  <!-- middle -->
   <div class="mid">
 
     <div class="tag-block">
       <span class="fleur-big">⚜</span>
       <div class="tag">
-        CBBC · EST. 2019<br>
+        CBBC · EST. 2019 · LOS ANGELES<br>
         COLD BREW BOLD CREW<br>
         SOMETHING WORTH WAITING FOR
       </div>
@@ -315,46 +325,38 @@ main {
 
     <div class="right-block">
       <p>
-        Bold. Cold. Uncompromising.<br>
+        Bold. Cold. Uncompromising.<br><br>
         We've been crafting something since 2019
         and it's almost time to share it.<br><br>
         Drop your email and be first
         through the door when we open.
       </p>
+
       <div>
         <div class="form-label">Your email →</div>
-        <!--
-          ════════════════════════════════════════
-          MAILCHIMP SETUP — 3 steps:
 
-          1. Log into Mailchimp
-          2. Go to Audience → Signup Forms → Embedded Forms
-          3. Copy your form action URL and paste it below
-             replacing YOUR_MAILCHIMP_URL
-          ════════════════════════════════════════
+        <!--
+          BUTTONDOWN: swap verifiedbysky for your username
+          if you change your Buttondown handle
         -->
         <form
           class="form"
-          action="YOUR_MAILCHIMP_URL"
+          id="mc-form"
+          action="https://buttondown.email/api/emails/embed-subscribe/verifiedbysky"
           method="POST"
-          target="_blank"
-          novalidate
-          id="mc-form">
-
-          <!-- Mailchimp requires this hidden field — do not remove -->
-          <input type="hidden" name="u" value="YOUR_U_VALUE"/>
-          <input type="hidden" name="id" value="YOUR_ID_VALUE"/>
+          target="_blank">
 
           <input
             type="email"
-            name="EMAIL"
+            name="email"
             id="email"
             placeholder="you@domain.com"
-            required
             autocomplete="email"/>
 
           <button type="submit" id="btn">I'm In</button>
+
         </form>
+
         <div class="note">No spam. No noise. Just the first pour.</div>
       </div>
     </div>
@@ -363,9 +365,8 @@ main {
 
   <div class="h-rule thin"></div>
 
-  <!-- bottom bar -->
   <div class="bottom-bar">
-    <div class="est">© 2019 – 2025 COLD BREW BOLD CREW. ALL RIGHTS RESERVED.</div>
+    <div class="est">© 2019 – 2026 COLD BREW BOLD CREW. ALL RIGHTS RESERVED.</div>
     <div class="social">@COLDBREW BOLDCREW</div>
   </div>
 
@@ -377,21 +378,25 @@ const inp  = document.getElementById('email');
 const btn  = document.getElementById('btn');
 
 form.addEventListener('submit', function(e) {
-  if (!inp.value.includes('@')) {
+  // client-side validation before letting Buttondown take over
+  if (!inp.value || !inp.value.includes('@') || !inp.value.includes('.')) {
     e.preventDefault();
-    inp.style.borderColor = '#c0392b';
+    inp.classList.add('error');
     inp.placeholder = 'Need a valid email.';
     inp.value = '';
-    setTimeout(() => { inp.style.borderColor = ''; }, 1400);
+    setTimeout(() => {
+      inp.classList.remove('error');
+      inp.placeholder = 'you@domain.com';
+    }, 1600);
     return;
   }
-  // Valid — show confirmation before Mailchimp opens
+  // valid — show confirmation, Buttondown handles in new tab
   btn.textContent = '✓ You\'re on the list';
   btn.classList.add('done');
   inp.placeholder = 'We\'ll be in touch.';
   inp.value = '';
-  // Mailchimp opens in new tab (target="_blank") — no page disruption
 });
 </script>
+
 </body>
 </html>
