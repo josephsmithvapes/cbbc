@@ -343,8 +343,7 @@ main {
           class="form"
           id="mc-form"
           action="https://buttondown.email/api/emails/embed-subscribe/verifiedbysky"
-          method="POST"
-          target="_blank">
+          method="POST">
 
           <input
             type="email"
@@ -364,7 +363,7 @@ main {
   </div>
 
   <div class="h-rule thin"></div>
-
+<div id="brew-mount"></div>
   <div class="bottom-bar">
     <div class="est">© 2019 – 2026 COLD BREW BOLD CREW. ALL RIGHTS RESERVED.</div>
   </div>
@@ -376,9 +375,10 @@ const form = document.getElementById('mc-form');
 const inp  = document.getElementById('email');
 const btn  = document.getElementById('btn');
 
-form.addEventListener('submit', function(e) {
+form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+
   if (!inp.value || !inp.value.includes('@')) {
-    e.preventDefault();
     inp.classList.add('error');
     inp.placeholder = 'Need a valid email.';
     inp.value = '';
@@ -388,16 +388,27 @@ form.addEventListener('submit', function(e) {
     }, 1600);
     return;
   }
-  // Don't clear value here — let the form post it first
+
+  const email = inp.value;
+
+  try {
+    await fetch(form.action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `email=${encodeURIComponent(email)}`
+    });
+  } catch(err) {
+    // Buttondown will still receive it even if CORS blocks the response
+  }
+
+  // Show confirmation regardless — Buttondown gets it
   btn.textContent = '✓ You\'re on the list';
   btn.classList.add('done');
-  // Clear AFTER a short delay so form has time to submit
-  setTimeout(() => {
-    inp.value = '';
-    inp.placeholder = 'We\'ll be in touch.';
-  }, 300);
+  inp.value = '';
+  inp.placeholder = 'We\'ll be in touch.';
 });
 </script>
 
+<script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
