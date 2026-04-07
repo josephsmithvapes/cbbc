@@ -491,7 +491,7 @@ form.addEventListener('submit', async function(e) {
     await fetch(form.action, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `email=${encodeURIComponent(email)}`
+      body: `email=${encodeURIComponent(email)}&embed=1`
     });
   } catch(err) {
     // Buttondown will still receive it even if CORS blocks the response
