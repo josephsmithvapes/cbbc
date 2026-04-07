@@ -12,6 +12,16 @@
   --ink:   #0f0c06;
   --cream: #f2ede0;
   --gold:  #c9a84c;
+
+  --font-display: 'Alfa Slab One', serif;
+  --font-brand:   'Cinzel', serif;
+  --font-body:    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 48px;
+  --space-xl: 64px;
 }
 
 html, body { height: 100%; }
@@ -22,7 +32,7 @@ body {
   display: flex;
   flex-direction: column;
   /* Use a system font stack for crisp, universal rendering */
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -33,7 +43,7 @@ body {
 }
 
 /* keep the large headline using the display face */
-.headline { font-family: 'Alfa Slab One', serif; font-weight: 700; }
+.headline { font-family: var(--font-display); font-weight: 700; }
 
 /* border frame */
 body::before {
@@ -57,8 +67,8 @@ body::before {
   justify-content: center;
 }
 .stripe-r span {
-  font-family: 'Cinzel', serif;
-  font-size: .5rem;
+  font-family: var(--font-brand);
+  font-size: .7rem;
   letter-spacing: .4em;
   color: var(--ink);
   writing-mode: vertical-rl;
@@ -74,17 +84,34 @@ body::before {
   padding: 0 80px 0 32px;
   justify-content: space-between;
   flex-shrink: 0;
+  gap: 24px;
 }
 .top-bar .logo {
-  font-family: 'Cinzel', serif;
-  font-size: .65rem;
-  letter-spacing: .3em;
+  font-family: var(--font-brand);
+  font-size: .7rem;
+  letter-spacing: .4em;
   color: var(--gold);
+  opacity: .7;
+}
+.top-bar .divider {
+  width: 1px;
+  height: 18px;
+  background: var(--gold);
+  opacity: .2;
+}
+.top-bar .meta {
+  font-family: var(--font-brand);
+  font-size: .5rem;
+  letter-spacing: .4em;
+  color: var(--gold);
+  opacity: .5;
 }
 .top-bar .fleur {
-  font-size: 22px;
+  font-size: 18px;
   color: var(--gold);
+  opacity: .5;
   line-height: 1;
+  margin-left: auto;
 }
 
 /* main */
@@ -136,7 +163,7 @@ main {
 }
 
 .tag {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: .7rem;
   letter-spacing: .12em;
   color: var(--ink);
@@ -148,7 +175,7 @@ main {
 .right-block { display: flex; flex-direction: column; gap: 24px; align-items: center; }
 
 .right-block p {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: .9rem;
   line-height: 1.9;
   color: var(--ink);
@@ -159,7 +186,7 @@ main {
 
 /* form */
 .form-label {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: .62rem;
   letter-spacing: .18em;
   color: var(--ink);
@@ -173,7 +200,7 @@ main {
 .form input {
   flex: 1;
   padding: 16px 18px;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: .95rem;
   border: 3px solid var(--ink);
   border-right: none;
@@ -183,6 +210,7 @@ main {
   letter-spacing: .02em;
   transition: background .15s, border-color .15s;
   -webkit-appearance: none;
+  appearance: none;
   border-radius: 0;
   -webkit-font-smoothing: antialiased;
 }
@@ -192,7 +220,7 @@ main {
 
 .form button {
   padding: 16px 24px;
-  font-family: 'Alfa Slab One', serif;
+  font-family: var(--font-display);
   font-size: 1rem;
   border: 3px solid var(--ink);
   background: var(--ink);
@@ -207,7 +235,7 @@ main {
 .form button.done   { background: var(--gold); border-color: var(--gold); color: var(--ink); }
 
 .note {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: .52rem;
   letter-spacing: .14em;
   color: var(--ink);
@@ -229,7 +257,7 @@ main {
   text-align: center;
 }
 .bottom-bar .est {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: .55rem;
   letter-spacing: .14em;
   color: var(--ink);
@@ -237,7 +265,7 @@ main {
   text-align: center;
 }
 .bottom-bar .social {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: .52rem;
   letter-spacing: .12em;
   color: var(--ink);
@@ -255,6 +283,18 @@ main {
 .mid        { animation: slide-up .5s .22s ease both; }
 .bottom-bar { animation: slide-up .5s .32s ease both; }
 
+  /* hero row: headline + keg illustration */
+  .hero-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+    justify-items: start;
+  }
+
+  .keg-wrap { justify-self: end; }
+  .keg { width: clamp(160px, 18vw, 320px); height: auto; display: block; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 700px) {
   body::before { border-width: 8px; }
@@ -264,7 +304,10 @@ main {
   .top-bar {
     padding: 0 16px;
     height: 46px;
+    gap: 12px;
   }
+  .top-bar .meta { display: none; }
+  .top-bar .divider { display: none; }
 
   main {
     padding: 28px 20px 36px 20px;
@@ -283,6 +326,12 @@ main {
     grid-template-columns: 1fr;
     gap: 24px;
   }
+
+  .hero-row {
+    grid-template-columns: 1fr;
+  }
+
+  .keg-wrap { justify-self: center; margin-top: 16px; }
 
   .mid-sep { display: none; }
 
@@ -323,15 +372,35 @@ main {
 
 <div class="top-bar">
   <div class="logo">Cold Brew Bold Crew</div>
+  <div class="divider" aria-hidden="true"></div>
+  <span class="meta">Est. 2019</span>
+  <div class="divider" aria-hidden="true"></div>
+  <span class="meta">Los Angeles</span>
   <div class="fleur">⚜</div>
 </div>
 
 <main>
 
-  <div class="headline">
-    <span class="line1">BREW</span>
-    <span class="line2">ING</span>
-    <span class="line3">SOON.</span>
+  <div class="hero-row">
+    <div class="headline">
+      <span class="line1">BREW</span>
+      <span class="line2">ING</span>
+      <span class="line3">SOON.</span>
+    </div>
+
+    <div class="keg-wrap" aria-hidden="false">
+      <!-- refined cold-brew SVG styled like provided image -->
+      <svg class="keg" viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="cold brew keg">
+        <defs>
+          <linearGradient id="liquid" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#c89f6a" />
+            <stop offset="1" stop-color="#b6894a" />
+          </linearGradient>
+        </defs>
+
+        <!-- filter / dripper -->
+       
+    </div>
   </div>
 
   <div class="h-rule"></div>

@@ -5,17 +5,15 @@ const css = `
     width: 100%;
     background: #f2ede0;
     border-bottom: 6px solid #0f0c06;
-    padding-inline: 64px;
+    padding-right: 64px;
     box-sizing: border-box;
   }
 
-  /* responsive: auto-fit columns with a sensible min width */
+  /* always 3 columns — never collapses */
   .bp-panels {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 0;
+    grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
-    align-items: stretch;
   }
 
   .bp-panel {
@@ -46,7 +44,7 @@ const css = `
   }
 
   .bp-step {
-    font-family: 'Roboto Slab', serif;
+    font-family: var(--font-body);
     font-size: .38rem;
     letter-spacing: .25em;
     color: #0f0c06;
@@ -55,7 +53,7 @@ const css = `
   }
 
   .bp-title {
-    font-family: 'Oswald', sans-serif;
+    font-family: var(--font-brand);
     font-size: clamp(.7rem, 3vw, 1.1rem);
     letter-spacing: .15em;
     font-weight: 700;
@@ -67,7 +65,7 @@ const css = `
   }
 
   .bp-desc {
-    font-family: 'Roboto Slab', serif;
+    font-family: var(--font-body);
     font-size: clamp(.48rem, 1.8vw, .62rem);
     color: #0f0c06;
     opacity: .42;
@@ -116,7 +114,7 @@ const css = `
     flex-wrap: wrap;
   }
   .bp-strip span {
-    font-family: 'Roboto Slab', serif;
+    font-family: var(--font-body);
     font-size: .4rem;
     letter-spacing: .18em;
     color: #0f0c06;
@@ -124,14 +122,8 @@ const css = `
   }
   .bp-dot { width:3px;height:3px;border-radius:50%;background:#0f0c06;opacity:.15; }
 
-  @media (max-width: 900px) {
-    /* Collapse borders and reduce horizontal padding on smaller viewports */
-    .bp-section { padding-inline: 20px; }
-    .bp-panel { border-right: none; }
-  }
-
   @media (max-width: 600px) {
-    .bp-section { padding-inline: 0; }
+    .bp-section { padding-right: 0; }
   }
 `
 
@@ -242,13 +234,7 @@ export default function BrewPanels() {
 
         </div>
 
-        <div className="bp-strip">
-          <span>COLD BREW BOLD CREW</span>
-          <div className="bp-dot"/>
-          <span>EST. 2019</span>
-          <div className="bp-dot"/>
-          <span>LOS ANGELES</span>
-        </div>
+       
       </section>
     </>
   )
