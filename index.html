@@ -467,6 +467,21 @@ main {
 </main>
 
 <script>
+const dot = '<span style="color:var(--gold)">.</span>';
+const frames = [
+  `SOON${dot}`,
+  `SOON${dot}${dot}`,
+  `SOON${dot}${dot}${dot}`,
+  `SOON${dot}${dot}${dot}${dot}`,
+];
+let fi = 0;
+const line3 = document.querySelector('.line3');
+line3.innerHTML = frames[0];
+setInterval(() => {
+  fi = (fi + 1) % frames.length;
+  line3.innerHTML = frames[fi];
+}, 600);
+
 const form = document.getElementById('mc-form');
 const inp  = document.getElementById('email');
 const btn  = document.getElementById('btn');
@@ -488,16 +503,27 @@ form.addEventListener('submit', async function(e) {
   const email = inp.value;
 
   try {
-    await fetch(form.action, {
+    const res = await fetch(form.action, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: `email=${encodeURIComponent(email)}&embed=1`
     });
+
+    if (res.status === 400) {
+      const data = await res.json().catch(() => ({}));
+      const msg  = (data.detail || data.email || '').toLowerCase();
+      if (msg.includes('already') || msg.includes('duplicate') || msg.includes('exist')) {
+        btn.textContent = '✓ Already on the list';
+        btn.classList.add('done');
+        inp.value = '';
+        inp.placeholder = 'We\'ll be in touch.';
+        return;
+      }
+    }
   } catch(err) {
-    // Buttondown will still receive it even if CORS blocks the response
+    // CORS may block the response — Buttondown still receives the request
   }
 
-  // Show confirmation regardless — Buttondown gets it
   btn.textContent = '✓ You\'re on the list';
   btn.classList.add('done');
   inp.value = '';
