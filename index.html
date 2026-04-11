@@ -395,8 +395,8 @@ form.addEventListener('submit', async function(e) {
   try {
     await fetch(form.action, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `email=${encodeURIComponent(email)}`
+     headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ email: "https://formspree.io/f/xojpgvon" }),
     });
   } catch(err) {
     // Buttondown will still receive it even if CORS blocks the response
