@@ -91,6 +91,35 @@ const css = `
     background-clip: text;
     letter-spacing: .02em;
   }
+  .bc-name {
+    font-family: var(--font-display, 'Alfa Slab One', serif);
+    font-size: 1rem;
+    background: ${GOLD_GRAD};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+  }
+  .bc-meta-row {
+    padding: 7px 20px 9px;
+    font-family: var(--font-brand, 'Space Grotesk', sans-serif);
+    font-size: var(--t-micro, 0.625rem);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: ${CREAM};
+    opacity: .35;
+    border-bottom: 1px solid rgba(201,168,76,.08);
+  }
+  .bc-tasting {
+    padding: 10px 20px 14px;
+    font-family: var(--font-brand, 'Space Grotesk', sans-serif);
+    font-size: var(--t-small, 0.8125rem);
+    color: ${CREAM};
+    opacity: .35;
+    font-style: italic;
+    border-top: 1px solid rgba(201,168,76,.06);
+    line-height: 1.5;
+  }
   .bc-chart {
     border-bottom: 1px solid rgba(201,168,76,.08);
     overflow: hidden;
@@ -207,15 +236,30 @@ function MiniChart({ data, gradId }) {
 }
 
 function BrewCard({ brew }) {
+  const { meta } = brew
   return (
     <div className="bc-card">
       <div className="bc-card-header">
-        <span className="bc-date">{fmtDate(brew.date)}</span>
+        <div>
+          {meta?.name
+            ? <div className="bc-name">{meta.name}</div>
+            : <div className="bc-date">{fmtDate(brew.date)}</div>
+          }
+          {meta?.name && <div className="bc-date" style={{ marginTop: 2 }}>{fmtDate(brew.date)}</div>}
+        </div>
         <span className="bc-duration">{fmtHM(brew.duration)}</span>
       </div>
+
+      {meta && (meta.origin || meta.roast || meta.process) && (
+        <div className="bc-meta-row">
+          {[meta.origin, meta.roast, meta.process].filter(Boolean).join(' · ')}
+        </div>
+      )}
+
       <div className="bc-chart">
         <MiniChart data={brew.chartData} gradId={brew.id.slice(0, 8)} />
       </div>
+
       <div className="bc-stats">
         <div className="bc-stat">
           <span className="bc-stat-val">{brew.tempMin.toFixed(1)}°F</span>
@@ -234,6 +278,12 @@ function BrewCard({ brew }) {
           <span className="bc-stat-lbl">Readings</span>
         </div>
       </div>
+
+      {meta?.tasting_notes && (
+        <div className="bc-tasting">
+          {meta.tasting_notes}
+        </div>
+      )}
     </div>
   )
 }
@@ -272,6 +322,10 @@ export default function BatchProof() {
       }
       batches.push(current)
 
+      // Fetch all batch metadata records
+      const { data: batchMeta } = await supabase.from('batches')
+        .select('*').order('steep_start', { ascending: true })
+
       const processed = batches
         .filter(readings => readings.length >= 2)
         .map((readings, idx) => {
@@ -279,6 +333,14 @@ export default function BatchProof() {
           const t1 = new Date(readings[readings.length - 1].recorded_at).getTime()
           const temps_f = readings.map(r => r.temp_c * 9 / 5 + 32)
           const avg = temps_f.reduce((a, b) => a + b, 0) / temps_f.length
+
+          // Match to a batches row: find one whose steep_start falls within
+          // 4 hours before → end of this session
+          const meta = batchMeta?.find(b => {
+            const bs = new Date(b.steep_start).getTime()
+            return bs >= t0 - 4 * 60 * 60 * 1000 && bs <= t1
+          }) ?? null
+
           return {
             id: `batch-${idx}-${t0}`,
             date: new Date(readings[0].recorded_at),
@@ -287,6 +349,7 @@ export default function BatchProof() {
             tempMax: Math.max(...temps_f),
             tempAvg: avg,
             points: readings.length,
+            meta,
             chartData: thin(readings.map(r => ({
               temp_f: r.temp_c * 9 / 5 + 32,
               elapsed_s: (new Date(r.recorded_at).getTime() - t0) / 1000,
