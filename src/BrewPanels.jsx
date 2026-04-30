@@ -3,17 +3,21 @@
 const css = `
   .bp-section {
     width: 100%;
-    background: #f2ede0;
-    border-bottom: 6px solid #0f0c06;
-    padding-right: 64px;
+    background: #1e1710;
+    border-bottom: 1px solid rgba(201,168,76,.15);
+    border-top: 1px solid rgba(201,168,76,.15);
     box-sizing: border-box;
   }
 
-  /* always 3 columns — never collapses */
   .bp-panels {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
+  }
+  @media (max-width: 600px) {
+    .bp-panels { grid-template-columns: 1fr; }
+    .bp-panel { border-right: none; border-bottom: 1px solid rgba(201,168,76,.1); }
+    .bp-panel:last-child { border-bottom: none; }
   }
 
   .bp-panel {
@@ -22,7 +26,7 @@ const css = `
     align-items: center;
     text-align: center;
     padding: 28px 12px 24px;
-    border-right: 1px solid rgba(15,12,6,.1);
+    border-right: 1px solid rgba(201,168,76,.1);
     gap: 8px;
     min-width: 0;
   }
@@ -37,17 +41,17 @@ const css = `
 
   .bp-fleur {
     font-size: 18px;
-    color: #0f0c06;
-    opacity: .2;
+    color: #c9a84c;
+    opacity: .25;
     line-height: 1;
     margin-top: 4px;
   }
 
   .bp-step {
     font-family: var(--font-body);
-    font-size: .38rem;
+    font-size: var(--t-label, 0.6875rem);
     letter-spacing: .25em;
-    color: #0f0c06;
+    color: #f2ede0;
     opacity: .28;
     text-transform: uppercase;
   }
@@ -66,9 +70,9 @@ const css = `
 
   .bp-desc {
     font-family: var(--font-body);
-    font-size: clamp(.48rem, 1.8vw, .62rem);
-    color: #0f0c06;
-    opacity: .42;
+    font-size: clamp(0.75rem, 2vw, 0.875rem);
+    color: #f2ede0;
+    opacity: .38;
     line-height: 1.6;
   }
 
@@ -105,7 +109,7 @@ const css = `
 
   /* strip */
   .bp-strip {
-    border-top: 1px solid rgba(15,12,6,.1);
+    border-top: 1px solid rgba(201,168,76,.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -115,19 +119,16 @@ const css = `
   }
   .bp-strip span {
     font-family: var(--font-body);
-    font-size: .4rem;
+    font-size: var(--t-micro, 0.625rem);
     letter-spacing: .18em;
-    color: #0f0c06;
-    opacity: .2;
+    color: #f2ede0;
+    opacity: .18;
   }
-  .bp-dot { width:3px;height:3px;border-radius:50%;background:#0f0c06;opacity:.15; }
+  .bp-dot { width:3px;height:3px;border-radius:50%;background:#c9a84c;opacity:.2; }
 
-  @media (max-width: 600px) {
-    .bp-section { padding-right: 0; }
-  }
 `
 
-const INK  = "#0f0c06"
+const INK  = "#f2ede0"
 const GOLD = "#c9a84c"
 
 export default function BrewPanels() {
