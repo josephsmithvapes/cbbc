@@ -298,7 +298,7 @@ export default function AdminPanel() {
 
       {/* ── header ── */}
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 24px', height:54, borderBottom:'1px solid rgba(201,168,76,.15)', position:'sticky', top:0, background:INK, zIndex:10 }}>
-        <span style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.4em', opacity:.7 }}>CBBC ADMIN</span>
+        <span style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.4em', opacity:.7 }}>BCCB ADMIN</span>
         <span style={{ color: flash.startsWith('✓') ? GOLD : flash.startsWith('✗') ? '#c0392b' : CREAM, fontSize:'var(--t-label,.6875rem)', letterSpacing:'.2em', opacity: flash ? 1 : .3, transition:'all .2s', fontFamily:"'Alfa Slab One',serif" }}>
           {flash || `BATCH #${batchNum}`}
         </span>
