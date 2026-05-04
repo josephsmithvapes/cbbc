@@ -279,7 +279,7 @@ export default function AdminPanel() {
   if (!authed) return (
     <div style={{ position:'fixed', inset:0, background:INK, display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999 }}>
       <form onSubmit={login} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:24, padding:48, border:'1px solid rgba(201,168,76,.2)', maxWidth:360, width:'90%' }}>
-        <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.4em', opacity:.7, fontFamily:"'Cinzel',serif" }}>COLD BREW BOLD CREW</div>
+        <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.4em', opacity:.7, fontFamily:"'Cinzel',serif" }}>BOLD CREW COLD BREW</div>
         <div style={{ color:CREAM, fontSize:'1.6rem', letterSpacing:'.1em', fontFamily:"'Alfa Slab One',serif" }}>ADMIN</div>
         <input type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="password" autoFocus
           style={{ ...FIELD, border:`2px solid ${pwErr ? '#c0392b' : 'rgba(201,168,76,.3)'}`, textAlign:'center' }} />

@@ -1,8 +1,8 @@
-# CBBC — Cold Brew Bold Crew
+# CBBC — Bold Crew Cold Brew
 
 Website for CBBC, a small-batch cold brew brand based in Los Angeles. Est. 2019.
 
-**Live:** [coldbrewboldcrew.com](https://coldbrewboldcrew.com)
+**Live:** [boldcrewcoldbrew.com](https://boldcrewcoldbrew.com)
 
 ---
 
@@ -91,7 +91,7 @@ VITE_ADMIN_PASS=your_admin_password
 npm run deploy
 ```
 
-Builds and pushes to `gh-pages` branch → live at coldbrewboldcrew.com.
+Builds and pushes to `gh-pages` branch → live at boldcrewcoldbrew.com.
 
 ---
 
