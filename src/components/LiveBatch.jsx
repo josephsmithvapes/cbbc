@@ -190,37 +190,84 @@ const css = `
   .lb-ice2 { animation: lb-ice2 2.2s ease-in-out .4s infinite; }
   .lb-ice3 { animation: lb-ice3 3.2s ease-in-out .8s infinite; }
 
-  /* IDLE crowdfunding meter */
-  .lb-meter-denom {
+  /* IDLE crowdfunding milestone track */
+  .lb-count-label {
     font-family: var(--font-brand);
-    font-size: var(--t-small, 0.8125rem);
-    letter-spacing: .18em;
+    font-size: var(--t-micro, 0.625rem);
+    letter-spacing: .28em;
     text-transform: uppercase;
     color: ${CREAM};
-    opacity: .32;
-    margin-top: -4px;
+    opacity: .35;
+    margin-top: -6px;
   }
-  .lb-meter-bar-wrap {
-    width: 180px;
+  .lb-milestone-track {
+    width: 210px;
+    position: relative;
     height: 2px;
     background: rgba(201,168,76,.12);
     border-radius: 1px;
-    overflow: hidden;
-    margin: 6px 0 2px;
+    margin: 8px 0 36px;
   }
-  .lb-meter-bar-fill {
-    height: 100%;
+  .lb-milestone-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
     background: ${GOLD_GRAD};
     border-radius: 1px;
     transition: width 1.2s cubic-bezier(.22,1,.36,1);
   }
+  .lb-milestone-markers { position: relative; height: 0; }
+  .lb-milestone {
+    position: absolute;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .lb-milestone-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(201,168,76,.35);
+    background: ${INK};
+    margin-top: -3.5px;
+    transition: background .4s, border-color .4s;
+  }
+  .lb-milestone-dot.reached { background: ${GOLD}; border-color: ${GOLD}; }
+  .lb-milestone-num {
+    font-family: var(--font-brand);
+    font-size: .6rem;
+    letter-spacing: .1em;
+    color: ${GOLD};
+    opacity: .65;
+    margin-top: 5px;
+  }
+  .lb-milestone-lbl {
+    font-family: var(--font-brand);
+    font-size: 7px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: ${CREAM};
+    opacity: .45;
+    white-space: nowrap;
+  }
 `
 
-/* ── IDLE: coffee bag SVG + crowdfunding meter ── */
+const MILESTONES = [
+  { n: 50,  pct: 25,  lbl: 'Batch #4 drops' },
+  { n: 100, pct: 50,  lbl: 'Monthly delivery' },
+  { n: 200, pct: 100, lbl: 'Weekly drops' },
+]
+
+function nextGoal(count) {
+  if (count < 50)  return `${50  - count} more to trigger Batch #4`
+  if (count < 100) return `${100 - count} more for monthly delivery`
+  if (count < 200) return `${200 - count} more for weekly drops`
+  return 'All thresholds reached — weekly drops active'
+}
+
+/* ── IDLE: coffee bag SVG + crowdfunding milestone track ── */
 function IdleStage({ count }) {
-  const TARGET = 50
-  const pct    = count != null ? Math.min(100, (count / TARGET) * 100) : 0
-  const needed = count != null ? Math.max(0, TARGET - count) : null
+  const fillPct = count != null ? Math.min(100, (count / 200) * 100) : 0
 
   return (
     <div className="lb-body">
@@ -242,15 +289,20 @@ function IdleStage({ count }) {
         {count != null ? (
           <>
             <div className="lb-display">{count}</div>
-            <div className="lb-meter-denom">/ {TARGET} pre-orders to brew Batch #4</div>
-            <div className="lb-meter-bar-wrap">
-              <div className="lb-meter-bar-fill" style={{ width: `${pct}%` }} />
+            <div className="lb-count-label">Pre-orders</div>
+            <div className="lb-milestone-track">
+              <div className="lb-milestone-fill" style={{ width: `${fillPct}%` }} />
+              <div className="lb-milestone-markers">
+                {MILESTONES.map(m => (
+                  <div key={m.n} className="lb-milestone" style={{ left: `${m.pct}%` }}>
+                    <div className={`lb-milestone-dot${count >= m.n ? ' reached' : ''}`} />
+                    <span className="lb-milestone-num">{m.n}</span>
+                    <span className="lb-milestone-lbl">{m.lbl}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="lb-sub">
-              {needed > 0
-                ? `${needed} more to trigger the next brew`
-                : 'Threshold reached — brewing soon'}
-            </div>
+            <div className="lb-sub">{nextGoal(count)}</div>
           </>
         ) : (
           <>
