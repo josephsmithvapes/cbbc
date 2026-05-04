@@ -369,7 +369,7 @@ export default function BrewMonitor() {
 
           <div className="bm-footer">
             <span>Last push · {new Date(state.last_update).toLocaleTimeString()}</span>
-            <span>20h steep · CBBC Lab · LA</span>
+            <span>20h steep · BCCB Lab · LA</span>
           </div>
         </div>
       </div>

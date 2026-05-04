@@ -206,7 +206,7 @@ function IdleStage() {
             <line x1="18" y1="72" x2="38" y2="72" stroke={CREAM} strokeWidth="1" opacity=".06"/>
             <text x="28" y="44" textAnchor="middle"
               fontFamily="'Cinzel',serif" fontSize="5.5" fontWeight="700"
-              fill={CREAM} opacity=".15" letterSpacing="1.5">CBBC</text>
+              fill={CREAM} opacity=".15" letterSpacing="1.5">BCCB</text>
           </svg>
         </div>
         <div className="lb-stage-title">STANDBY</div>
