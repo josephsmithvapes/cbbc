@@ -725,14 +725,14 @@ footer {
 }
 
 /* Right panel sections */
-.panel-photo { position:relative; overflow:hidden; flex-shrink:0; height:260px; }
+.panel-photo { position:relative; overflow:hidden; flex-shrink:0; height:320px; background:var(--dark); }
 .panel-photo img {
-  width:100%; height:100%; object-fit:cover; object-position:center top; display:block;
-  filter:contrast(1.08) brightness(.78) saturate(.62);
+  width:100%; height:100%; object-fit:contain; object-position:center center; display:block;
+  filter:contrast(1.05) brightness(.88) saturate(.7);
 }
 .panel-photo::after {
   content:''; position:absolute; inset:0;
-  background:linear-gradient(to bottom, transparent 40%, var(--dark) 100%);
+  background:linear-gradient(to bottom, transparent 60%, var(--dark) 100%);
   pointer-events:none;
 }
 .panel-photo-tag {
@@ -770,8 +770,8 @@ footer {
   letter-spacing:.3em; text-transform:uppercase; color:var(--gold); opacity:.65;
 }
 .invest-drawer-title {
-  font-family:var(--font-display); font-size:1.05rem;
-  color:var(--cream); margin-top:3px;
+  font-family:var(--font-brand); font-weight:700; font-size:1rem;
+  letter-spacing:.04em; color:var(--cream); margin-top:3px;
 }
 .invest-dot-pulse {
   width:8px; height:8px; border-radius:50%;
@@ -803,8 +803,8 @@ footer {
 }
 .invest-expr-btn {
   width:100%; background:var(--gold); border:none;
-  color:var(--ink); font-family:var(--font-display); font-size:.85rem;
-  letter-spacing:.04em; padding:13px; cursor:pointer; transition:background .2s;
+  color:var(--ink); font-family:var(--font-brand); font-weight:700; font-size:.8rem;
+  letter-spacing:.1em; padding:13px; cursor:pointer; transition:background .2s;
 }
 .invest-expr-btn:hover { background:var(--gold-lt); }
 
@@ -906,13 +906,13 @@ footer {
 }
 .milestone-dot.reached { background:var(--gold); border-color:var(--gold); }
 .milestone-num {
-  font-family:var(--font-display); font-size:.65rem;
-  color:var(--gold); opacity:.55; margin-top:5px;
+  font-family:var(--font-brand); font-size:.7rem;
+  letter-spacing:.12em; color:var(--gold); opacity:.65; margin-top:5px;
 }
 .milestone-lbl {
-  font-family:var(--font-brand); font-size:7px;
-  letter-spacing:.14em; text-transform:uppercase;
-  color:var(--cream); opacity:.42; white-space:nowrap;
+  font-family:var(--font-brand); font-size:8.5px;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--cream); opacity:.5; white-space:nowrap;
 }
 
 /* Tier cards */
@@ -933,8 +933,9 @@ footer {
   color:var(--gold); opacity:.6;
 }
 .service-tier-name {
-  font-family:var(--font-display);
-  font-size:clamp(.8rem,1.2vw,.95rem);
+  font-family:var(--font-brand);
+  font-weight:700;
+  font-size:clamp(.85rem,1.2vw,1rem);
   letter-spacing:.02em; color:var(--cream); line-height:1.15;
 }
 .service-tier-desc {
@@ -1028,17 +1029,17 @@ footer {
             <div class="milestone" style="left:25%">
               <div class="milestone-dot" id="wl-dot-1"></div>
               <span class="milestone-num">50</span>
-              <span class="milestone-lbl">Batch #4</span>
+              <span class="milestone-lbl">Batch #4 drops</span>
             </div>
             <div class="milestone" style="left:50%">
               <div class="milestone-dot" id="wl-dot-2"></div>
               <span class="milestone-num">100</span>
-              <span class="milestone-lbl">Monthly</span>
+              <span class="milestone-lbl">Monthly delivery</span>
             </div>
             <div class="milestone" style="left:100%">
               <div class="milestone-dot" id="wl-dot-3"></div>
               <span class="milestone-num">200</span>
-              <span class="milestone-lbl">Weekly</span>
+              <span class="milestone-lbl">Weekly drops</span>
             </div>
           </div>
         </div>
@@ -1121,7 +1122,7 @@ footer {
   <!-- RIGHT: sticky brand panel + invest drawer -->
   <div class="live-hero-panel">
     <div class="panel-photo">
-      <img src="/img/bottle-hero.png" alt="BCCB cold brew bottle — small batch, Los Angeles">
+      <img src="/img/bottle-bccb.png" alt="BCCB cold brew bottle — small batch, Los Angeles">
       <span class="panel-photo-tag">SMALL BATCH · LOS ANGELES</span>
     </div>
     <div class="panel-story">
