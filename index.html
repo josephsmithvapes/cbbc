@@ -989,7 +989,7 @@ footer {
   body { padding-bottom:60px; }
 }
 </style>
-  <script type="module" crossorigin src="/assets/index-Lc5kCtV_.js"></script>
+  <script type="module" crossorigin src="/assets/index-BvYOV_ei.js"></script>
 </head>
 <body>
 
@@ -1016,34 +1016,6 @@ footer {
     <!-- Service strip: purchase tiers anchored to the brew process -->
     <div class="service-strip">
       <div class="service-eyebrow">Get yours — launching soon</div>
-
-      <!-- Waitlist counter + milestone track -->
-      <div class="waitlist-band">
-        <div class="waitlist-count-row">
-          <span class="waitlist-num" id="wl-count">—</span>
-          <span class="waitlist-label">on the list</span>
-        </div>
-        <div class="milestone-track">
-          <div class="milestone-fill" id="wl-fill"></div>
-          <div class="milestone-markers">
-            <div class="milestone" style="left:25%">
-              <div class="milestone-dot" id="wl-dot-1"></div>
-              <span class="milestone-num">50</span>
-              <span class="milestone-lbl">Batch #4 drops</span>
-            </div>
-            <div class="milestone" style="left:50%">
-              <div class="milestone-dot" id="wl-dot-2"></div>
-              <span class="milestone-num">100</span>
-              <span class="milestone-lbl">Monthly delivery</span>
-            </div>
-            <div class="milestone" style="left:100%">
-              <div class="milestone-dot" id="wl-dot-3"></div>
-              <span class="milestone-num">200</span>
-              <span class="milestone-lbl">Weekly drops</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div class="service-tiers">
 
@@ -1889,9 +1861,11 @@ footer {
 
   investForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    var name  = document.getElementById('if-name').value.trim();
-    var email = document.getElementById('if-email').value.trim();
-    var type  = document.getElementById('if-type').value;
+    var name    = document.getElementById('if-name').value.trim();
+    var email   = document.getElementById('if-email').value.trim();
+    var type    = document.getElementById('if-type').value;
+    var range   = document.getElementById('if-range').value;
+    var message = document.getElementById('if-message').value.trim();
     if (!name || !email || !type) {
       var el = !name ? document.getElementById('if-name') : !email ? document.getElementById('if-email') : document.getElementById('if-type');
       el.focus(); el.style.borderColor='rgba(200,103,58,.7)';
@@ -1899,14 +1873,42 @@ footer {
       return;
     }
     investBtn.disabled = true; investBtn.textContent = 'SENDING…';
-    // TODO: wire to real endpoint, e.g. Formspree or Supabase
-    // fetch('https://formspree.io/f/YOUR_ID', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name,email,type,...}) })
-    setTimeout(function() {
+    var SB  = window._sbUrl;
+    var KEY = window._sbKey;
+    fetch(SB + '/rest/v1/interest_submissions', {
+      method: 'POST',
+      headers: { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY,
+                 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ name: name, email: email, investor_type: type,
+                             amount_range: range || null, message: message || null })
+    }).then(function() {
       investForm.style.display = 'none';
       investSuccess.classList.add('visible');
       try { localStorage.setItem('cbbc_interest_sent', '1'); } catch(_) {}
-    }, 900);
+    }).catch(function() {
+      investBtn.disabled = false; investBtn.textContent = 'TRY AGAIN';
+    });
   });
+
+  /* email capture — AJAX submit so user stays on page */
+  var mcForm = document.getElementById('mc-form');
+  if (mcForm) {
+    mcForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var emailVal = document.getElementById('email').value.trim();
+      var btn = document.getElementById('btn');
+      if (!emailVal) return;
+      btn.disabled = true; btn.textContent = '…';
+      var fd = new FormData();
+      fd.append('email', emailVal);
+      fetch('https://buttondown.email/api/emails/embed-subscribe/verifiedbysky', {
+        method: 'POST', body: fd, mode: 'no-cors'
+      }).catch(function(){}).finally(function() {
+        btn.textContent = "YOU'RE IN ✓"; btn.classList.add('done');
+        if (window._addToWaitlist) window._addToWaitlist(emailVal, window._bccbTier || 'general');
+      });
+    });
+  }
 })();
 </script>
 
@@ -1946,6 +1948,7 @@ footer {
 (function() {
   var SB = 'https://qmzgnbcahcpmntbnmikq.supabase.co'
   var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtemduYmNhaGNwbW50Ym5taWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjU1MTEsImV4cCI6MjA5MjA0MTUxMX0.LLJ_5OnNqxMMFDvDM-0kq3KxIfrfblufW7tYdfWpbyQ'
+  window._sbUrl = SB; window._sbKey = KEY
   var MILESTONES = [50, 100, 200]
   var MAX = 200
   window._bccbTier = 'general'
@@ -2011,14 +2014,19 @@ function dismissStickyBar() {
 }
 
 function submitStickyEmail() {
-  var email = document.getElementById('seb-email').value.trim();
-  if (!email || !email.includes('@')) return;
-  var f = document.createElement('form');
-  f.method = 'POST';
-  f.action = 'https://buttondown.email/api/emails/embed-subscribe/verifiedbysky';
-  var i = document.createElement('input');
-  i.type = 'email'; i.name = 'email'; i.value = email;
-  f.appendChild(i); document.body.appendChild(f); f.submit();
+  var emailVal = document.getElementById('seb-email').value.trim();
+  if (!emailVal || !emailVal.includes('@')) return;
+  var btn = document.querySelector('.seb-join');
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  var fd = new FormData();
+  fd.append('email', emailVal);
+  fetch('https://buttondown.email/api/emails/embed-subscribe/verifiedbysky', {
+    method: 'POST', body: fd, mode: 'no-cors'
+  }).catch(function(){}).finally(function() {
+    if (btn) { btn.textContent = "YOU'RE IN ✓"; }
+    if (window._addToWaitlist) window._addToWaitlist(emailVal, 'general');
+    setTimeout(dismissStickyBar, 2000);
+  });
 }
 
 /* mobile tab nav — highlight active section on scroll */
