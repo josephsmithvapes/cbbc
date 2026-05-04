@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import LiveBatch from './components/LiveBatch'
 import BrewMonitor from './components/BrewMonitor'
-import BrewPanels from './BrewPanels'
-import BatchProof from './components/BatchProof'
 import AdminPanel from './pages/AdminPanel'
 
 export default function App() {
@@ -14,8 +12,6 @@ export default function App() {
     <>
       <LiveBatch />
       <BrewMonitor />
-      <BrewPanels />
-      <BatchProof />
     </>
   )
 }

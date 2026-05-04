@@ -671,6 +671,306 @@ footer {
                        transition-duration: .01ms !important; }
 }
 </style>
+<style>
+/* ─────────────────────────────────────────
+   OPTION C — LIVE-FIRST LAYOUT
+───────────────────────────────────────── */
+:root {
+  --gold-grad: linear-gradient(135deg, #f0d878 0%, #c9a84c 55%, #8a6018 100%);
+  --rule-gold: rgba(201,168,76,.45);
+}
+
+/* Nav tabs */
+.nav-tabs { display:flex; height:100%; margin-left:auto; }
+.nav-tab {
+  display:flex; align-items:center; padding:0 20px;
+  border-left:1px solid var(--rule);
+  font-family:var(--font-brand); font-size:var(--t-micro);
+  letter-spacing:.28em; text-transform:uppercase;
+  color:var(--cream); opacity:.35; text-decoration:none;
+  transition:opacity .15s; white-space:nowrap; cursor:pointer;
+}
+.nav-tab:hover { opacity:.65; }
+.nav-tab.active { opacity:1; color:var(--gold); }
+
+/* Live hero — IoT data IS the hero */
+.live-hero {
+  display:grid; grid-template-columns:1fr 370px;
+  border-bottom:1px solid var(--rule);
+  padding-top:var(--nav-h);
+  min-height:calc(100vh - var(--nav-h));
+}
+.live-hero-main { border-right:1px solid var(--rule); overflow:hidden; }
+.live-hero-panel {
+  display:flex; flex-direction:column;
+  position:sticky; top:var(--nav-h);
+  height:calc(100vh - var(--nav-h)); overflow-y:auto;
+}
+
+/* Right panel sections */
+.panel-photo { position:relative; overflow:hidden; flex-shrink:0; height:260px; }
+.panel-photo img {
+  width:100%; height:100%; object-fit:cover; object-position:center top; display:block;
+  filter:contrast(1.08) brightness(.78) saturate(.62);
+}
+.panel-photo::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to bottom, transparent 40%, var(--dark) 100%);
+  pointer-events:none;
+}
+.panel-photo-tag {
+  position:absolute; bottom:14px; left:18px; z-index:2;
+  font-family:var(--font-brand); font-size:var(--t-micro);
+  letter-spacing:.26em; color:var(--gold); opacity:.5;
+}
+.panel-story {
+  padding:22px 22px 18px; background:var(--dark);
+  border-bottom:1px solid var(--rule);
+}
+.panel-headline {
+  font-family:var(--font-display); font-size:1.45rem;
+  line-height:1; letter-spacing:.03em; margin:10px 0 11px;
+}
+.panel-headline em {
+  font-style:normal;
+  background:var(--gold-grad);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.panel-story p { font-size:var(--t-small); color:var(--muted); line-height:1.75; }
+
+/* Invest drawer (right panel, always visible) */
+.invest-drawer-panel {
+  flex:1; display:flex; flex-direction:column;
+  border-top:2px solid var(--gold); background:var(--dark);
+}
+.invest-drawer-hd {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 22px;
+}
+.invest-drawer-label {
+  font-family:var(--font-brand); font-size:var(--t-micro);
+  letter-spacing:.3em; text-transform:uppercase; color:var(--gold); opacity:.65;
+}
+.invest-drawer-title {
+  font-family:var(--font-display); font-size:1.05rem;
+  color:var(--cream); margin-top:3px;
+}
+.invest-dot-pulse {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--gold); flex-shrink:0;
+  animation:idp-pulse 2s ease-in-out infinite;
+}
+@keyframes idp-pulse {
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:.3;transform:scale(.65);}
+}
+.invest-drawer-body { padding:0 22px 22px; }
+.invest-mini-stat {
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:10px 0; border-bottom:1px solid var(--rule);
+}
+.invest-mini-stat.last { border-bottom:none; margin-bottom:14px; }
+.ims-num {
+  font-family:var(--font-display); font-size:1.2rem;
+  background:var(--gold-grad);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.ims-open {
+  font-family:var(--font-brand); font-size:var(--t-small);
+  letter-spacing:.1em; color:var(--gold);
+}
+.ims-lbl {
+  font-family:var(--font-brand); font-size:var(--t-micro);
+  letter-spacing:.2em; text-transform:uppercase; color:var(--cream); opacity:.35;
+}
+.invest-expr-btn {
+  width:100%; background:var(--gold); border:none;
+  color:var(--ink); font-family:var(--font-display); font-size:.85rem;
+  letter-spacing:.04em; padding:13px; cursor:pointer; transition:background .2s;
+}
+.invest-expr-btn:hover { background:var(--gold-lt); }
+
+/* Sticky email bar (desktop only) */
+.sticky-email-bar {
+  position:fixed; bottom:0; left:0; right:0; z-index:200;
+  background:var(--dark); border-top:1px solid rgba(201,168,76,.3);
+  padding:13px 32px; display:flex; align-items:center; gap:16px;
+  transform:translateY(100%); transition:transform .35s cubic-bezier(.22,1,.36,1);
+}
+.sticky-email-bar.visible { transform:translateY(0); }
+.seb-label {
+  font-family:var(--font-brand); font-size:var(--t-micro);
+  letter-spacing:.28em; text-transform:uppercase;
+  color:var(--cream); opacity:.45; white-space:nowrap;
+}
+.seb-input {
+  flex:1; max-width:260px; background:transparent;
+  border:1px solid var(--rule); color:var(--cream);
+  font-family:var(--font-body); font-size:var(--t-small);
+  padding:9px 13px; outline:none;
+}
+.seb-input:focus { border-color:rgba(201,168,76,.4); }
+.seb-join {
+  background:var(--gold); border:none; color:var(--ink);
+  font-family:var(--font-display); font-size:.8rem;
+  letter-spacing:.04em; padding:9px 22px; cursor:pointer; white-space:nowrap;
+}
+.seb-dismiss {
+  background:none; border:none; color:var(--cream);
+  opacity:.3; cursor:pointer; font-size:20px;
+  flex-shrink:0; line-height:1; margin-left:auto; padding:0 4px;
+}
+
+/* Mobile bottom tabs */
+.mobile-tab-nav {
+  display:none; position:fixed; bottom:0; left:0; right:0; z-index:200;
+  background:var(--dark); border-top:1px solid var(--rule);
+}
+.mobile-tab-nav a {
+  flex:1; padding:9px 4px 11px;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  font-family:var(--font-brand); font-size:8px;
+  letter-spacing:.16em; text-transform:uppercase;
+  color:var(--cream); opacity:.35; text-decoration:none; transition:opacity .15s;
+}
+.mobile-tab-nav a.active { opacity:1; color:var(--gold); }
+.tab-icon { font-size:15px; line-height:1; }
+
+/* Service strip */
+.service-strip {
+  padding:24px 28px 20px;
+  border-bottom:1px solid var(--rule);
+  background:var(--dark);
+}
+.service-eyebrow {
+  font-family:var(--font-brand); font-size:var(--t-micro);
+  letter-spacing:.38em; text-transform:uppercase;
+  color:var(--gold); opacity:.5; margin-bottom:16px;
+}
+
+/* Waitlist counter */
+.waitlist-band { margin-bottom:20px; }
+.waitlist-count-row {
+  display:flex; align-items:baseline; gap:10px; margin-bottom:12px;
+}
+.waitlist-num {
+  font-family:var(--font-display);
+  font-size:clamp(2.2rem,4vw,3rem);
+  background:var(--gold-grad);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; line-height:1;
+}
+.waitlist-label {
+  font-family:var(--font-brand); font-size:var(--t-micro);
+  letter-spacing:.28em; text-transform:uppercase;
+  color:var(--cream); opacity:.38;
+}
+.milestone-track {
+  position:relative; height:2px;
+  background:rgba(201,168,76,.1); border-radius:1px;
+  margin-bottom:24px;
+}
+.milestone-fill {
+  position:absolute; left:0; top:0; bottom:0;
+  background:var(--gold-grad); border-radius:1px;
+  width:0; transition:width 1.2s cubic-bezier(.22,1,.36,1);
+}
+.milestone-markers { position:relative; height:0; }
+.milestone {
+  position:absolute; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+}
+.milestone-dot {
+  width:7px; height:7px; border-radius:50%;
+  border:1.5px solid rgba(201,168,76,.35);
+  background:var(--dark); margin-top:-3px;
+  transition:background .4s, border-color .4s;
+}
+.milestone-dot.reached { background:var(--gold); border-color:var(--gold); }
+.milestone-num {
+  font-family:var(--font-display); font-size:.65rem;
+  color:var(--gold); opacity:.55; margin-top:5px;
+}
+.milestone-lbl {
+  font-family:var(--font-brand); font-size:7px;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:var(--cream); opacity:.25; white-space:nowrap;
+}
+
+/* Tier cards */
+.service-tiers {
+  display:flex; gap:1px; background:var(--rule);
+  border:1px solid var(--rule); margin-bottom:14px;
+}
+.service-divider { display:none; }
+.service-tier {
+  flex:1; display:flex; flex-direction:column;
+  gap:7px; padding:14px; background:var(--dark);
+}
+.service-icon { flex-shrink:0; }
+.service-tier-text { display:flex; flex-direction:column; gap:5px; flex:1; }
+.service-tier-badge {
+  font-family:var(--font-brand); font-size:7px;
+  letter-spacing:.28em; text-transform:uppercase;
+  color:var(--gold); opacity:.6;
+}
+.service-tier-name {
+  font-family:var(--font-display);
+  font-size:clamp(.8rem,1.2vw,.95rem);
+  letter-spacing:.02em; color:var(--cream); line-height:1.15;
+}
+.service-tier-desc {
+  font-size:var(--t-small); color:var(--muted);
+  line-height:1.6; flex:1;
+}
+.service-tier-cta {
+  align-self:flex-start; margin-top:6px;
+  background:none; border:1px solid rgba(201,168,76,.3);
+  color:var(--gold); font-family:var(--font-brand);
+  font-size:7px; letter-spacing:.22em; text-transform:uppercase;
+  padding:7px 14px; cursor:pointer; transition:border-color .15s, color .15s;
+}
+.service-tier-cta:hover { border-color:var(--gold); color:var(--gold-lt); }
+
+/* Batch history bar */
+.service-track-bar {
+  display:flex; align-items:center; gap:10px;
+  padding-top:12px; border-top:1px solid var(--rule);
+  font-family:var(--font-brand); font-size:var(--t-micro);
+  letter-spacing:.14em; color:var(--cream); opacity:.3;
+}
+.service-track-bar span { flex:1; }
+.service-link {
+  background:none; border:none;
+  border-bottom:1px solid rgba(201,168,76,.3);
+  color:var(--gold); opacity:.7;
+  font-family:var(--font-brand); font-size:var(--t-micro);
+  letter-spacing:.14em; cursor:pointer; padding:0;
+  transition:opacity .15s; flex-shrink:0;
+}
+.service-link:hover { opacity:1; }
+
+@media (max-width:640px) {
+  .service-strip { padding:18px 18px 16px; }
+  .service-tiers { flex-direction:column; }
+  .service-tier { flex-direction:row; align-items:flex-start; gap:12px; }
+  .service-tier-text { gap:4px; }
+  .service-tier-cta { margin-top:4px; }
+}
+
+/* Section scroll anchors — offset for fixed nav */
+#batches, #story, #invest { scroll-margin-top: var(--nav-h); }
+
+/* Option C responsive */
+@media (max-width:960px) {
+  .live-hero { grid-template-columns:1fr; min-height:auto; }
+  .live-hero-panel { display:none; }
+  .sticky-email-bar { display:none !important; }
+  .mobile-tab-nav { display:flex; }
+  body { padding-bottom:60px; }
+}
+</style>
 </head>
 <body>
 
@@ -679,58 +979,175 @@ footer {
   <span class="logo">Bold Crew Cold Brew</span>
   <div class="nav-divider" aria-hidden="true"></div>
   <span class="nav-meta" aria-hidden="true">Est. 2019</span>
-  <div class="nav-divider" aria-hidden="true"></div>
-  <span class="nav-meta" aria-hidden="true">Los Angeles</span>
-  <div id="flow-mount" style="display:flex;align-items:center;margin-left:auto;" aria-label="Brew process status"></div>
-  <img class="nav-fleur" src="/img/fleur.png" alt="" aria-hidden="true">
+  <div class="nav-tabs" role="navigation" aria-label="Site sections">
+    <a class="nav-tab active" href="#live">Live</a>
+    <a class="nav-tab" href="#batches">Batches</a>
+    <a class="nav-tab" href="#story">Story</a>
+    <a class="nav-tab" href="#invest">Invest</a>
+  </div>
 </nav>
 
-<!-- ── HERO ── -->
-<section class="hero" aria-label="Bold Crew Cold Brew — coming soon">
+<!-- ── LIVE-FIRST HERO ── -->
+<section class="live-hero" id="live" aria-label="Live brew monitor">
 
-  <!-- left: text -->
-  <div class="hero-left">
-    <p class="hero-eyebrow" aria-hidden="true">BCCB · Los Angeles · Est. 2019</p>
-    <div class="hero-row">
-      <h1 class="hero-headline">
-        <span class="l1">BOLD</span>
-        <span class="l2">CREW<span id="dots" style="position:absolute;color:var(--gold-lt);" aria-hidden="true"></span></span>
-        <span class="l3">COLD</span>
-          <span class="l1">BREW.</span>
-      </h1>
-    </div>
-    <div class="hero-sub">
-      <p>Small batch. Cold steeped 20 hours.<br>
-      Brewed with intent. Served without compromise.<br>
-      Something worth waiting for.</p>
-      <div class="hero-cta">
-        <button class="btn-primary"
-          onclick="document.querySelector('.capture').scrollIntoView({behavior:'smooth'})"
-          type="button">
-          Get Notified
-        </button>
-        <a href="#brew-mount" class="btn-ghost">See the process</a>
+  <!-- LEFT: service intro + React live monitor -->
+  <div class="live-hero-main">
+
+    <!-- Service strip: purchase tiers anchored to the brew process -->
+    <div class="service-strip">
+      <div class="service-eyebrow">Get yours — launching soon</div>
+
+      <!-- Waitlist counter + milestone track -->
+      <div class="waitlist-band">
+        <div class="waitlist-count-row">
+          <span class="waitlist-num" id="wl-count">—</span>
+          <span class="waitlist-label">on the list</span>
+        </div>
+        <div class="milestone-track">
+          <div class="milestone-fill" id="wl-fill"></div>
+          <div class="milestone-markers">
+            <div class="milestone" style="left:25%">
+              <div class="milestone-dot" id="wl-dot-1"></div>
+              <span class="milestone-num">50</span>
+              <span class="milestone-lbl">Batch #4</span>
+            </div>
+            <div class="milestone" style="left:50%">
+              <div class="milestone-dot" id="wl-dot-2"></div>
+              <span class="milestone-num">100</span>
+              <span class="milestone-lbl">Monthly</span>
+            </div>
+            <div class="milestone" style="left:100%">
+              <div class="milestone-dot" id="wl-dot-3"></div>
+              <span class="milestone-num">200</span>
+              <span class="milestone-lbl">Weekly</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-tiers">
+
+        <div class="service-tier">
+          <svg class="service-icon" width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <line x1="18" y1="3" x2="30" y2="3" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" opacity=".85"/>
+            <circle cx="30" cy="3" r="2.8" fill="#c9a84c" opacity=".75"/>
+            <circle cx="18" cy="3" r="2.4" stroke="#c9a84c" stroke-width="1.6" fill="none" opacity=".85"/>
+            <line x1="18" y1="5.4" x2="18" y2="11" stroke="#c9a84c" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M10 11 L7 20 L29 20 L26 11 Z" stroke="#c9a84c" stroke-width="1.5" fill="#c9a84c" fill-opacity=".08" stroke-linejoin="round"/>
+            <rect x="7" y="20" width="22" height="12" rx="2" stroke="#c9a84c" stroke-width="1.6" fill="#c9a84c" fill-opacity=".06"/>
+            <rect x="5.5" y="32" width="25" height="2.5" rx="1.5" stroke="#c9a84c" stroke-width="1.4" fill="none" opacity=".6"/>
+          </svg>
+          <div class="service-tier-text">
+            <span class="service-tier-badge">Weekly Drop</span>
+            <span class="service-tier-name">Fresh grind, every week.</span>
+            <span class="service-tier-desc">A new batch ground, steeped 20h, and shipped the moment it's ready. First pour, every time.</span>
+            <button class="service-tier-cta" onclick="window._bccbTier='weekly';document.querySelector('.capture').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('email').focus()},400)">Join Waitlist</button>
+          </div>
+        </div>
+
+        <div class="service-divider" aria-hidden="true"></div>
+
+        <div class="service-tier">
+          <svg class="service-icon" width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect x="3" y="4" width="30" height="4" rx="2" stroke="#c9a84c" stroke-width="1.6" fill="none" opacity=".5"/>
+            <rect x="5" y="8" width="26" height="24" rx="2.5" stroke="#c9a84c" stroke-width="1.6" fill="none" opacity=".5"/>
+            <rect x="6" y="18" width="24" height="13" rx="1.5" fill="#c9a84c" fill-opacity=".1" clip-path="url(#jar-clip-s)"/>
+            <clipPath id="jar-clip-s"><rect x="5" y="8" width="26" height="24" rx="2.5"/></clipPath>
+            <line x1="6" y1="18" x2="30" y2="18" stroke="#c9a84c" stroke-width="1" stroke-opacity=".4"/>
+            <line x1="24" y1="3" x2="22" y2="28" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity=".45" stroke-dasharray="2 2"/>
+            <circle cx="22" cy="28" r="2" fill="#c9a84c" opacity=".55"/>
+          </svg>
+          <div class="service-tier-text">
+            <span class="service-tier-badge">Monthly Delivery</span>
+            <span class="service-tier-name">One cold steep a month.</span>
+            <span class="service-tier-desc">A single batch, 20h in cold filtered water, temperature-logged live. Delivered cold to your door.</span>
+            <button class="service-tier-cta" onclick="window._bccbTier='monthly';document.querySelector('.capture').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('email').focus()},400)">Join Waitlist</button>
+          </div>
+        </div>
+
+        <div class="service-divider" aria-hidden="true"></div>
+
+        <div class="service-tier">
+          <svg class="service-icon" width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <path d="M13 2h10v5l3 4v20a2 2 0 01-2 2H12a2 2 0 01-2-2V11l3-4V2z" stroke="#c9a84c" stroke-width="1.6" fill="#c9a84c" fill-opacity=".06" stroke-linejoin="round"/>
+            <rect x="13" y="2" width="10" height="3" rx="1" stroke="#c9a84c" stroke-width="1.4" fill="#c9a84c" fill-opacity=".15"/>
+            <line x1="11" y1="22" x2="25" y2="22" stroke="#c9a84c" stroke-width="1" stroke-opacity=".3"/>
+            <rect x="12" y="16" width="12" height="8" rx="1" stroke="#c9a84c" stroke-width="1" fill="none" opacity=".2"/>
+            <text x="18" y="21.5" text-anchor="middle" font-family="'Cinzel',serif" font-size="3.5" fill="#c9a84c" opacity=".5" letter-spacing="0.8">BCCB</text>
+          </svg>
+          <div class="service-tier-text">
+            <span class="service-tier-badge">Single Batch</span>
+            <span class="service-tier-name">Order when you're ready.</span>
+            <span class="service-tier-desc">No subscription. Pick a batch, watch it steep live, get it shipped when it's done. No shortcuts.</span>
+            <button class="service-tier-cta" onclick="window._bccbTier='single';document.querySelector('.capture').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('email').focus()},400)">Join Waitlist</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Batch history callout -->
+      <div class="service-track-bar">
+        <svg width="18" height="14" viewBox="0 0 36 28" fill="none" aria-hidden="true">
+          <polyline points="0,22 6,18 12,16 18,14 22,15 28,9 34,5 36,4" fill="none" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
+          <circle cx="36" cy="4" r="2" fill="#c9a84c" opacity=".7"/>
+        </svg>
+        <span>Every batch on the record — temperature curves, steep times, tasting notes.</span>
+        <button class="service-link" onclick="document.getElementById('batches').scrollIntoView({behavior:'smooth'})">See the archive →</button>
       </div>
     </div>
-    <div class="scroll-hint" aria-hidden="true">
-      <span class="scroll-hint-label">SCROLL</span>
-      <div class="scroll-arrow"></div>
-    </div>
+
+    <div id="brew-mount" tabindex="-1"></div>
   </div>
 
-  <!-- right: bottle photo -->
-  <div class="hero-right" aria-hidden="true">
-    <img src="/img/bottle-hero.png" alt="">
-    <span class="hero-right-tag">SMALL BATCH · LOS ANGELES</span>
+  <!-- RIGHT: sticky brand panel + invest drawer -->
+  <div class="live-hero-panel">
+    <div class="panel-photo">
+      <img src="/img/bottle-hero.png" alt="BCCB cold brew bottle — small batch, Los Angeles">
+      <span class="panel-photo-tag">SMALL BATCH · LOS ANGELES</span>
+    </div>
+    <div class="panel-story">
+      <p class="eyebrow">Est. 2019</p>
+      <h2 class="panel-headline">BOLD CREW<br><em>COLD BREW.</em></h2>
+      <p>The most transparent cold brew in Los Angeles. Small batch, cold steeped 20 hours. Every reading live.</p>
+    </div>
+    <div class="invest-drawer-panel">
+      <div class="invest-drawer-hd">
+        <div>
+          <div class="invest-drawer-label">Open Round</div>
+          <div class="invest-drawer-title">Invest in BCCB</div>
+        </div>
+        <div class="invest-dot-pulse"></div>
+      </div>
+      <div class="invest-drawer-body">
+        <div class="invest-mini-stat">
+          <span class="ims-lbl">U.S. Cold Brew Market</span>
+          <span class="ims-num">$400M</span>
+        </div>
+        <div class="invest-mini-stat">
+          <span class="ims-lbl">Annual Growth</span>
+          <span class="ims-num">20%+</span>
+        </div>
+        <div class="invest-mini-stat last">
+          <span class="ims-lbl">Round Status</span>
+          <span class="ims-open">Open</span>
+        </div>
+        <button class="invest-expr-btn"
+          onclick="document.getElementById('invest').scrollIntoView({behavior:'smooth'})">
+          EXPRESS INTEREST →
+        </button>
+      </div>
+    </div>
   </div>
 
 </section>
 
-<!-- ── LIVE BREWERY (React) ── -->
-<div id="brew-mount" tabindex="-1"></div>
+<!-- ── BATCH PROOF (React) ── -->
+<section id="batches" aria-label="Past batches">
+  <div id="batch-mount"></div>
+</section>
 
 <!-- ── STORY ── -->
-<section class="story" aria-label="Our story">
+<section class="story" id="story" aria-label="Our story">
   <div class="story-img">
     <img src="/img/story-scoop.png" alt="Coffee grounds being scooped — BCCB small batch process">
     <span class="story-img-tag">LOS ANGELES · EST. 2019</span>
@@ -802,6 +1219,7 @@ footer {
 </section>
 
 <!-- ── INVEST SECTION ── -->
+<div id="invest">
 <style>
 :root {
   --gold-grad: linear-gradient(135deg, #f0d878 0%, #c9a84c 55%, #8a6018 100%);
@@ -1431,6 +1849,7 @@ footer {
 
   </div><!-- /.invest-accordion-body -->
 </div><!-- /.invest-accordion -->
+</div><!-- /#invest -->
 
 <script>
 ;(function() {
@@ -1471,10 +1890,26 @@ footer {
 })();
 </script>
 
+<!-- ── STICKY EMAIL BAR (desktop) ── -->
+<div class="sticky-email-bar" id="sticky-bar" role="complementary" aria-label="Email signup">
+  <span class="seb-label">First pour. First to know.</span>
+  <input class="seb-input" type="email" id="seb-email" placeholder="you@domain.com" autocomplete="email">
+  <button class="seb-join" onclick="submitStickyEmail()">JOIN THE LIST</button>
+  <button class="seb-dismiss" onclick="dismissStickyBar()" aria-label="Dismiss">×</button>
+</div>
+
+<!-- ── MOBILE BOTTOM TABS ── -->
+<nav class="mobile-tab-nav" aria-label="Site sections">
+  <a class="active" href="#live"><span class="tab-icon">◉</span>Live</a>
+  <a href="#batches"><span class="tab-icon">⊞</span>Batches</a>
+  <a href="#story"><span class="tab-icon">◆</span>Story</a>
+  <a href="#invest"><span class="tab-icon">◇</span>Invest</a>
+</nav>
+
 <!-- ── FOOTER ── -->
 <footer>
   <span class="footer-logo">Bold Crew Cold Brew</span>
-  <small class="footer-copy">© 2019–2026 CBBC · Los Angeles · All rights reserved</small>
+  <small class="footer-copy">© 2019–2026 BCCB · Los Angeles · All rights reserved</small>
 </footer>
 
 <!-- visually hidden utility -->
@@ -1487,16 +1922,116 @@ footer {
 </style>
 
 <script>
-/* animated dots — respects prefers-reduced-motion */
-const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (!reduced) {
-  const l2 = document.querySelector('.l2');
-  l2.style.position = 'relative';
-  const frames = ['.','..','...','....'];
-  let fi = 0;
-  const el = document.getElementById('dots');
-  setInterval(() => { fi = (fi+1) % frames.length; el.textContent = frames[fi]; }, 600);
+/* waitlist — Supabase REST (anon key is intentionally public) */
+(function() {
+  var SB = 'https://qmzgnbcahcpmntbnmikq.supabase.co'
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtemduYmNhaGNwbW50Ym5taWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjU1MTEsImV4cCI6MjA5MjA0MTUxMX0.LLJ_5OnNqxMMFDvDM-0kq3KxIfrfblufW7tYdfWpbyQ'
+  var MILESTONES = [50, 100, 200]
+  var MAX = 200
+  window._bccbTier = 'general'
+
+  function updateUI(n) {
+    var el = document.getElementById('wl-count')
+    if (el) el.textContent = n
+    var fill = document.getElementById('wl-fill')
+    if (fill) fill.style.width = Math.min(100, (n / MAX) * 100) + '%'
+    MILESTONES.forEach(function(m, i) {
+      var dot = document.getElementById('wl-dot-' + (i + 1))
+      if (dot && n >= m) dot.classList.add('reached')
+    })
+  }
+
+  fetch(SB + '/rest/v1/waitlist_entries?select=id', {
+    headers: { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY,
+                'Prefer': 'count=exact', 'Range': '0-0' }
+  }).then(function(r) {
+    var cr = r.headers.get('content-range')
+    var n = cr ? parseInt(cr.split('/')[1]) : 0
+    if (!isNaN(n)) updateUI(n)
+  }).catch(function() {})
+
+  window._addToWaitlist = function(email, tier) {
+    return fetch(SB + '/rest/v1/waitlist_entries', {
+      method: 'POST',
+      headers: { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY,
+                 'Content-Type': 'application/json',
+                 'Prefer': 'resolution=ignore-duplicates,return=minimal' },
+      body: JSON.stringify({ email: email, tier: tier || 'general' })
+    }).then(function() {
+      return fetch(SB + '/rest/v1/waitlist_entries?select=id', {
+        headers: { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY,
+                   'Prefer': 'count=exact', 'Range': '0-0' }
+      })
+    }).then(function(r) {
+      var cr = r.headers.get('content-range')
+      var n = cr ? parseInt(cr.split('/')[1]) : 0
+      if (!isNaN(n)) updateUI(n)
+    }).catch(function() {})
+  }
+})();
+
+/* sticky email bar — appears after scrolling past first viewport */
+(function() {
+  var bar = document.getElementById('sticky-bar');
+  var DISMISSED = 'bccb_sticky_dismissed';
+  if (!bar || sessionStorage.getItem(DISMISSED)) return;
+  function onScroll() {
+    if (window.scrollY > window.innerHeight * 0.7) {
+      bar.classList.add('visible');
+      window.removeEventListener('scroll', onScroll);
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+function dismissStickyBar() {
+  var bar = document.getElementById('sticky-bar');
+  if (bar) bar.classList.remove('visible');
+  try { sessionStorage.setItem('bccb_sticky_dismissed', '1'); } catch(_) {}
 }
+
+function submitStickyEmail() {
+  var email = document.getElementById('seb-email').value.trim();
+  if (!email || !email.includes('@')) return;
+  var f = document.createElement('form');
+  f.method = 'POST';
+  f.action = 'https://buttondown.email/api/emails/embed-subscribe/verifiedbysky';
+  var i = document.createElement('input');
+  i.type = 'email'; i.name = 'email'; i.value = email;
+  f.appendChild(i); document.body.appendChild(f); f.submit();
+}
+
+/* mobile tab nav — highlight active section on scroll */
+(function() {
+  var tabs = document.querySelectorAll('.mobile-tab-nav a');
+  var ids = ['live','batches','story','invest'];
+  function update() {
+    var y = window.scrollY + window.innerHeight / 3;
+    var active = 0;
+    ids.forEach(function(id, i) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop <= y) active = i;
+    });
+    tabs.forEach(function(t, i) { t.classList.toggle('active', i === active); });
+  }
+  window.addEventListener('scroll', update, { passive: true });
+})();
+
+/* nav tab highlight on scroll */
+(function() {
+  var tabs = document.querySelectorAll('.nav-tab');
+  var ids = ['live','batches','story','invest'];
+  function update() {
+    var y = window.scrollY + 80;
+    var active = 0;
+    ids.forEach(function(id, i) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop <= y) active = i;
+    });
+    tabs.forEach(function(t, i) { t.classList.toggle('active', i === active); });
+  }
+  window.addEventListener('scroll', update, { passive: true });
+})();
 
 /* email form */
 const form = document.getElementById('mc-form');
@@ -1538,6 +2073,7 @@ form.addEventListener('submit', async function(e) {
   btn.textContent = "✓ You're on the list";
   btn.classList.add('done');
   inp.value = ''; inp.placeholder = "We'll be in touch.";
+  if (window._addToWaitlist) window._addToWaitlist(email, window._bccbTier || 'general');
 });
 </script>
 
