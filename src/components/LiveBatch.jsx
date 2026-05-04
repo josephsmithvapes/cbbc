@@ -404,8 +404,9 @@ export default function LiveBatch() {
   }, [])
 
   useEffect(() => {
-    supabase.from('waitlist_entries').select('*', { count: 'exact', head: true })
+    supabase.from('waitlist_entries').select('id', { count: 'exact' }).limit(0)
       .then(({ count }) => { if (count != null) setWaitlistCount(count) })
+      .catch(() => {})
   }, [])
 
   const stage    = batch?.stage ?? 'idle'
