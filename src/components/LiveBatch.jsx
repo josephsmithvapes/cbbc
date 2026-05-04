@@ -189,10 +189,39 @@ const css = `
   .lb-ice1 { animation: lb-ice1 2.8s ease-in-out infinite; }
   .lb-ice2 { animation: lb-ice2 2.2s ease-in-out .4s infinite; }
   .lb-ice3 { animation: lb-ice3 3.2s ease-in-out .8s infinite; }
+
+  /* IDLE crowdfunding meter */
+  .lb-meter-denom {
+    font-family: var(--font-brand);
+    font-size: var(--t-small, 0.8125rem);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: ${CREAM};
+    opacity: .32;
+    margin-top: -4px;
+  }
+  .lb-meter-bar-wrap {
+    width: 180px;
+    height: 2px;
+    background: rgba(201,168,76,.12);
+    border-radius: 1px;
+    overflow: hidden;
+    margin: 6px 0 2px;
+  }
+  .lb-meter-bar-fill {
+    height: 100%;
+    background: ${GOLD_GRAD};
+    border-radius: 1px;
+    transition: width 1.2s cubic-bezier(.22,1,.36,1);
+  }
 `
 
-/* ── IDLE: coffee bag SVG ── */
-function IdleStage() {
+/* ── IDLE: coffee bag SVG + crowdfunding meter ── */
+function IdleStage({ count }) {
+  const TARGET = 50
+  const pct    = count != null ? Math.min(100, (count / TARGET) * 100) : 0
+  const needed = count != null ? Math.max(0, TARGET - count) : null
+
   return (
     <div className="lb-body">
       <div className="lb-inner">
@@ -210,8 +239,25 @@ function IdleStage() {
           </svg>
         </div>
         <div className="lb-stage-title">STANDBY</div>
-        <div className="lb-display dim">NEXT BATCH<br/>COMING SOON</div>
-        <div className="lb-sub">Small batch · Los Angeles · Cold brewed</div>
+        {count != null ? (
+          <>
+            <div className="lb-display">{count}</div>
+            <div className="lb-meter-denom">/ {TARGET} pre-orders to brew Batch #4</div>
+            <div className="lb-meter-bar-wrap">
+              <div className="lb-meter-bar-fill" style={{ width: `${pct}%` }} />
+            </div>
+            <div className="lb-sub">
+              {needed > 0
+                ? `${needed} more to trigger the next brew`
+                : 'Threshold reached — brewing soon'}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="lb-display dim">NEXT BATCH<br/>COMING SOON</div>
+            <div className="lb-sub">Small batch · Los Angeles · Cold brewed</div>
+          </>
+        )}
       </div>
     </div>
   )
@@ -342,6 +388,7 @@ function ReadyStage({ batchNum }) {
 
 export default function LiveBatch() {
   const [batch, setBatch] = useState(null)
+  const [waitlistCount, setWaitlistCount] = useState(null)
   const remaining = useCountdown(batch?.stage === 'steeping' ? batch.steep_start : null)
 
   useEffect(() => {
@@ -355,6 +402,11 @@ export default function LiveBatch() {
       .subscribe()
 
     return () => supabase.removeChannel(channel)
+  }, [])
+
+  useEffect(() => {
+    supabase.from('waitlist_entries').select('*', { count: 'exact', head: true })
+      .then(({ count }) => { if (count != null) setWaitlistCount(count) })
   }, [])
 
   const stage    = batch?.stage ?? 'idle'
@@ -381,7 +433,7 @@ export default function LiveBatch() {
           </span>
         </div>
 
-        {stage === 'idle'     && <IdleStage />}
+        {stage === 'idle'     && <IdleStage count={waitlistCount} />}
         {stage === 'grinding' && <GrindingStage batchNum={batchNum} />}
         {stage === 'steeping' && <SteepingStage batchNum={batchNum} remaining={remaining} />}
         {stage === 'ready'    && <ReadyStage batchNum={batchNum} />}
