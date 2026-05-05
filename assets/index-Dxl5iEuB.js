@@ -431,7 +431,8 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
   .bc-scroll::-webkit-scrollbar { display: none; }
   .bc-card {
     background: ${Aa};
-    border: 1px solid rgba(201,168,76,.18);
+    border: 1px solid rgba(201,168,76,.22);
+    box-shadow: 0 0 18px rgba(201,168,76,.07), 0 0 1px rgba(201,168,76,.3) inset;
     min-width: min(580px, 85vw);
     flex-shrink: 0;
   }
