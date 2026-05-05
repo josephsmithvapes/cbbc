@@ -429,20 +429,25 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
   .bc-outer {
     width: 100%;
     overflow: hidden;
+    padding: 2px 0 4px;
   }
   .bc-track {
     display: flex;
+    gap: 16px;
     transition: transform 0.85s cubic-bezier(.22,1,.36,1);
     will-change: transform;
   }
   .bc-card {
     flex-shrink: 0;
-    width: 100%;
+    width: 440px;
     background: ${ja};
-    border-top: 1px solid rgba(201,168,76,.2);
-    border-bottom: 1px solid rgba(201,168,76,.2);
+    border: 1px solid rgba(201,168,76,.22);
+    box-shadow: 0 0 18px rgba(201,168,76,.07), inset 0 0 1px rgba(201,168,76,.3);
     box-sizing: border-box;
     user-select: none;
+  }
+  @media (max-width: 500px) {
+    .bc-card { width: calc(100vw - 48px); }
   }
 
   /* card internals */
@@ -452,8 +457,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
     align-items: baseline;
     padding: 22px 28px 16px;
     border-bottom: 1px solid rgba(201,168,76,.08);
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
   }
   .bc-date {
     font-family: 'Space Grotesk', sans-serif;
@@ -489,15 +493,13 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
     color: ${Na};
     opacity: .35;
     border-bottom: 1px solid rgba(201,168,76,.08);
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
   }
   .bc-chart {
     border-bottom: 1px solid rgba(201,168,76,.08);
     overflow: hidden;
     line-height: 0;
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
   }
   .bc-no-chart {
     height: 80px;
@@ -511,13 +513,11 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
     color: ${Na};
     opacity: .12;
     border-bottom: 1px solid rgba(201,168,76,.06);
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
   }
   .bc-stats {
     display: flex;
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
   }
   .bc-stat {
     flex: 1;
@@ -554,8 +554,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
     font-style: italic;
     border-top: 1px solid rgba(201,168,76,.06);
     line-height: 1.55;
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
   }
 
   /* arrows */
@@ -621,4 +620,4 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
     .bc-meta-row { padding: 7px 16px 9px; }
     .bc-tasting { padding: 10px 16px 14px; }
   }
-`;function La(e,t=200){if(e.length<=t)return e;let n=Math.ceil(e.length/t);return e.filter((t,r)=>r%n===0||r===e.length-1)}function Ra(e){if(!e)return null;let t=Math.floor(e/3600),n=Math.floor(e%3600/60);return`${t}h ${String(n).padStart(2,`0`)}m`}function za(e){return e.toLocaleDateString(`en-US`,{month:`short`,day:`numeric`,year:`numeric`}).toUpperCase()}function Ba({data:e,gradId:t}){if(!e||e.length<2)return null;let n=e.map(e=>e.temp_f),r=Math.min(...n),i=Math.max(...n)-r||.5,a=e.map(e=>e.elapsed_s),o=a[0],s=a[a.length-1],c=s-o||1,l=e=>(e-o)/c*600,u=e=>122-(e-r)/i*114,d=e.map(e=>`${l(e.elapsed_s).toFixed(1)},${u(e.temp_f).toFixed(1)}`).join(` `),f=[`M ${l(e[0].elapsed_s).toFixed(1)},${u(e[0].temp_f).toFixed(1)}`,...e.slice(1).map(e=>`L ${l(e.elapsed_s).toFixed(1)},${u(e.temp_f).toFixed(1)}`),`L 600,130 L 0,130 Z`].join(` `),p=s/3600,m=p>15?5:p>7?2:1,h=[];for(let e=0;e*3600<=s;e+=m)h.push(e);return(0,I.jsxs)(`svg`,{viewBox:`0 0 600 130`,preserveAspectRatio:`none`,style:{width:`100%`,height:130,display:`block`},children:[(0,I.jsx)(`defs`,{children:(0,I.jsxs)(`linearGradient`,{id:`mc-${t}`,x1:`0`,y1:`0`,x2:`0`,y2:`1`,children:[(0,I.jsx)(`stop`,{offset:`0%`,stopColor:Ma,stopOpacity:`0.18`}),(0,I.jsx)(`stop`,{offset:`100%`,stopColor:Ma,stopOpacity:`0`})]})}),h.map(e=>(0,I.jsx)(`line`,{x1:l(e*3600).toFixed(1),y1:0,x2:l(e*3600).toFixed(1),y2:130,stroke:`rgba(201,168,76,.06)`,strokeWidth:`1`},e)),(0,I.jsx)(`path`,{d:f,fill:`url(#mc-${t})`}),(0,I.jsx)(`polyline`,{points:d,fill:`none`,stroke:Ma,strokeWidth:`1.5`,strokeLinejoin:`round`,strokeLinecap:`round`})]})}function Va({brew:e}){let{meta:t}=e,n=Ra(e.duration),r=e.id.replace(/[^a-z0-9]/gi,``).slice(0,10);return(0,I.jsxs)(`div`,{className:`bc-card`,children:[(0,I.jsxs)(`div`,{className:`bc-card-header`,children:[(0,I.jsxs)(`div`,{children:[t?.name?(0,I.jsx)(`div`,{className:`bc-name`,children:t.name}):(0,I.jsx)(`div`,{className:`bc-date`,children:za(e.date)}),t?.name&&(0,I.jsx)(`div`,{className:`bc-date`,style:{marginTop:2},children:za(e.date)})]}),n&&(0,I.jsx)(`span`,{className:`bc-duration`,children:n})]}),t&&(t.origin||t.roast||t.process)&&(0,I.jsx)(`div`,{className:`bc-meta-row`,children:[t.origin,t.roast,t.process].filter(Boolean).join(` · `)}),e.chartData?.length>=2?(0,I.jsx)(`div`,{className:`bc-chart`,children:(0,I.jsx)(Ba,{data:e.chartData,gradId:r})}):(0,I.jsx)(`div`,{className:`bc-no-chart`,children:`No temperature data`}),e.tempMin!=null&&(0,I.jsxs)(`div`,{className:`bc-stats`,children:[(0,I.jsxs)(`div`,{className:`bc-stat`,children:[(0,I.jsxs)(`span`,{className:`bc-stat-val`,children:[e.tempMin.toFixed(1),`°F`]}),(0,I.jsx)(`span`,{className:`bc-stat-lbl`,children:`Low`})]}),(0,I.jsxs)(`div`,{className:`bc-stat`,children:[(0,I.jsxs)(`span`,{className:`bc-stat-val`,children:[e.tempMax.toFixed(1),`°F`]}),(0,I.jsx)(`span`,{className:`bc-stat-lbl`,children:`High`})]}),(0,I.jsxs)(`div`,{className:`bc-stat`,children:[(0,I.jsxs)(`span`,{className:`bc-stat-val`,children:[e.tempAvg.toFixed(1),`°F`]}),(0,I.jsx)(`span`,{className:`bc-stat-lbl`,children:`Avg`})]}),(0,I.jsxs)(`div`,{className:`bc-stat`,children:[(0,I.jsx)(`span`,{className:`bc-stat-val`,children:e.points.toLocaleString()}),(0,I.jsx)(`span`,{className:`bc-stat-lbl`,children:`Readings`})]})]}),t?.tasting_notes&&(0,I.jsx)(`div`,{className:`bc-tasting`,children:t.tasting_notes})]})}function Ha(){let[e,t]=(0,l.useState)(null),[n,r]=(0,l.useState)(0),i=(0,l.useRef)(null),a=(0,l.useRef)(null),o=(0,l.useRef)(0),s=(0,l.useRef)(1),c=(0,l.useRef)(!1),u=(0,l.useRef)(null);function d(t){let n=e?.length??0;if(!n)return;let s=Math.max(0,Math.min(n-1,t));if(o.current=s,r(s),a.current&&i.current){let e=i.current.clientWidth;a.current.style.transform=`translateX(-${s*e}px)`}}function f(e){clearInterval(u.current),!(e<=1)&&(u.current=setInterval(()=>{if(c.current)return;let t=o.current+s.current;if(t>=e-1&&(s.current=-1,t=e-1),t<=0&&(s.current=1,t=0),o.current=t,r(t),a.current&&i.current){let e=i.current.clientWidth;a.current.style.transform=`translateX(-${t*e}px)`}},5e3))}(0,l.useEffect)(()=>{if(!e?.length)return;d(0),f(e.length);let t=new ResizeObserver(()=>d(o.current));return i.current&&t.observe(i.current),()=>{clearInterval(u.current),t.disconnect()}},[e]),(0,l.useEffect)(()=>{async function e(){let e=[],n=1e3,r=0;for(;;){let{data:t}=await F.from(`temperature_readings`).select(`brew_id, temp_c, recorded_at`).order(`recorded_at`,{ascending:!0}).range(r,r+n-1);if(!t?.length||(e.push(...t),t.length<n))break;r+=n}let i=[];if(e.length){let t=[e[0]];for(let n=1;n<e.length;n++)new Date(e[n].recorded_at)-new Date(e[n-1].recorded_at)>216e5&&(i.push(t),t=[]),t.push(e[n]);i.push(t)}let{data:a}=await F.from(`batches`).select(`*`).order(`steep_start`,{ascending:!1}).limit(10),o=new Set,s=(a??[]).map(e=>{let t=new Date(e.steep_start).getTime(),n=e.steep_end?new Date(e.steep_end).getTime():Date.now(),r=i.findIndex((e,r)=>{if(o.has(r))return!1;let i=new Date(e[0].recorded_at).getTime();return i>=t-4*36e5&&i<=n}),a=null,s=null,c=null,l=0,u=[];if(r>=0){o.add(r);let e=i[r],t=new Date(e[0].recorded_at).getTime(),n=e.map(e=>e.temp_c*9/5+32);a=Math.min(...n),s=Math.max(...n),c=n.reduce((e,t)=>e+t,0)/n.length,l=e.length,u=La(e.map(e=>({temp_f:e.temp_c*9/5+32,elapsed_s:(new Date(e.recorded_at).getTime()-t)/1e3})),200)}return{id:`b-${e.id}`,date:new Date(e.steep_start),duration:e.steep_end?(n-t)/1e3:null,tempMin:a,tempMax:s,tempAvg:c,points:l,chartData:u,meta:e}}),c=i.filter((e,t)=>!o.has(t)&&i[t].length>=2).map((e,t)=>{let n=new Date(e[0].recorded_at).getTime(),r=new Date(e[e.length-1].recorded_at).getTime(),i=e.map(e=>e.temp_c*9/5+32);return{id:`s-${t}-${n}`,date:new Date(e[0].recorded_at),duration:(r-n)/1e3,tempMin:Math.min(...i),tempMax:Math.max(...i),tempAvg:i.reduce((e,t)=>e+t,0)/i.length,points:e.length,chartData:La(e.map(e=>({temp_f:e.temp_c*9/5+32,elapsed_s:(new Date(e.recorded_at).getTime()-n)/1e3})),200),meta:null}}),l=[...s,...c].sort((e,t)=>t.date-e.date).slice(0,10);t(l.length?l:[])}e()},[]);let p=e?.length??0;return(0,I.jsxs)(I.Fragment,{children:[(0,I.jsx)(`style`,{children:Ia}),(0,I.jsxs)(`section`,{className:`bp-section`,children:[(0,I.jsxs)(`div`,{className:`bp-inner`,children:[(0,I.jsx)(`div`,{className:`bp-eyebrow`,children:`Batch Proof`}),(0,I.jsx)(`h2`,{className:`bp-headline`,children:`Past Batches`})]}),e===null&&(0,I.jsx)(`div`,{className:`bp-empty`,children:`Loading batch data…`}),e?.length===0&&(0,I.jsx)(`div`,{className:`bp-empty`,children:`No batches recorded yet.`}),e?.length>0&&(0,I.jsxs)(`div`,{className:`bc-carousel`,onMouseEnter:()=>{c.current=!0},onMouseLeave:()=>{c.current=!1},children:[(0,I.jsx)(`div`,{className:`bc-outer`,ref:i,children:(0,I.jsx)(`div`,{className:`bc-track`,ref:a,children:e.map(e=>(0,I.jsx)(Va,{brew:e},e.id))})}),(0,I.jsx)(`button`,{className:`bc-arrow bc-arrow-l`,onClick:()=>{c.current=!1,d(o.current-1)},disabled:n===0,"aria-label":`Previous batch`,children:`‹`}),(0,I.jsx)(`button`,{className:`bc-arrow bc-arrow-r`,onClick:()=>{c.current=!1,d(o.current+1)},disabled:n===p-1,"aria-label":`Next batch`,children:`›`}),(0,I.jsx)(`div`,{className:`bc-dots`,children:e.map((e,t)=>(0,I.jsx)(`button`,{className:`bc-dot${t===n?` active`:``}`,onClick:()=>{c.current=!1,d(t)},"aria-label":`Go to batch ${t+1}`},t))})]}),(0,I.jsx)(`div`,{className:`bp-inner`,children:(0,I.jsx)(`div`,{className:`bp-caption`,children:`Temperature logged via DS18B20 · ESP32 telemetry · Los Angeles`})})]})]})}(0,u.createRoot)(document.getElementById(`brew-mount`)).render((0,I.jsx)(l.StrictMode,{children:(0,I.jsx)(Aa,{})}));var Ua=document.getElementById(`batch-mount`);Ua&&(0,u.createRoot)(Ua).render((0,I.jsx)(l.StrictMode,{children:(0,I.jsx)(Ha,{})}));
+`;function La(e,t=200){if(e.length<=t)return e;let n=Math.ceil(e.length/t);return e.filter((t,r)=>r%n===0||r===e.length-1)}function Ra(e){if(!e)return null;let t=Math.floor(e/3600),n=Math.floor(e%3600/60);return`${t}h ${String(n).padStart(2,`0`)}m`}function za(e){return e.toLocaleDateString(`en-US`,{month:`short`,day:`numeric`,year:`numeric`}).toUpperCase()}function Ba({data:e,gradId:t}){if(!e||e.length<2)return null;let n=e.map(e=>e.temp_f),r=Math.min(...n),i=Math.max(...n)-r||.5,a=e.map(e=>e.elapsed_s),o=a[0],s=a[a.length-1],c=s-o||1,l=e=>(e-o)/c*600,u=e=>122-(e-r)/i*114,d=e.map(e=>`${l(e.elapsed_s).toFixed(1)},${u(e.temp_f).toFixed(1)}`).join(` `),f=[`M ${l(e[0].elapsed_s).toFixed(1)},${u(e[0].temp_f).toFixed(1)}`,...e.slice(1).map(e=>`L ${l(e.elapsed_s).toFixed(1)},${u(e.temp_f).toFixed(1)}`),`L 600,130 L 0,130 Z`].join(` `),p=s/3600,m=p>15?5:p>7?2:1,h=[];for(let e=0;e*3600<=s;e+=m)h.push(e);return(0,I.jsxs)(`svg`,{viewBox:`0 0 600 130`,preserveAspectRatio:`none`,style:{width:`100%`,height:130,display:`block`},children:[(0,I.jsx)(`defs`,{children:(0,I.jsxs)(`linearGradient`,{id:`mc-${t}`,x1:`0`,y1:`0`,x2:`0`,y2:`1`,children:[(0,I.jsx)(`stop`,{offset:`0%`,stopColor:Ma,stopOpacity:`0.18`}),(0,I.jsx)(`stop`,{offset:`100%`,stopColor:Ma,stopOpacity:`0`})]})}),h.map(e=>(0,I.jsx)(`line`,{x1:l(e*3600).toFixed(1),y1:0,x2:l(e*3600).toFixed(1),y2:130,stroke:`rgba(201,168,76,.06)`,strokeWidth:`1`},e)),(0,I.jsx)(`path`,{d:f,fill:`url(#mc-${t})`}),(0,I.jsx)(`polyline`,{points:d,fill:`none`,stroke:Ma,strokeWidth:`1.5`,strokeLinejoin:`round`,strokeLinecap:`round`})]})}function Va({brew:e}){let{meta:t}=e,n=Ra(e.duration),r=e.id.replace(/[^a-z0-9]/gi,``).slice(0,10);return(0,I.jsxs)(`div`,{className:`bc-card`,children:[(0,I.jsxs)(`div`,{className:`bc-card-header`,children:[(0,I.jsxs)(`div`,{children:[t?.name?(0,I.jsx)(`div`,{className:`bc-name`,children:t.name}):(0,I.jsx)(`div`,{className:`bc-date`,children:za(e.date)}),t?.name&&(0,I.jsx)(`div`,{className:`bc-date`,style:{marginTop:2},children:za(e.date)})]}),n&&(0,I.jsx)(`span`,{className:`bc-duration`,children:n})]}),t&&(t.origin||t.roast||t.process)&&(0,I.jsx)(`div`,{className:`bc-meta-row`,children:[t.origin,t.roast,t.process].filter(Boolean).join(` · `)}),e.chartData?.length>=2?(0,I.jsx)(`div`,{className:`bc-chart`,children:(0,I.jsx)(Ba,{data:e.chartData,gradId:r})}):(0,I.jsx)(`div`,{className:`bc-no-chart`,children:`No temperature data`}),e.tempMin!=null&&(0,I.jsxs)(`div`,{className:`bc-stats`,children:[(0,I.jsxs)(`div`,{className:`bc-stat`,children:[(0,I.jsxs)(`span`,{className:`bc-stat-val`,children:[e.tempMin.toFixed(1),`°F`]}),(0,I.jsx)(`span`,{className:`bc-stat-lbl`,children:`Low`})]}),(0,I.jsxs)(`div`,{className:`bc-stat`,children:[(0,I.jsxs)(`span`,{className:`bc-stat-val`,children:[e.tempMax.toFixed(1),`°F`]}),(0,I.jsx)(`span`,{className:`bc-stat-lbl`,children:`High`})]}),(0,I.jsxs)(`div`,{className:`bc-stat`,children:[(0,I.jsxs)(`span`,{className:`bc-stat-val`,children:[e.tempAvg.toFixed(1),`°F`]}),(0,I.jsx)(`span`,{className:`bc-stat-lbl`,children:`Avg`})]}),(0,I.jsxs)(`div`,{className:`bc-stat`,children:[(0,I.jsx)(`span`,{className:`bc-stat-val`,children:e.points.toLocaleString()}),(0,I.jsx)(`span`,{className:`bc-stat-lbl`,children:`Readings`})]})]}),t?.tasting_notes&&(0,I.jsx)(`div`,{className:`bc-tasting`,children:t.tasting_notes})]})}function Ha(){let[e,t]=(0,l.useState)(null),[n,r]=(0,l.useState)(0),i=(0,l.useRef)(null),a=(0,l.useRef)(null),o=(0,l.useRef)(0),s=(0,l.useRef)(1),c=(0,l.useRef)(!1),u=(0,l.useRef)(null);function d(){let e=a.current?.firstElementChild;return e?e.offsetWidth+16:456}function f(t){let n=e?.length??0;if(!n)return;let i=Math.max(0,Math.min(n-1,t));o.current=i,r(i),a.current&&(a.current.style.transform=`translateX(-${i*d()}px)`)}function p(e){clearInterval(u.current),!(e<=1)&&(u.current=setInterval(()=>{if(c.current)return;let t=o.current+s.current;t>=e-1&&(s.current=-1,t=e-1),t<=0&&(s.current=1,t=0),o.current=t,r(t),a.current&&(a.current.style.transform=`translateX(-${t*d()}px)`)},5e3))}(0,l.useEffect)(()=>{if(e?.length)return f(0),p(e.length),()=>clearInterval(u.current)},[e]),(0,l.useEffect)(()=>{async function e(){let e=[],n=1e3,r=0;for(;;){let{data:t}=await F.from(`temperature_readings`).select(`brew_id, temp_c, recorded_at`).order(`recorded_at`,{ascending:!0}).range(r,r+n-1);if(!t?.length||(e.push(...t),t.length<n))break;r+=n}let i=[];if(e.length){let t=[e[0]];for(let n=1;n<e.length;n++)new Date(e[n].recorded_at)-new Date(e[n-1].recorded_at)>216e5&&(i.push(t),t=[]),t.push(e[n]);i.push(t)}let{data:a}=await F.from(`batches`).select(`*`).order(`steep_start`,{ascending:!1}).limit(10),o=new Set,s=(a??[]).map(e=>{let t=new Date(e.steep_start).getTime(),n=e.steep_end?new Date(e.steep_end).getTime():Date.now(),r=i.findIndex((e,r)=>{if(o.has(r))return!1;let i=new Date(e[0].recorded_at).getTime();return i>=t-4*36e5&&i<=n}),a=null,s=null,c=null,l=0,u=[];if(r>=0){o.add(r);let e=i[r],t=new Date(e[0].recorded_at).getTime(),n=e.map(e=>e.temp_c*9/5+32);a=Math.min(...n),s=Math.max(...n),c=n.reduce((e,t)=>e+t,0)/n.length,l=e.length,u=La(e.map(e=>({temp_f:e.temp_c*9/5+32,elapsed_s:(new Date(e.recorded_at).getTime()-t)/1e3})),200)}return{id:`b-${e.id}`,date:new Date(e.steep_start),duration:e.steep_end?(n-t)/1e3:null,tempMin:a,tempMax:s,tempAvg:c,points:l,chartData:u,meta:e}}),c=i.filter((e,t)=>!o.has(t)&&i[t].length>=2).map((e,t)=>{let n=new Date(e[0].recorded_at).getTime(),r=new Date(e[e.length-1].recorded_at).getTime(),i=e.map(e=>e.temp_c*9/5+32);return{id:`s-${t}-${n}`,date:new Date(e[0].recorded_at),duration:(r-n)/1e3,tempMin:Math.min(...i),tempMax:Math.max(...i),tempAvg:i.reduce((e,t)=>e+t,0)/i.length,points:e.length,chartData:La(e.map(e=>({temp_f:e.temp_c*9/5+32,elapsed_s:(new Date(e.recorded_at).getTime()-n)/1e3})),200),meta:null}}),l=[...s,...c].sort((e,t)=>t.date-e.date).slice(0,10);t(l.length?l:[])}e()},[]);let m=e?.length??0;return(0,I.jsxs)(I.Fragment,{children:[(0,I.jsx)(`style`,{children:Ia}),(0,I.jsxs)(`section`,{className:`bp-section`,children:[(0,I.jsxs)(`div`,{className:`bp-inner`,children:[(0,I.jsx)(`div`,{className:`bp-eyebrow`,children:`Batch Proof`}),(0,I.jsx)(`h2`,{className:`bp-headline`,children:`Past Batches`})]}),e===null&&(0,I.jsx)(`div`,{className:`bp-empty`,children:`Loading batch data…`}),e?.length===0&&(0,I.jsx)(`div`,{className:`bp-empty`,children:`No batches recorded yet.`}),e?.length>0&&(0,I.jsxs)(`div`,{className:`bc-carousel`,onMouseEnter:()=>{c.current=!0},onMouseLeave:()=>{c.current=!1},children:[(0,I.jsx)(`div`,{className:`bc-outer`,ref:i,children:(0,I.jsx)(`div`,{className:`bc-track`,ref:a,children:e.map(e=>(0,I.jsx)(Va,{brew:e},e.id))})}),(0,I.jsx)(`button`,{className:`bc-arrow bc-arrow-l`,onClick:()=>{c.current=!1,f(o.current-1)},disabled:n===0,"aria-label":`Previous batch`,children:`‹`}),(0,I.jsx)(`button`,{className:`bc-arrow bc-arrow-r`,onClick:()=>{c.current=!1,f(o.current+1)},disabled:n===m-1,"aria-label":`Next batch`,children:`›`}),(0,I.jsx)(`div`,{className:`bc-dots`,children:e.map((e,t)=>(0,I.jsx)(`button`,{className:`bc-dot${t===n?` active`:``}`,onClick:()=>{c.current=!1,f(t)},"aria-label":`Go to batch ${t+1}`},t))})]}),(0,I.jsx)(`div`,{className:`bp-inner`,children:(0,I.jsx)(`div`,{className:`bp-caption`,children:`Temperature logged via DS18B20 · ESP32 telemetry · Los Angeles`})})]})]})}(0,u.createRoot)(document.getElementById(`brew-mount`)).render((0,I.jsx)(l.StrictMode,{children:(0,I.jsx)(Aa,{})}));var Ua=document.getElementById(`batch-mount`);Ua&&(0,u.createRoot)(Ua).render((0,I.jsx)(l.StrictMode,{children:(0,I.jsx)(Ha,{})}));
