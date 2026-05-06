@@ -586,6 +586,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
     width: max-content;
     min-width: 100%;
     padding: 0 24px;
+    justify-content: center;
   }
 
   /* Card */
