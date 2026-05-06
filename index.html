@@ -62,7 +62,7 @@
   --nav-h: 56px;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   background: var(--ink);
@@ -970,10 +970,15 @@ footer {
 .service-matrix-btn.is-primary:hover { background:var(--gold-lt); border-color:var(--gold-lt); color:var(--ink); }
 @media (max-width:720px) {
   .service-matrix { grid-template-columns:1fr; gap:3px; }
-  .plan-card-head { padding:24px 20px 18px; }
-  .plan-card-stat { margin:0 20px; }
-  .plan-card-features { padding:16px 20px 18px; }
-  .plan-card-cta { padding:16px 20px 20px; }
+  /* Center all card content on single-column mobile */
+  .plan-card-head { padding:28px 24px 20px; text-align:center; }
+  .plan-card-img { margin:0 auto 16px; }
+  .plan-card-eyebrow { margin-bottom:8px; }
+  .plan-card-name { font-size:clamp(2rem,9vw,2.6rem); margin-bottom:6px; }
+  .plan-card-stat { margin:0 24px; justify-content:center; }
+  .plan-card-features { padding:18px 28px 20px; align-items:center; }
+  .plan-card-cta { padding:14px 24px 26px; }
+  .plan-card-flag { font-size:8px; padding:5px 12px; }
 }
 
 /* Maiden investor milestone indicator */
@@ -1189,11 +1194,17 @@ footer {
   opacity: 0;
   padding: 0 24px;
 }
-.cbbc-tier-vault:hover .cbbc-tier-vault-body,
 .cbbc-tier-vault.is-expanded .cbbc-tier-vault-body {
   max-height: 700px;
   opacity: 1;
   padding: 0 24px 26px;
+}
+@media (hover: hover) {
+  .cbbc-tier-vault:hover .cbbc-tier-vault-body {
+    max-height: 700px;
+    opacity: 1;
+    padding: 0 24px 26px;
+  }
 }
 .cbbc-tier-vault-divider {
   height: 1px;
@@ -1202,9 +1213,13 @@ footer {
   transition: opacity 0.3s ease;
   opacity: 0;
 }
-.cbbc-tier-vault:hover .cbbc-tier-vault-divider,
 .cbbc-tier-vault.is-expanded .cbbc-tier-vault-divider {
   opacity: 1;
+}
+@media (hover: hover) {
+  .cbbc-tier-vault:hover .cbbc-tier-vault-divider {
+    opacity: 1;
+  }
 }
 .cbbc-tier-vault-banner {
   font-family: var(--font-brand, 'Cinzel', serif);
@@ -1289,19 +1304,24 @@ footer {
     padding: 18px 0;
   }
   .cbbc-tier-vault-cell:first-child { border-top: none; }
-  /* On touch devices, disable hover expand — rely on click only */
-  @media (hover: none) {
-    .cbbc-tier-vault:hover .cbbc-tier-vault-body {
-      max-height: 0;
-      opacity: 0;
-      padding: 0 24px;
-    }
-    .cbbc-tier-vault:hover .cbbc-tier-vault-divider { opacity: 0; }
+  /* Mobile layout: cards first edge-to-edge, accordion below with padding */
+  .service-strip {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .service-matrix {
+    order: 1;
+  }
+  .cbbc-tier-vault {
+    order: 2;
+    margin: 20px 16px 8px;
   }
 }
 
 @media (max-width:640px) {
-  .service-strip { padding:18px 18px 16px; }
+  .service-strip { padding:12px 0 16px; }
   .service-tiers { flex-direction:column; }
   .service-tier { flex-direction:row; align-items:flex-start; gap:12px; }
   .service-tier-text { gap:4px; }
@@ -1317,7 +1337,13 @@ footer {
   .live-hero-panel { display:none; }
   .sticky-email-bar { display:none !important; }
   .mobile-tab-nav { display:flex; }
+  .service-track-bar { display:none; }
   body { padding-bottom:60px; }
+  /* Nav: hide top tabs — bottom nav handles section switching */
+  .nav-tabs { display:none; }
+  .top-bar { justify-content:center; padding:0 20px; gap:0; }
+  .nav-fleur { display:none; }
+  .logo { margin:0 auto; }
 }
 </style>
   <script type="module" crossorigin src="/assets/index-DO_oJtel.js"></script>
@@ -1885,18 +1911,71 @@ footer {
   background-repeat:repeat;
 }
 
-@media (max-width:700px) {
+@media (max-width:768px) {
+  /* ── Accordion trigger ── */
+  .invest-accordion-header {
+    padding:16px;
+    min-height:unset;
+    gap:12px;
+    align-items:center;
+  }
+  .invest-accordion-header-inner { gap:10px; flex:1; min-width:0; }
+  .invest-accordion-fleur { display:none; }
+  .invest-accordion-label { gap:3px; }
+  .invest-accordion-eyebrow { font-size:9px; letter-spacing:.32em; }
+  .invest-accordion-title { font-size:16px; line-height:1.2; }
+  .invest-status-pill { display:none; }
+  .invest-accordion-chevron { width:26px; height:26px; flex-shrink:0; }
+
+  /* ── Body: hero band ── */
+  .hero-band { padding:40px 20px 36px; }
+  .hero-band h1 { font-size:clamp(28px,10vw,48px); margin-top:14px; }
+  .hero-band p { font-size:14px; margin-top:14px; }
+
+  /* ── Body: sections ── */
+  .invest-section { padding:0 16px 52px; }
+  .section-head { padding:40px 0 20px; gap:10px; }
+  .section-head h2 { font-size:clamp(20px,7vw,32px); }
+
+  /* ── Grids → single col ── */
   .brew-timeline { grid-template-columns:1fr; }
   .brew-arrow { display:none; }
   .market-grid, .funds-layout, .team-grid { grid-template-columns:1fr; }
   .revenue-row { grid-template-columns:1fr; }
   .revenue-label { border-right:none; border-bottom:1px solid var(--rule); }
   .revenue-tag { border-left:none; border-top:1px solid var(--rule); }
-  .pillars { flex-direction:column; }
-  .pillar { border-right:none; border-bottom:1px solid var(--rule); }
+
+  /* ── Cell padding ── */
+  .brew-step { padding:24px 18px; gap:10px; }
+  .market-stat { padding:26px 18px; }
+  .market-stat .num { font-size:clamp(28px,9vw,48px); }
+  .funds-visual { padding:28px 20px; }
+  .funds-list { padding:24px 18px; }
+  .fund-item { padding:18px 0; gap:14px; }
+  .team-card { padding:28px 20px; }
+  .revenue-bar-wrap { padding:18px 20px; }
+  .revenue-label { padding:18px; }
+  .revenue-tag { padding:14px 18px; }
+
+  /* ── Interest form ── */
+  .interest-form-wrap { padding:26px 18px; gap:18px; }
   .interest-form-fields { grid-template-columns:1fr; }
   .interest-form-fields .full { grid-column:1; }
-  .interest-form-wrap { padding:36px 24px; }
+  .form-submit-row { flex-direction:column; align-items:stretch; gap:14px; }
+  .form-submit-btn { width:100%; padding:15px 20px; font-size:15px; }
+  .form-privacy { text-align:center; }
+
+  /* ── CTA band ── */
+  .cta-band { padding:44px 20px; }
+  .cta-band h2 { font-size:clamp(22px,7vw,40px); margin-top:14px; }
+  .cta-band p { font-size:14px; margin-top:16px; }
+  .cta-btn { padding:15px 32px; font-size:16px; margin-top:24px; }
+  .pillars { flex-direction:column; max-width:100%; }
+  .pillar { border-right:none; border-bottom:1px solid var(--rule); padding:22px 18px; }
+  .pillar:last-child { border-bottom:none; }
+
+  /* ── Plan download link ── */
+  .plan-download { padding:16px 18px; gap:14px; }
 }
 </style>
 
