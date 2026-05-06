@@ -229,7 +229,7 @@ function fmtTemp(v) { return v == null ? '--' : v.toFixed(1) }
 function fmtMass(v) { return v == null ? '--' : Math.round(v).toString() }
 
 const STATUS_LABELS = {
-  IDLE: 'STANDBY',
+  IDLE: 'MAIDEN BATCH · OPEN',
   BREWING: 'BREWING · LIVE',
   READY: 'BATCH READY',
   POURING: 'POURING',

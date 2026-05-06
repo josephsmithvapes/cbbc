@@ -1,0 +1,36 @@
+<svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- ── Single dark amber bottle — fresh, every week ── -->
+
+  <!-- bottle body -->
+  <path d="M93,58 L80,72 L80,136 Q80,144 110,144 Q140,144 140,136 L140,72 L127,58 Z"
+    fill="#2b1804" stroke="rgba(201,168,76,.14)" stroke-width="1"/>
+
+  <!-- liquid fill (amber, ~55%) -->
+  <clipPath id="wbottle">
+    <path d="M93,58 L80,72 L80,136 Q80,144 110,144 Q140,144 140,136 L140,72 L127,58 Z"/>
+  </clipPath>
+  <rect x="80" y="98" width="60" height="48" fill="#4e2505" opacity=".65" clip-path="url(#wbottle)"/>
+
+  <!-- glass sheen -->
+  <rect x="84" y="74" width="5" height="55" rx="2.5" fill="rgba(255,255,255,.06)"/>
+
+  <!-- label -->
+  <rect x="84" y="84" width="52" height="42" rx="1" fill="rgba(242,237,224,.03)" stroke="rgba(201,168,76,.2)" stroke-width="0.8"/>
+  <text x="110" y="100" text-anchor="middle" font-family="'Cinzel',serif" font-size="6.5" font-weight="700" fill="#c9a84c" opacity=".6" letter-spacing="1.5">BCCB</text>
+  <text x="110" y="111" text-anchor="middle" font-family="'Cinzel',serif" font-size="4.5" fill="#f2ede0" opacity=".2" letter-spacing="1">COLD BREW</text>
+  <line x1="90" y1="117" x2="130" y2="117" stroke="rgba(201,168,76,.1)" stroke-width="0.6"/>
+  <text x="110" y="123" text-anchor="middle" font-family="'Cinzel',serif" font-size="4" fill="#f2ede0" opacity=".15" letter-spacing="0.8">LOS ANGELES</text>
+
+  <!-- neck -->
+  <rect x="99" y="22" width="22" height="40" rx="3" fill="#2b1804" stroke="rgba(201,168,76,.12)" stroke-width="0.8"/>
+  <rect x="101" y="24" width="5" height="34" rx="2" fill="rgba(255,255,255,.05)"/>
+
+  <!-- cap -->
+  <rect x="95" y="10" width="30" height="15" rx="3" fill="#c9a84c" opacity=".85"/>
+  <rect x="97" y="11" width="26" height="5" rx="1.5" fill="rgba(255,255,255,.18)"/>
+  <!-- cap ridge -->
+  <rect x="94" y="22" width="32" height="3" rx="1" fill="#9a7020" opacity=".6"/>
+
+
+</svg>
