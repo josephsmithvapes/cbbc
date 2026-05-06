@@ -285,15 +285,8 @@ export default function BrewMonitor() {
     return () => clearInterval(id)
   }, [])
 
-  if (!state) {
-    return (
-      <>
-        <style>{css}</style>
-        <div className="bm-wrap">
-          <div className="bm-connecting">Connecting to brew rig…</div>
-        </div>
-      </>
-    )
+  if (!state || (state.status !== 'BREWING' && state.status !== 'POURING')) {
+    return null
   }
 
   const elapsed    = (state.elapsed_seconds ?? 0) + tick
