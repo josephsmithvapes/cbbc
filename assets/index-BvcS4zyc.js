@@ -564,6 +564,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
     opacity: .18;
     margin-top: 20px;
     padding: 0 24px;
+    text-align: center;
   }
 
   /* Carousel */
