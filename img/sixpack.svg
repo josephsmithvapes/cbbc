@@ -1,0 +1,36 @@
+<svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- box shadow / depth -->
+  <rect x="32" y="52" width="168" height="98" rx="4" fill="#0d0905"/>
+
+  <!-- back face -->
+  <rect x="22" y="44" width="168" height="98" rx="4" fill="#1a1208"/>
+
+  <!-- front face -->
+  <rect x="18" y="48" width="168" height="98" rx="4" fill="#1e1509" stroke="rgba(201,168,76,.22)" stroke-width="1"/>
+
+  <!-- top edge rim -->
+  <rect x="18" y="46" width="168" height="9" rx="3" fill="#2c1e0c" stroke="rgba(201,168,76,.28)" stroke-width="1"/>
+
+  <!-- handle cutout -->
+  <rect x="83" y="34" width="54" height="22" rx="11" fill="#0d0905" stroke="rgba(201,168,76,.4)" stroke-width="1"/>
+  <!-- handle inner highlight -->
+  <rect x="85" y="36" width="50" height="18" rx="9" fill="none" stroke="rgba(201,168,76,.12)" stroke-width="1"/>
+
+  <!-- vertical divider center -->
+  <line x1="102" y1="57" x2="102" y2="144" stroke="rgba(201,168,76,.1)" stroke-width="1"/>
+
+  <!-- horizontal crease lines -->
+  <line x1="22" y1="88" x2="184" y2="88" stroke="rgba(201,168,76,.06)" stroke-width="1"/>
+  <line x1="22" y1="116" x2="184" y2="116" stroke="rgba(201,168,76,.04)" stroke-width="1"/>
+
+  <!-- BCCB wordmark on box -->
+  <text x="102" y="108" text-anchor="middle" font-family="'Cinzel',serif" font-size="11" font-weight="700" fill="#c9a84c" opacity=".28" letter-spacing="3">BOLD CREW</text>
+  <text x="102" y="122" text-anchor="middle" font-family="'Cinzel',serif" font-size="7.5" fill="#c9a84c" opacity=".18" letter-spacing="2.5">COLD BREW · LA</text>
+
+  <!-- subtle corner fold top-left -->
+  <path d="M18,57 Q22,48 30,48" stroke="rgba(201,168,76,.12)" stroke-width="1" fill="none"/>
+  <!-- subtle corner fold top-right -->
+  <path d="M186,57 Q182,48 174,48" stroke="rgba(201,168,76,.12)" stroke-width="1" fill="none"/>
+
+</svg>

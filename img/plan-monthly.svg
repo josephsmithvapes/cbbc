@@ -1,0 +1,43 @@
+<svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- ── Wide-mouth mason jar — 20h cold steep ── -->
+
+  <!-- jar body -->
+  <rect x="62" y="42" width="96" height="100" rx="5" fill="#1e1208" stroke="rgba(201,168,76,.14)" stroke-width="1"/>
+
+  <!-- liquid fill (dark cold brew, ~60%) -->
+  <clipPath id="mjar">
+    <rect x="62" y="42" width="96" height="100" rx="5"/>
+  </clipPath>
+  <rect x="62" y="92" width="96" height="52" fill="#3d1e04" opacity=".75" clip-path="url(#mjar)"/>
+  <!-- liquid surface shimmer -->
+  <ellipse cx="110" cy="92" rx="46" ry="3" fill="#5a2c06" opacity=".5"/>
+
+  <!-- jar sheen -->
+  <rect x="66" y="46" width="6" height="90" rx="3" fill="rgba(255,255,255,.05)"/>
+
+  <!-- measurement marks (right side) -->
+  <line x1="153" y1="68" x2="158" y2="68" stroke="rgba(201,168,76,.3)" stroke-width="0.8"/>
+  <line x1="153" y1="82" x2="158" y2="82" stroke="rgba(201,168,76,.2)" stroke-width="0.8"/>
+  <line x1="153" y1="96" x2="158" y2="96" stroke="rgba(201,168,76,.3)" stroke-width="0.8"/>
+  <line x1="153" y1="110" x2="158" y2="110" stroke="rgba(201,168,76,.2)" stroke-width="0.8"/>
+  <line x1="153" y1="124" x2="158" y2="124" stroke="rgba(201,168,76,.3)" stroke-width="0.8"/>
+
+  <!-- center 20H timer badge -->
+  <rect x="84" y="60" width="52" height="36" rx="2" fill="rgba(201,168,76,.05)" stroke="rgba(201,168,76,.2)" stroke-width="0.8"/>
+  <text x="110" y="77" text-anchor="middle" font-family="'Alfa Slab One',serif" font-size="16" fill="#c9a84c" opacity=".75" letter-spacing=".5">20H</text>
+  <text x="110" y="88" text-anchor="middle" font-family="'Cinzel',serif" font-size="4.5" fill="#f2ede0" opacity=".25" letter-spacing="1.2">COLD STEEP</text>
+
+  <!-- BCCB under liquid line -->
+  <text x="110" y="115" text-anchor="middle" font-family="'Cinzel',serif" font-size="5.5" font-weight="700" fill="#c9a84c" opacity=".3" letter-spacing="1.5">BCCB</text>
+
+  <!-- lid band -->
+  <rect x="60" y="30" width="100" height="16" rx="3" fill="#2a1a08" stroke="rgba(201,168,76,.22)" stroke-width="1"/>
+  <!-- lid top -->
+  <rect x="64" y="22" width="92" height="12" rx="2" fill="#1e1208" stroke="rgba(201,168,76,.18)" stroke-width="0.8"/>
+  <!-- lid clip left -->
+  <path d="M68,30 Q58,30 58,38 Q58,44 66,44" stroke="rgba(201,168,76,.3)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <!-- lid clip right -->
+  <path d="M152,30 Q162,30 162,38 Q162,44 154,44" stroke="rgba(201,168,76,.3)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+
+</svg>

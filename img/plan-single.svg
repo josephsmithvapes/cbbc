@@ -1,0 +1,43 @@
+<svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- ── Cold brew glass over ice — single order ── -->
+
+  <!-- glass outer shape (tapered, wider at top) -->
+  <path d="M72,22 L148,22 L136,142 Q136,148 110,148 Q84,148 84,142 Z"
+    fill="#1a1008" stroke="rgba(201,168,76,.15)" stroke-width="1"/>
+
+  <!-- liquid fill (dark cold brew, lower 58%) -->
+  <clipPath id="sglass">
+    <path d="M72,22 L148,22 L136,142 Q136,148 110,148 Q84,148 84,142 Z"/>
+  </clipPath>
+  <rect x="72" y="72" width="76" height="78" fill="#3a1c04" opacity=".8" clip-path="url(#sglass)"/>
+  <!-- liquid surface -->
+  <ellipse cx="110" cy="72" rx="36" ry="3.5" fill="#5a2c06" opacity=".6"/>
+
+  <!-- glass sheen left -->
+  <path d="M75,28 L81,138" stroke="rgba(255,255,255,.07)" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- top rim highlight -->
+  <path d="M72,22 L148,22" stroke="rgba(201,168,76,.35)" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- ice cubes -->
+  <rect x="82" y="78" width="26" height="22" rx="4" fill="#c9eaf5" fill-opacity=".07" stroke="rgba(200,230,245,.2)" stroke-width="0.8"/>
+  <rect x="113" y="76" width="22" height="20" rx="4" fill="#c9eaf5" fill-opacity=".06" stroke="rgba(200,230,245,.18)" stroke-width="0.8"/>
+  <rect x="89" y="96" width="20" height="18" rx="4" fill="#c9eaf5" fill-opacity=".05" stroke="rgba(200,230,245,.15)" stroke-width="0.8"/>
+  <!-- ice cube inner refraction lines -->
+  <line x1="84" y1="84" x2="90" y2="78" stroke="rgba(200,230,245,.12)" stroke-width="0.6"/>
+  <line x1="115" y1="82" x2="121" y2="76" stroke="rgba(200,230,245,.1)" stroke-width="0.6"/>
+
+  <!-- condensation drips -->
+  <path d="M144,55 Q146,60 144,66" stroke="rgba(200,230,245,.15)" stroke-width="1" stroke-linecap="round"/>
+  <path d="M78,80 Q76,86 78,94" stroke="rgba(200,230,245,.1)" stroke-width="1" stroke-linecap="round"/>
+
+  <!-- 12 OZ label -->
+  <text x="110" y="108" text-anchor="middle" font-family="'Cinzel',serif" font-size="5.5" font-weight="700" fill="#c9a84c" opacity=".35" letter-spacing="1.2">12 OZ</text>
+  <text x="110" y="120" text-anchor="middle" font-family="'Cinzel',serif" font-size="4.5" fill="#f2ede0" opacity=".18" letter-spacing="1">COLD BREW</text>
+
+  <!-- straw (optional accent) -->
+  <rect x="126" y="16" width="5" height="60" rx="2.5" fill="#c9a84c" opacity=".2"/>
+  <rect x="127" y="17" width="2" height="58" rx="1" fill="rgba(255,255,255,.08)"/>
+
+</svg>
