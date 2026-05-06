@@ -854,6 +854,133 @@ footer {
 .mobile-tab-nav a.active { opacity:1; color:var(--gold); }
 .tab-icon { font-size:15px; line-height:1; }
 
+/* Service 
+ v2 — comparison table */
+.service-matrix {
+  border:1px solid var(--rule);
+  margin-bottom:14px;
+  background:var(--dark);
+}
+.service-matrix-row {
+  display:grid;
+  grid-template-columns:160px 1fr 1fr 1fr;
+}
+.service-matrix-row + .service-matrix-row { border-top:1px solid rgba(242,237,224,.04); }
+.service-matrix-row.is-head { border-top:none; border-bottom:1px solid var(--rule); }
+.service-matrix-row.is-cta  { border-top:1px solid var(--rule); }
+.service-matrix-cell {
+  padding:14px 18px;
+  border-left:1px solid var(--rule);
+  display:flex; align-items:center;
+  position:relative;
+}
+.service-matrix-cell:first-child { border-left:none; }
+.service-matrix-cell.is-featured { background:var(--mid); }
+.service-matrix-row.is-head .service-matrix-cell,
+.service-matrix-row.is-cta  .service-matrix-cell { padding:18px 18px; }
+.service-matrix-collabel,
+.service-matrix-rowlabel {
+  font-family:var(--font-brand);
+  font-size:var(--t-micro);
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--cream); opacity:.42;
+}
+.service-matrix-planhead { display:flex; align-items:center; gap:12px; }
+.service-matrix-planhead .service-icon { flex-shrink:0; }
+.service-matrix-headline {
+  display:block;
+  font-family:var(--font-brand); font-weight:700;
+  font-size:14px; letter-spacing:.04em;
+  color:var(--cream); margin-top:4px;
+}
+.service-matrix-eyebrow {
+  display:block;
+  font-family:var(--font-brand);
+  font-size:7px; letter-spacing:.32em; text-transform:uppercase;
+  color:var(--gold); opacity:.7;
+}
+.service-matrix-value {
+  font-family:var(--font-body);
+  font-size:var(--t-small);
+  color:var(--cream); opacity:.92;
+}
+.service-matrix-flag {
+  position:absolute; top:-1px; right:-1px;
+  font-family:var(--font-brand);
+  font-size:7px; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--ink); background:var(--gold);
+  padding:4px 9px;
+}
+.service-matrix-btn {
+  font-family:var(--font-brand); font-weight:700;
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  padding:10px 14px; width:100%;
+  background:transparent; color:var(--cream);
+  border:1px solid rgba(201,168,76,.3);
+  cursor:pointer;
+  transition:border-color .15s, color .15s, background .15s;
+}
+.service-matrix-btn:hover { border-color:var(--gold); color:var(--gold-lt); }
+.service-matrix-btn.is-primary {
+  background:var(--gold); color:var(--ink);
+  border-color:var(--gold);
+}
+.service-matrix-btn.is-primary:hover { background:var(--gold-lt); border-color:var(--gold-lt); color:var(--ink); }
+@media (max-width:720px) {
+  .service-matrix-row { grid-template-columns:1fr; }
+  .service-matrix-cell { border-left:none; border-top:1px solid rgba(242,237,224,.04); }
+  .service-matrix-row.is-head .service-matrix-cell:first-child,
+  .service-matrix-row.is-cta  .service-matrix-cell:first-child { display:none; }
+  .service-matrix-row { border-bottom:1px solid var(--rule); }
+  .service-matrix-row:last-child { border-bottom:none; }
+}
+
+/* Maiden investor milestone indicator */
+.maiden-milestones {
+  margin-bottom:18px;
+  padding:14px 16px;
+  border:1px solid rgba(201,168,76,.18);
+  background:rgba(201,168,76,.04);
+}
+.maiden-milestone-label {
+  display:flex; align-items:center; gap:7px;
+  font-family:var(--font-brand);
+  font-size:var(--t-micro); letter-spacing:.28em; text-transform:uppercase;
+  color:var(--gold); opacity:.75;
+  margin-bottom:12px;
+}
+.maiden-milestone-track {
+  display:flex; align-items:stretch; gap:0;
+}
+.maiden-milestone-node {
+  flex:1;
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+  text-align:center;
+}
+.maiden-node-num {
+  font-family:var(--font-display);
+  font-size:1.35rem; line-height:1;
+  background:var(--gold-grad, linear-gradient(135deg,#f0d878,#c9a84c));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.maiden-node-desc {
+  font-family:var(--font-body);
+  font-size:var(--t-small); color:var(--cream); opacity:.55;
+  line-height:1.3;
+}
+.maiden-milestone-sep {
+  width:1px; background:rgba(201,168,76,.15);
+  margin:0 12px; flex-shrink:0;
+}
+@media (max-width:720px) {
+  .maiden-milestone-track { flex-direction:column; gap:10px; }
+  .maiden-milestone-sep { width:100%; height:1px; margin:0; }
+  .maiden-milestone-node { flex-direction:row; align-items:center; text-align:left; gap:12px; }
+  .maiden-node-num { font-size:1.1rem; min-width:28px; }
+}
+
 /* Service strip */
 .service-strip {
   padding:24px 32px 20px;
@@ -968,6 +1095,170 @@ footer {
   transition:opacity .15s; flex-shrink:0;
 }
 .service-link:hover { opacity:1; }
+@keyframes vault-breathe {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(201,168,76,.28),
+      0 0 14px rgba(201,168,76,.07);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(201,168,76,.65),
+      0 0 28px rgba(201,168,76,.2),
+      0 0 54px rgba(201,168,76,.07);
+  }
+}
+.cbbc-tier-vault {
+  border: 1px solid rgba(201,168,76,.28);
+  background: var(--cbbc-dark, #161108);
+  display: flex;
+  flex-direction: column;
+  animation: vault-breathe 3s ease-in-out infinite;
+  cursor: pointer;
+  position: relative;
+}
+.cbbc-tier-vault.is-expanded {
+  animation: none;
+  box-shadow: 0 0 0 1px rgba(201,168,76,.4), 0 0 32px rgba(201,168,76,.12);
+}
+.cbbc-tier-vault-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  gap: 12px;
+  user-select: none;
+}
+.cbbc-tier-vault-chevron {
+  flex-shrink: 0;
+  color: var(--cbbc-gold, #c9a84c);
+  opacity: 0.7;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+}
+.cbbc-tier-vault.is-expanded .cbbc-tier-vault-chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+.cbbc-tier-vault:hover:not(.is-expanded) .cbbc-tier-vault-chevron {
+  opacity: 1;
+}
+.cbbc-tier-vault-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, padding 0.4s ease;
+  opacity: 0;
+  padding: 0 24px;
+}
+.cbbc-tier-vault:hover .cbbc-tier-vault-body,
+.cbbc-tier-vault.is-expanded .cbbc-tier-vault-body {
+  max-height: 700px;
+  opacity: 1;
+  padding: 0 24px 26px;
+}
+.cbbc-tier-vault-divider {
+  height: 1px;
+  background: rgba(201,168,76,.1);
+  margin: 0 24px;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+.cbbc-tier-vault:hover .cbbc-tier-vault-divider,
+.cbbc-tier-vault.is-expanded .cbbc-tier-vault-divider {
+  opacity: 1;
+}
+.cbbc-tier-vault-banner {
+  font-family: var(--font-brand, 'Cinzel', serif);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cbbc-gold, #c9a84c);
+  opacity: 0.85;
+}
+.cbbc-tier-vault-star {
+  display: inline-block;
+  margin-right: 8px;
+}
+.cbbc-tier-vault-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+}
+.cbbc-tier-vault-cell {
+  padding: 10px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  border-left: 1px solid var(--cbbc-rule-soft, rgba(242,237,224,.08));
+}
+.cbbc-tier-vault-cell:first-child {
+  border-left: none;
+}
+.cbbc-tier-vault-lock {
+  display: block;
+}
+.cbbc-tier-vault-count {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-brand, 'Cinzel', serif);
+  font-size: 0.625rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cbbc-cream, #f2ede0);
+  opacity: 0.7;
+}
+.cbbc-tier-vault-num {
+  font-family: var(--font-display, 'Alfa Slab One', serif);
+  font-size: 1.125rem;
+  letter-spacing: 0;
+  color: var(--cbbc-gold, #c9a84c);
+  opacity: 0.95;
+}
+.cbbc-tier-vault-of {
+  opacity: 0.75;
+}
+.cbbc-tier-vault-reward {
+  font-family: var(--font-body, 'Space Grotesk', system-ui, sans-serif);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--cbbc-gold, #c9a84c);
+  opacity: 0.85;
+  white-space: nowrap;
+  text-align: center;
+}
+.cbbc-tier-vault-bar {
+  width: 100%;
+  height: 2px;
+  background: var(--cbbc-rule-soft, rgba(242,237,224,.08));
+  position: relative;
+  margin-top: 4px;
+}
+.cbbc-tier-vault-bar > span {
+  position: absolute;
+  inset: 0;
+  background: var(--cbbc-gold, #c9a84c);
+  display: block;
+}
+@media (max-width: 720px) {
+  .cbbc-tier-vault-grid { grid-template-columns: 1fr; }
+  .cbbc-tier-vault-cell {
+    border-left: none;
+    border-top: 1px solid var(--cbbc-rule-soft, rgba(242,237,224,.08));
+    padding: 18px 0;
+  }
+  .cbbc-tier-vault-cell:first-child { border-top: none; }
+  /* On touch devices, disable hover expand — rely on click only */
+  @media (hover: none) {
+    .cbbc-tier-vault:hover .cbbc-tier-vault-body {
+      max-height: 0;
+      opacity: 0;
+      padding: 0 24px;
+    }
+    .cbbc-tier-vault:hover .cbbc-tier-vault-divider { opacity: 0; }
+  }
+}
 
 @media (max-width:640px) {
   .service-strip { padding:18px 18px 16px; }
@@ -989,7 +1280,7 @@ footer {
   body { padding-bottom:60px; }
 }
 </style>
-  <script type="module" crossorigin src="/assets/index-DL0jztax.js"></script>
+  <script type="module" crossorigin src="/assets/index-m4SHwIgX.js"></script>
 </head>
 <body>
 
@@ -1015,66 +1306,215 @@ footer {
 
     <!-- Service strip: purchase tiers anchored to the brew process -->
     <div class="service-strip">
-      <div class="service-eyebrow">Get yours — launching soon</div>
+    <!--  <div class="service-eyebrow">Get yours — Maiden Batch</div> -->
 
-      <div class="service-tiers">
-
-        <div class="service-tier">
-          <svg class="service-icon" width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-            <line x1="18" y1="3" x2="30" y2="3" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" opacity=".85"/>
-            <circle cx="30" cy="3" r="2.8" fill="#c9a84c" opacity=".75"/>
-            <circle cx="18" cy="3" r="2.4" stroke="#c9a84c" stroke-width="1.6" fill="none" opacity=".85"/>
-            <line x1="18" y1="5.4" x2="18" y2="11" stroke="#c9a84c" stroke-width="1.6" stroke-linecap="round"/>
-            <path d="M10 11 L7 20 L29 20 L26 11 Z" stroke="#c9a84c" stroke-width="1.5" fill="#c9a84c" fill-opacity=".08" stroke-linejoin="round"/>
-            <rect x="7" y="20" width="22" height="12" rx="2" stroke="#c9a84c" stroke-width="1.6" fill="#c9a84c" fill-opacity=".06"/>
-            <rect x="5.5" y="32" width="25" height="2.5" rx="1.5" stroke="#c9a84c" stroke-width="1.4" fill="none" opacity=".6"/>
+      <!-- Maiden investor milestone indicator -->
+      <!--<div class="maiden-milestones" aria-label="Maiden investor benefits">
+        <div class="maiden-milestone-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="#c9a84c" stroke-width="1.8" stroke-linejoin="round" fill="#c9a84c" fill-opacity=".15"/>
           </svg>
-          <div class="service-tier-text">
-            <span class="service-tier-badge">Weekly Drop</span>
-            <span class="service-tier-name">Fresh grind, every week.</span>
-            <span class="service-tier-desc">A new batch ground, steeped 20h, and shipped the moment it's ready. First pour, every time.</span>
-            <button class="service-tier-cta" onclick="window._bccbTier='weekly';document.querySelector('.capture').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('email').focus()},400)">Join Waitlist</button>
+          Maiden investors unlock exclusive benefits — rewards unlock for all reservations at each tier
+        </div>
+        <div class="maiden-milestone-track" role="list">
+          <div class="maiden-milestone-node" role="listitem">
+            <span class="maiden-node-num">5</span>
+            <span class="maiden-node-desc">First 5 reservations unlock early access + name in every bottle run</span>
+          </div>
+          <div class="maiden-milestone-sep" aria-hidden="true"></div>
+          <div class="maiden-milestone-node" role="listitem">
+            <span class="maiden-node-num">10</span>
+            <span class="maiden-node-desc">First 10 reservations unlock founder pricing locked for life</span>
+          </div>
+          <div class="maiden-milestone-sep" aria-hidden="true"></div>
+          <div class="maiden-milestone-node" role="listitem">
+            <span class="maiden-node-num">20</span>
+            <span class="maiden-node-desc">First 20 reservations unlock private batch selection + tasting invite</span>
+          </div>
+        </div>
+      </div> -->
+      <section class="cbbc-tier-vault" aria-label="Maiden batch reservation rewards" role="button" tabindex="0" aria-expanded="false">
+  <div class="cbbc-tier-vault-trigger">
+    <div class="cbbc-tier-vault-banner">
+      <span class="cbbc-tier-vault-star" aria-hidden="true">☆</span>
+      Maiden investors unlock exclusive benefits — Be one of the first to Join the Crew!
+    </div>
+    <svg class="cbbc-tier-vault-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="cbbc-tier-vault-divider"></div>
+  <div class="cbbc-tier-vault-body">
+  <div class="cbbc-tier-vault-grid" style="margin-top:22px;">
+
+    <!-- Tier 5 -->
+    <div class="cbbc-tier-vault-cell" data-target="5">
+      <svg class="cbbc-tier-vault-lock" width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <defs>
+          <clipPath id="cbbc-vault-clip-5"><rect x="13" y="31" width="38" height="26" rx="1.5"/></clipPath>
+        </defs>
+        <path d="M20 30 V22 a12 12 0 0 1 24 0 V30" stroke="#f2ede0" stroke-opacity=".55" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+        <rect x="12" y="30" width="40" height="28" rx="2" stroke="#c9a84c" stroke-opacity=".85" stroke-width="1.6" fill="none"/>
+        <rect x="13" y="46.4" width="38" height="10.6" fill="#c9a84c" fill-opacity=".22" clip-path="url(#cbbc-vault-clip-5)"/>
+        <circle cx="32" cy="42" r="3" fill="#c9a84c" fill-opacity=".5"/>
+        <rect x="31" y="44" width="2" height="6" fill="#c9a84c" fill-opacity=".5"/>
+      </svg>
+      <div class="cbbc-tier-vault-count">
+        <span class="cbbc-tier-vault-num">0</span>
+        <span class="cbbc-tier-vault-of">/ 5 reservations</span>
+      </div>
+      <p class="cbbc-tier-vault-reward">Tier I</p>
+      <div class="cbbc-tier-vault-bar"><span style="width:0%"></span></div>
+    </div>
+
+    <!-- Tier 10 -->
+    <div class="cbbc-tier-vault-cell" data-target="10">
+      <svg class="cbbc-tier-vault-lock" width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <defs>
+          <clipPath id="cbbc-vault-clip-10"><rect x="13" y="31" width="38" height="26" rx="1.5"/></clipPath>
+        </defs>
+        <path d="M20 30 V22 a12 12 0 0 1 24 0 V30" stroke="#f2ede0" stroke-opacity=".55" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+        <rect x="12" y="30" width="40" height="28" rx="2" stroke="#c9a84c" stroke-opacity=".85" stroke-width="1.6" fill="none"/>
+        <rect x="13" y="49.2" width="38" height="7.8" fill="#c9a84c" fill-opacity=".22" clip-path="url(#cbbc-vault-clip-10)"/>
+        <circle cx="32" cy="42" r="3" fill="#c9a84c" fill-opacity=".5"/>
+        <rect x="31" y="44" width="2" height="6" fill="#c9a84c" fill-opacity=".5"/>
+      </svg>
+      <div class="cbbc-tier-vault-count">
+        <span class="cbbc-tier-vault-num">0</span>
+        <span class="cbbc-tier-vault-of">/ 10 reservations</span>
+      </div>
+      <p class="cbbc-tier-vault-reward">Tier II</p>
+      <div class="cbbc-tier-vault-bar"><span style="width:0%"></span></div>
+    </div>
+
+    <!-- Tier 20 -->
+    <div class="cbbc-tier-vault-cell" data-target="25">
+      <svg class="cbbc-tier-vault-lock" width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <defs>
+          <clipPath id="cbbc-vault-clip-20"><rect x="13" y="31" width="38" height="26" rx="1.5"/></clipPath>
+        </defs>
+        <path d="M20 30 V22 a12 12 0 0 1 24 0 V30" stroke="#f2ede0" stroke-opacity=".55" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+        <rect x="12" y="30" width="40" height="28" rx="2" stroke="#c9a84c" stroke-opacity=".85" stroke-width="1.6" fill="none"/>
+        <rect x="13" y="53.1" width="38" height="3.9" fill="#c9a84c" fill-opacity=".22" clip-path="url(#cbbc-vault-clip-20)"/>
+        <circle cx="32" cy="42" r="3" fill="#c9a84c" fill-opacity=".5"/>
+        <rect x="31" y="44" width="2" height="6" fill="#c9a84c" fill-opacity=".5"/>
+      </svg>
+      <div class="cbbc-tier-vault-count">
+        <span class="cbbc-tier-vault-num">0</span>
+        <span class="cbbc-tier-vault-of">/ 25 reservations</span>
+      </div>
+      <p class="cbbc-tier-vault-reward">Tier III</p>
+      <div class="cbbc-tier-vault-bar"><span style="width:0%"></span></div>
+    </div>
+
+  </div>
+  </div><!-- /.cbbc-tier-vault-body -->
+</section>
+
+      <div class="service-matrix" role="table" aria-label="Reservation tiers">
+
+        <!-- Header row -->
+        <div class="service-matrix-row is-head" role="row">
+          <div class="service-matrix-cell" role="columnheader">
+            <span class="service-matrix-collabel">Plan</span>
+          </div>
+          <div class="service-matrix-cell" role="columnheader">
+            <div class="service-matrix-planhead">
+              <svg class="service-icon" width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <line x1="18" y1="3" x2="30" y2="3" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" opacity=".85"/>
+                <circle cx="30" cy="3" r="2.8" fill="#c9a84c" opacity=".75"/>
+                <circle cx="18" cy="3" r="2.4" stroke="#c9a84c" stroke-width="1.6" fill="none" opacity=".85"/>
+                <line x1="18" y1="5.4" x2="18" y2="11" stroke="#c9a84c" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M10 11 L7 20 L29 20 L26 11 Z" stroke="#c9a84c" stroke-width="1.5" fill="#c9a84c" fill-opacity=".08" stroke-linejoin="round"/>
+                <rect x="7" y="20" width="22" height="12" rx="2" stroke="#c9a84c" stroke-width="1.6" fill="#c9a84c" fill-opacity=".06"/>
+                <rect x="5.5" y="32" width="25" height="2.5" rx="1.5" stroke="#c9a84c" stroke-width="1.4" fill="none" opacity=".6"/>
+              </svg>
+              <div>
+                <span class="service-matrix-eyebrow">Weekly Batch</span>
+                <span class="service-matrix-headline">Fresh grind, every week.</span>
+              </div>
+            </div>
+          </div>
+          <div class="service-matrix-cell is-featured" role="columnheader">
+            <span class="service-matrix-flag">★ Most reserved</span>
+            <div class="service-matrix-planhead">
+              <svg class="service-icon" width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <rect x="3" y="4" width="30" height="4" rx="2" stroke="#c9a84c" stroke-width="1.6" fill="none" opacity=".5"/>
+                <rect x="5" y="8" width="26" height="24" rx="2.5" stroke="#c9a84c" stroke-width="1.6" fill="none" opacity=".5"/>
+                <rect x="6" y="18" width="24" height="13" rx="1.5" fill="#c9a84c" fill-opacity=".1" clip-path="url(#jar-clip-m)"/>
+                <clipPath id="jar-clip-m"><rect x="5" y="8" width="26" height="24" rx="2.5"/></clipPath>
+                <line x1="6" y1="18" x2="30" y2="18" stroke="#c9a84c" stroke-width="1" stroke-opacity=".4"/>
+                <line x1="24" y1="3" x2="22" y2="28" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity=".45" stroke-dasharray="2 2"/>
+                <circle cx="22" cy="28" r="2" fill="#c9a84c" opacity=".55"/>
+              </svg>
+              <div>
+                <span class="service-matrix-eyebrow">Monthly Batch</span>
+                <span class="service-matrix-headline">One cold steep a month.</span>
+              </div>
+            </div>
+          </div>
+          <div class="service-matrix-cell" role="columnheader">
+            <div class="service-matrix-planhead">
+              <svg class="service-icon" width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <path d="M13 2h10v5l3 4v20a2 2 0 01-2 2H12a2 2 0 01-2-2V11l3-4V2z" stroke="#c9a84c" stroke-width="1.6" fill="#c9a84c" fill-opacity=".06" stroke-linejoin="round"/>
+                <rect x="13" y="2" width="10" height="3" rx="1" stroke="#c9a84c" stroke-width="1.4" fill="#c9a84c" fill-opacity=".15"/>
+                <line x1="11" y1="22" x2="25" y2="22" stroke="#c9a84c" stroke-width="1" stroke-opacity=".3"/>
+                <rect x="12" y="16" width="12" height="8" rx="1" stroke="#c9a84c" stroke-width="1" fill="none" opacity=".2"/>
+                <text x="18" y="21.5" text-anchor="middle" font-family="'Cinzel',serif" font-size="3.5" fill="#c9a84c" opacity=".5" letter-spacing="0.8">BCCB</text>
+              </svg>
+              <div>
+                <span class="service-matrix-eyebrow">Single Batch</span>
+                <span class="service-matrix-headline">Order when you're ready.</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="service-divider" aria-hidden="true"></div>
-
-        <div class="service-tier">
-          <svg class="service-icon" width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-            <rect x="3" y="4" width="30" height="4" rx="2" stroke="#c9a84c" stroke-width="1.6" fill="none" opacity=".5"/>
-            <rect x="5" y="8" width="26" height="24" rx="2.5" stroke="#c9a84c" stroke-width="1.6" fill="none" opacity=".5"/>
-            <rect x="6" y="18" width="24" height="13" rx="1.5" fill="#c9a84c" fill-opacity=".1" clip-path="url(#jar-clip-s)"/>
-            <clipPath id="jar-clip-s"><rect x="5" y="8" width="26" height="24" rx="2.5"/></clipPath>
-            <line x1="6" y1="18" x2="30" y2="18" stroke="#c9a84c" stroke-width="1" stroke-opacity=".4"/>
-            <line x1="24" y1="3" x2="22" y2="28" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" opacity=".45" stroke-dasharray="2 2"/>
-            <circle cx="22" cy="28" r="2" fill="#c9a84c" opacity=".55"/>
-          </svg>
-          <div class="service-tier-text">
-            <span class="service-tier-badge">Monthly Delivery</span>
-            <span class="service-tier-name">One cold steep a month.</span>
-            <span class="service-tier-desc">A single batch, 20h in cold filtered water, temperature-logged live. Delivered cold to your door.</span>
-            <button class="service-tier-cta" onclick="window._bccbTier='monthly';document.querySelector('.capture').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('email').focus()},400)">Join Waitlist</button>
-          </div>
+        <!-- Data rows -->
+        <div class="service-matrix-row" role="row">
+          <div class="service-matrix-cell" role="rowheader"><span class="service-matrix-rowlabel">What you get</span></div>
+          <div class="service-matrix-cell" role="cell"><span class="service-matrix-value">1 Case of 6</span></div>
+          <div class="service-matrix-cell is-featured" role="cell"><span class="service-matrix-value">2 Cases of 6</span></div>
+          <div class="service-matrix-cell" role="cell"><span class="service-matrix-value">1 Case of 6</span></div>
+        </div>
+        <div class="service-matrix-row" role="row">
+          <div class="service-matrix-cell" role="rowheader"><span class="service-matrix-rowlabel">Size</span></div>
+          <div class="service-matrix-cell" role="cell"><span class="service-matrix-value">12 oz</span></div>
+          <div class="service-matrix-cell is-featured" role="cell"><span class="service-matrix-value">12 oz each</span></div>
+          <div class="service-matrix-cell" role="cell"><span class="service-matrix-value">12 oz</span></div>
+        </div>
+        <div class="service-matrix-row" role="row">
+          <div class="service-matrix-cell" role="rowheader"><span class="service-matrix-rowlabel">Cadence</span></div>
+          <div class="service-matrix-cell" role="cell"><span class="service-matrix-value">Every Sunday</span></div>
+          <div class="service-matrix-cell is-featured" role="cell"><span class="service-matrix-value">Once a Month</span></div>
+          <div class="service-matrix-cell" role="cell"><span class="service-matrix-value">One-time</span></div>
+        </div>
+        <div class="service-matrix-row" role="row">
+          <div class="service-matrix-cell" role="rowheader"><span class="service-matrix-rowlabel">Ships</span></div>
+          <div class="service-matrix-cell" role="cell"><span class="service-matrix-value">On Batch Finish</span></div>
+          <div class="service-matrix-cell is-featured" role="cell"><span class="service-matrix-value">On Batch Finish</span></div>
+          <div class="service-matrix-cell" role="cell"><span class="service-matrix-value">On Batch Finish</span></div>
+        </div>
+        <div class="service-matrix-row" role="row">
+          <div class="service-matrix-cell" role="rowheader"><span class="service-matrix-rowlabel">Commitment</span></div>
+          <div class="service-matrix-cell" role="cell"><span class="service-matrix-value">Cancel Anytime</span></div>
+          <div class="service-matrix-cell is-featured" role="cell"><span class="service-matrix-value">Cancel Anytime</span></div>
+          <div class="service-matrix-cell" role="cell"><span class="service-matrix-value">None</span></div>
         </div>
 
-        <div class="service-divider" aria-hidden="true"></div>
-
-        <div class="service-tier">
-          <svg class="service-icon" width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-            <path d="M13 2h10v5l3 4v20a2 2 0 01-2 2H12a2 2 0 01-2-2V11l3-4V2z" stroke="#c9a84c" stroke-width="1.6" fill="#c9a84c" fill-opacity=".06" stroke-linejoin="round"/>
-            <rect x="13" y="2" width="10" height="3" rx="1" stroke="#c9a84c" stroke-width="1.4" fill="#c9a84c" fill-opacity=".15"/>
-            <line x1="11" y1="22" x2="25" y2="22" stroke="#c9a84c" stroke-width="1" stroke-opacity=".3"/>
-            <rect x="12" y="16" width="12" height="8" rx="1" stroke="#c9a84c" stroke-width="1" fill="none" opacity=".2"/>
-            <text x="18" y="21.5" text-anchor="middle" font-family="'Cinzel',serif" font-size="3.5" fill="#c9a84c" opacity=".5" letter-spacing="0.8">BCCB</text>
-          </svg>
-          <div class="service-tier-text">
-            <span class="service-tier-badge">Single Batch</span>
-            <span class="service-tier-name">Order when you're ready.</span>
-            <span class="service-tier-desc">No subscription. Pick a batch, watch it steep live, get it shipped when it's done. No shortcuts.</span>
-            <button class="service-tier-cta" onclick="window._bccbTier='single';document.querySelector('.capture').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('email').focus()},400)">Join Waitlist</button>
+        <!-- CTA row -->
+        <div class="service-matrix-row is-cta" role="row">
+          <div class="service-matrix-cell" role="rowheader"><span class="service-matrix-collabel">Reserve</span></div>
+          <div class="service-matrix-cell" role="cell">
+            <button class="service-matrix-btn" onclick="window._bccbTier='weekly';document.querySelector('.capture').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('email').focus()},400)">Reserve weekly</button>
+          </div>
+          <div class="service-matrix-cell is-featured" role="cell">
+            <button class="service-matrix-btn is-primary" onclick="window._bccbTier='monthly';document.querySelector('.capture').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('email').focus()},400)">Reserve monthly</button>
+          </div>
+          <div class="service-matrix-cell" role="cell">
+            <button class="service-matrix-btn" onclick="window._bccbTier='single';document.querySelector('.capture').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('email').focus()},400)">Reserve single</button>
           </div>
         </div>
-
       </div>
 
       <!-- Batch history callout -->
@@ -1141,14 +1581,13 @@ footer {
 <!-- ── STORY ── -->
 <section class="story" id="story" aria-label="Our story">
   <div class="story-img">
-    <img src="/img/story-scoop.png" alt="Coffee grounds being scooped — BCCB small batch process">
-    <span class="story-img-tag">LOS ANGELES · EST. 2019</span>
+    <img src="/img/la-cityscape.jpg" alt="Los Angeles cityscape — BCCB cold brew, born in LA">
+    <span class="story-img-tag">LOS ANGELES · EST. 2026</span>
   </div>
   <div class="story-content">
     <p class="eyebrow">Our Story</p>
     <h2>Built slow.<br>Made <em>bold.</em><br>Always cold.</h2>
-    <p>BCCB started in 2019 in Los Angeles — a city that moves fast but appreciates things made with patience. We brew in small batches because we care about what goes in every cup.</p>
-    <p>No corners cut. No scale-up shortcuts. This is cold brew for people who actually give a damn.</p>
+    <p>BCCB was formed in 2026 to provide premium cold brew throughout Los Angeles. We've already been serving you for the last 10 years, now it's time to serve you BOLDLY.</p>
     <div class="story-stats" role="list">
       <div class="stat" role="listitem">
         <span class="stat-num">20h</span>
@@ -1708,7 +2147,7 @@ footer {
           </div>
         </div>
       </div>
-      <a class="plan-download" href="#" download title="Download CBBC Business Plan PDF">
+      <a class="plan-download" href="/img/cbbc-small-batch-rig.pdf" download title="Download CBBC Business Plan PDF">
         <div class="plan-download-icon">
           <svg width="18" height="22" viewBox="0 0 18 22" fill="none">
             <path d="M3 2h8l4 4v14a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="#c9a84c" stroke-width="1.4" fill="none" opacity=".7"/>
@@ -1744,7 +2183,7 @@ footer {
           </div>
         </div>
         <div class="team-card">
-          <div><div class="name">CRIS ZELAYA</div><div class="role" style="margin-top:8px;">Coffee Master · Science</div></div>
+          <div><div class="name">CRIS ZELAYA</div><div class="role" style="margin-top:8px;">Science & Brew Chief</div></div>
           <div class="divider"></div>
           <p>9+ years in specialty coffee with a hard science background. Technical architect of BCCB's brew process — precise enough to monitor with an IoT sensor, consistent enough to scale.</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
@@ -1890,6 +2329,22 @@ footer {
     });
   });
 
+  /* Maiden investors vault — click to pin open, hover to peek */
+  (function() {
+    var vault = document.querySelector('.cbbc-tier-vault');
+    if (!vault) return;
+    vault.addEventListener('click', function() {
+      var pinned = vault.classList.toggle('is-expanded');
+      vault.setAttribute('aria-expanded', pinned ? 'true' : 'false');
+    });
+    vault.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        vault.click();
+      }
+    });
+  })();
+
   /* email capture — AJAX submit so user stays on page */
   var mcForm = document.getElementById('mc-form');
   if (mcForm) {
@@ -1953,6 +2408,19 @@ footer {
   var MAX = 200
   window._bccbTier = 'general'
 
+  function updateVaultCells(n) {
+    document.querySelectorAll('.cbbc-tier-vault-cell').forEach(function(cell) {
+      var target = parseInt(cell.getAttribute('data-target'), 10)
+      if (!target) return
+      var current = Math.min(n, target)
+      var pct = Math.round((current / target) * 100)
+      var numEl = cell.querySelector('.cbbc-tier-vault-num')
+      if (numEl) numEl.textContent = current
+      var barEl = cell.querySelector('.cbbc-tier-vault-bar > span')
+      if (barEl) barEl.style.width = pct + '%'
+    })
+  }
+
   function updateUI(n) {
     var el = document.getElementById('wl-count')
     if (el) el.textContent = n
@@ -1962,6 +2430,7 @@ footer {
       var dot = document.getElementById('wl-dot-' + (i + 1))
       if (dot && n >= m) dot.classList.add('reached')
     })
+    updateVaultCells(n)
   }
 
   fetch(SB + '/rest/v1/waitlist_entries?select=id', {
@@ -2104,6 +2573,6 @@ form.addEventListener('submit', async function(e) {
   if (window._addToWaitlist) window._addToWaitlist(email, window._bccbTier || 'general');
 });
 </script>
-
+
 </body>
 </html>
