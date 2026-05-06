@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import FirstBatch from './components/FirstBatch'
 import LiveBatch from './components/LiveBatch'
 import BrewMonitor from './components/BrewMonitor'
 import AdminPanel from './pages/AdminPanel'
@@ -10,6 +11,7 @@ export default function App() {
 
   return (
     <>
+      <FirstBatch />
       <LiveBatch />
       <BrewMonitor />
     </>

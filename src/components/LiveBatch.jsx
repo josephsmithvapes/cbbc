@@ -46,42 +46,6 @@ const css = `
     background: ${INK};
   }
 
-  .lb-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 24px;
-    border-bottom: 1px solid ${RULE};
-    background: ${INK};
-  }
-  .lb-label {
-    font-family: var(--font-brand);
-    font-size: var(--t-label, 0.6875rem);
-    letter-spacing: .32em;
-    color: ${CREAM};
-    opacity: .28;
-    text-transform: uppercase;
-  }
-  .lb-badge {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-family: var(--font-brand);
-    font-size: var(--t-label, 0.6875rem);
-    letter-spacing: .28em;
-    text-transform: uppercase;
-  }
-  .lb-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .lb-dot.live { animation: lb-pulse 1.4s ease-in-out infinite; }
-  @keyframes lb-pulse {
-    0%,100% { opacity:1; transform:scale(1); }
-    50%      { opacity:.35; transform:scale(.65); }
-  }
-
   /* ── SHARED BODY ── */
   .lb-body {
     min-height: 300px;
@@ -157,13 +121,6 @@ const css = `
     justify-content: center;
   }
 
-  /* IDLE bean float */
-  @keyframes lb-float {
-    0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-7px); }
-  }
-  .lb-anim-float { animation: lb-float 4s ease-in-out infinite; }
-
   /* GRINDING shudder */
   @keyframes lb-shudder {
     0%,38%  { transform: translate(0,0) rotate(0deg); }
@@ -190,77 +147,7 @@ const css = `
   .lb-ice2 { animation: lb-ice2 2.2s ease-in-out .4s infinite; }
   .lb-ice3 { animation: lb-ice3 3.2s ease-in-out .8s infinite; }
 
-  /* IDLE crowdfunding meter */
-  .lb-count-label {
-    font-family: var(--font-brand);
-    font-size: var(--t-micro, 0.625rem);
-    letter-spacing: .28em;
-    text-transform: uppercase;
-    color: ${CREAM};
-    opacity: .35;
-    margin-top: -6px;
-  }
-  .lb-meter-bar {
-    width: 180px;
-    height: 2px;
-    background: rgba(201,168,76,.12);
-    border-radius: 1px;
-    overflow: hidden;
-    margin: 10px 0 4px;
-  }
-  .lb-meter-fill {
-    height: 100%;
-    background: ${GOLD_GRAD};
-    border-radius: 1px;
-    transition: width 1.2s cubic-bezier(.22,1,.36,1);
-  }
 `
-
-const BATCH_TARGET = 25
-
-/* ── IDLE: coffee bag SVG + crowdfunding meter ── */
-function IdleStage({ count }) {
-  const pct    = count != null ? Math.min(100, (count / BATCH_TARGET) * 100) : 0
-  const needed = count != null ? Math.max(0, BATCH_TARGET - count) : null
-
-  return (
-    <div className="lb-body">
-      <div className="lb-inner">
-        <div className="lb-svg-wrap">
-          <svg className="lb-anim-float" width="56" height="100" viewBox="0 0 56 100" fill="none">
-            <path d="M8 28 L28 10 L48 28 L48 88 Q48 94 28 94 Q8 94 8 88 Z"
-              stroke={CREAM} strokeWidth="2" fill={CREAM} fillOpacity=".04" strokeLinejoin="round" opacity=".3"/>
-            <path d="M20 20 L28 10 L36 20" stroke={CREAM} strokeWidth="1.5" fill="none" opacity=".2" strokeLinejoin="round"/>
-            <line x1="18" y1="52" x2="38" y2="52" stroke={CREAM} strokeWidth="1" opacity=".08"/>
-            <line x1="18" y1="62" x2="38" y2="62" stroke={CREAM} strokeWidth="1" opacity=".08"/>
-            <line x1="18" y1="72" x2="38" y2="72" stroke={CREAM} strokeWidth="1" opacity=".06"/>
-            <text x="28" y="44" textAnchor="middle"
-              fontFamily="'Cinzel',serif" fontSize="5.5" fontWeight="700"
-              fill={CREAM} opacity=".15" letterSpacing="1.5">BCCB</text>
-          </svg>
-        </div>
-        <div className="lb-stage-title">STANDBY</div>
-        {count != null ? (
-          <>
-            <div className="lb-display">{count} <span style={{fontSize:'0.38em', opacity:.4, WebkitTextFillColor: CREAM}}>/ {BATCH_TARGET}</span></div>
-            <div className="lb-count-label">Pre-orders to brew next batch</div>
-            <div className="lb-meter-bar">
-              <div className="lb-meter-fill" style={{ width: `${pct}%` }} />
-            </div>
-            <div className="lb-sub">
-              {needed > 0 ? `${needed} more and we brew` : 'We\'re brewing — thank you'}
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="lb-display dim">NEXT BATCH<br/>COMING SOON</div>
-            <div className="lb-sub">Small batch · Los Angeles · Cold brewed</div>
-          </>
-        )}
-      </div>
-    </div>
-  )
-}
 
 /* ── GRINDING: hand grinder SVG ── */
 function GrindingStage({ batchNum }) {
@@ -387,7 +274,6 @@ function ReadyStage({ batchNum }) {
 
 export default function LiveBatch() {
   const [batch, setBatch] = useState(null)
-  const [waitlistCount, setWaitlistCount] = useState(null)
   const remaining = useCountdown(batch?.stage === 'steeping' ? batch.steep_start : null)
 
   useEffect(() => {
@@ -403,37 +289,18 @@ export default function LiveBatch() {
     return () => supabase.removeChannel(channel)
   }, [])
 
-  useEffect(() => {
-    supabase.from('waitlist_entries').select('id', { count: 'exact' }).limit(0)
-      .then(({ count }) => { if (count != null) setWaitlistCount(count) })
-      .catch(() => {})
-  }, [])
-
   const stage    = batch?.stage ?? 'idle'
   const batchNum = batch?.batch_number ?? 0
 
-  const badgeText = { idle:'STANDBY', grinding:'LIVE NOW', steeping:'LIVE NOW', ready:'BATCH READY' }[stage]
-  const isLive    = stage === 'grinding' || stage === 'steeping'
+  const isLive   = stage === 'grinding' || stage === 'steeping'
+  const isActive = isLive || stage === 'ready'
+
+  if (!isActive) return null
 
   return (
     <>
       <style>{css}</style>
       <div className="lb-wrap">
-        <div className="lb-header">
-          <span className="lb-label">Brew Status</span>
-          <span className="lb-badge" style={{
-            color: isLive || stage==='ready' ? GOLD : CREAM,
-            opacity: stage==='idle' ? .35 : 1,
-          }}>
-            <span className={`lb-dot${isLive ? ' live' : ''}`} style={{
-              background: isLive || stage==='ready' ? GOLD : CREAM,
-              opacity: stage==='idle' ? .2 : 1,
-            }}/>
-            {badgeText}
-          </span>
-        </div>
-
-        {stage === 'idle'     && <IdleStage count={waitlistCount} />}
         {stage === 'grinding' && <GrindingStage batchNum={batchNum} />}
         {stage === 'steeping' && <SteepingStage batchNum={batchNum} remaining={remaining} />}
         {stage === 'ready'    && <ReadyStage batchNum={batchNum} />}
