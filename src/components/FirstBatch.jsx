@@ -58,7 +58,7 @@ const css = `
   .fb-cityscape {
     position: absolute;
     inset: 0;
-    background-image: url('/img/la-cityscape.jpg');
+    background-image: url('/img/story-scoop.png');
     background-size: cover;
     background-position: center 60%;
     /* Darken + push toward amber/sepia — filter chain order matters */
