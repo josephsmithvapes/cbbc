@@ -148,11 +148,13 @@ export default function AdminPanel() {
   const [isAdding, setIsAdding]       = useState(false)
   const [addForm, setAddForm]         = useState(EMPTY_FORM)
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const [batchTarget, setBatchTarget]     = useState(25)
+  const [savingTarget, setSavingTarget]   = useState(false)
 
   useEffect(() => {
     if (!authed) return
     supabase.from('batch_state').select('*').eq('id', 1).single()
-      .then(({ data }) => { if (data) setBatch(data) })
+      .then(({ data }) => { if (data) { setBatch(data); if (data.batch_target) setBatchTarget(data.batch_target) } })
     const ch = supabase.channel('admin-batch')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'batch_state' },
         ({ new: row }) => setBatch(row))
@@ -181,6 +183,15 @@ export default function AdminPanel() {
   }
 
   function flash_(msg) { setFlash(msg); setTimeout(() => setFlash(''), 2200) }
+
+  async function saveBatchTarget() {
+    const n = parseInt(batchTarget)
+    if (!n || n < 1) return
+    setSavingTarget(true)
+    const { error } = await supabase.from('batch_state').update({ batch_target: n }).eq('id', 1)
+    flash_(error ? '✗ ERROR' : '✓ SAVED')
+    setSavingTarget(false)
+  }
 
   function login(e) {
     e.preventDefault()
@@ -213,8 +224,13 @@ export default function AdminPanel() {
     if (stage === 'idle') { update.steep_start = null; setActiveBatch(null); setForm(EMPTY_FORM) }
 
     const { error } = await supabase.from('batch_state').update(update).eq('id', 1)
-    if (!error) { setBatch(prev => ({ ...prev, ...update })); flash_('✓ LIVE') }
-    else flash_('✗ ERROR')
+    if (!error) {
+      setBatch(prev => ({ ...prev, ...update }))
+      // Keep brew_state in sync so BrewMonitor reflects admin stage without ESP32
+      const statusMap = { grinding: 'BREWING', steeping: 'BREWING', ready: 'READY', idle: 'IDLE' }
+      await supabase.from('brew_state').update({ status: statusMap[stage] }).eq('id', 1)
+      flash_('✓ LIVE')
+    } else flash_('✗ ERROR')
     setSaving(false)
   }
 
@@ -316,6 +332,21 @@ export default function AdminPanel() {
             STARTED: {new Date(batch.steep_start).toLocaleString()}
           </div>
         )}
+      </div>
+
+      {/* ── batch target ── */}
+      <div style={{ padding:'20px 24px', borderBottom:'1px solid rgba(201,168,76,.1)', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box' }}>
+        <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4, marginBottom:14, textAlign:'center' }}>KEG TARGET</div>
+        <div style={{ display:'flex', gap:10, alignItems:'center' }}>
+          <input type="number" min="1" max="999" value={batchTarget}
+            onChange={e => setBatchTarget(e.target.value)}
+            style={{ ...FIELD, width:90, textAlign:'center', fontFamily:"'Alfa Slab One',serif", fontSize:'1.2rem' }} />
+          <span style={{ color:CREAM, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.2em', opacity:.3, fontFamily:"'Cinzel',serif" }}>PRE-ORDERS TO TRIGGER BREW</span>
+          <button onClick={saveBatchTarget} disabled={savingTarget}
+            style={{ marginLeft:'auto', padding:'10px 18px', background:GOLD, border:'none', cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.22em', color:INK, opacity: savingTarget ? .5 : 1, flexShrink:0 }}>
+            SET
+          </button>
+        </div>
       </div>
 
       {/* ── new batch metadata form ── */}

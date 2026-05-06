@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-const BATCH_TARGET = 25
+const BATCH_TARGET_DEFAULT = 25
 const INK       = '#161108'
 const GOLD      = '#c9a84c'
 const CREAM     = '#f2ede0'
@@ -28,9 +28,11 @@ const css = `
     font-family: var(--font-brand);
     font-size: var(--t-label, 0.6875rem);
     letter-spacing: .32em;
-    color: ${CREAM};
-    opacity: .28;
+    color: rgba(242,237,224,0.28);
     text-transform: uppercase;
+  }
+  .fb-maiden {
+    color: ${GOLD};
   }
   .fb-badge {
     font-family: var(--font-brand);
@@ -174,24 +176,27 @@ const css = `
 `
 
 export default function FirstBatch() {
-  const [count, setCount] = useState(null)
+  const [count, setCount]   = useState(null)
+  const [target, setTarget] = useState(BATCH_TARGET_DEFAULT)
 
   useEffect(() => {
     supabase.from('waitlist_entries').select('id', { count: 'exact' }).limit(0)
       .then(({ count: c }) => { if (c != null) setCount(c) })
+    supabase.from('batch_state').select('batch_target').eq('id', 1).single()
+      .then(({ data }) => { if (data?.batch_target) setTarget(data.batch_target) })
       .catch(() => {})
   }, [])
 
-  const pct    = count != null ? Math.min(100, (count / BATCH_TARGET) * 100) : 0
-  const needed = count != null ? Math.max(0, BATCH_TARGET - count) : null
+  const pct    = count != null ? Math.min(100, (count / target) * 100) : 0
+  const needed = count != null ? Math.max(0, target - count) : null
 
   return (
     <>
       <style>{css}</style>
       <div className="fb-wrap">
         <div className="fb-header">
-          <span className="fb-label">Brew Status</span>
-          <span className="fb-badge">STANDBY</span>
+          <span className="fb-label"><span className="fb-maiden">Maiden</span> Batch</span>
+          <span className="fb-badge">BATCH #01 · OPEN</span>
         </div>
         <div className="fb-body">
           <div className="fb-cityscape" aria-hidden="true" />
@@ -209,24 +214,26 @@ export default function FirstBatch() {
                   fill={CREAM} opacity=".15" letterSpacing="1.5">BCCB</text>
               </svg>
             </div>
-            <div className="fb-stage-title">STANDBY</div>
+            <div className="fb-stage-title"> Reserve your spot in the <span style={{ color: GOLD }}>Maiden</span> Batch now!</div>
             {count != null ? (
               <>
                 <div className="fb-display">
-                  {count} <span style={{ fontSize: '0.38em', opacity: .4, WebkitTextFillColor: CREAM }}>/ {BATCH_TARGET}</span>
+                  {count} <span style={{ fontSize: '0.38em', opacity: .4, WebkitTextFillColor: CREAM }}>/ {target}</span>
                 </div>
-                <div className="fb-count-label">Pre-orders to brew next batch</div>
+                <div className="fb-count-label">pre-orders to unlock the maiden batch</div>
                 <div className="fb-meter-bar">
                   <div className="fb-meter-fill" style={{ width: `${pct}%` }} />
                 </div>
                 <div className="fb-sub">
-                  {needed > 0 ? `${needed} more and we brew` : "We're brewing — thank you"}
+                  {needed > 0
+                    ? `${needed} more and we brew batch #01`
+                    : "Batch #01 confirmed — we're brewing"}
                 </div>
               </>
             ) : (
               <>
-                <div className="fb-display dim">NEXT BATCH<br/>COMING SOON</div>
-                <div className="fb-sub">Small batch · Los Angeles · Cold brewed</div>
+                <div className="fb-display dim">BATCH #01<br/>COMING SOON</div>
+                <div className="fb-sub">Small batch · cold brewed · Los Angeles</div>
               </>
             )}
           </div>

@@ -98,6 +98,7 @@ const css = `
     opacity: .18;
     margin-top: 20px;
     padding: 0 24px;
+    text-align: center;
   }
 
   /* Carousel */
@@ -120,6 +121,7 @@ const css = `
     width: max-content;
     min-width: 100%;
     padding: 0 24px;
+    justify-content: center;
   }
 
   /* Card */
@@ -584,7 +586,7 @@ export default function BatchProof() {
                 <circle cx="202" cy="14" r="1.5" fill={GOLD} opacity=".4"/>
                 {/* SUPABASE box */}
                 <rect x="178" y="20" width="48" height="16" rx="2"
-                  stroke={GOLD} strokeWidth="1" fill={GOLD} fillOpacity=".04" opacity=".55"/>we
+                  stroke={GOLD} strokeWidth="1" fill={GOLD} fillOpacity=".04" opacity=".55"/>
                 <text x="202" y="31" textAnchor="middle"
                   fontFamily="var(--font-brand,'Space Grotesk',sans-serif)"
                   fontSize="5" fill={GOLD} opacity=".55" letterSpacing=".5">DATABASE</text>
