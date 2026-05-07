@@ -183,7 +183,7 @@ export default function FirstBatch() {
     supabase.from('waitlist_entries').select('id', { count: 'exact' }).limit(0)
       .then(({ count: c }) => { if (c != null) setCount(c) })
     supabase.from('batch_state').select('batch_target').eq('id', 1).single()
-      .then(({ data }) => { if (data?.batch_target) setTarget(data.batch_target) })
+      .then(({ data, error }) => { if (!error && data?.batch_target) setTarget(data.batch_target) })
       .catch(() => {})
   }, [])
 
