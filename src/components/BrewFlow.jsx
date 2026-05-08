@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { useBatchState } from '../lib/hooks'
 
 const INK   = '#161108'
 const GOLD  = '#c9a84c'
@@ -70,21 +69,8 @@ const STEPS = [
 const STAGE_INDEX = { idle: -1, grinding: 0, steeping: 1, ready: 2 }
 
 export default function BrewFlow() {
-  const [stage, setStage] = useState('idle')
-
-  useEffect(() => {
-    supabase.from('batch_state').select('stage').eq('id', 1).single()
-      .then(({ data }) => { if (data) setStage(data.stage) })
-
-    const ch = supabase.channel('flow-update')
-      .on('postgres_changes', {
-        event: 'UPDATE', schema: 'public', table: 'batch_state'
-      }, ({ new: row }) => setStage(row.stage))
-      .subscribe()
-
-    return () => supabase.removeChannel(ch)
-  }, [])
-
+  const batch   = useBatchState()
+  const stage   = batch?.stage ?? 'idle'
   const current = STAGE_INDEX[stage] ?? -1
 
   return (

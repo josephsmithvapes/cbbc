@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { useState } from 'react'
+import { useBatchState } from '../lib/hooks'
 
 const STEEP_HOURS = 20
 const INK   = '#161108'
@@ -273,21 +273,8 @@ function ReadyStage({ batchNum }) {
 }
 
 export default function LiveBatch() {
-  const [batch, setBatch] = useState(null)
+  const batch     = useBatchState()
   const remaining = useCountdown(batch?.stage === 'steeping' ? batch.steep_start : null)
-
-  useEffect(() => {
-    supabase.from('batch_state').select('*').eq('id', 1).single()
-      .then(({ data }) => { if (data) setBatch(data) })
-
-    const channel = supabase.channel('batch-live')
-      .on('postgres_changes', {
-        event: 'UPDATE', schema: 'public', table: 'batch_state'
-      }, ({ new: row }) => setBatch(row))
-      .subscribe()
-
-    return () => supabase.removeChannel(channel)
-  }, [])
 
   const stage    = batch?.stage ?? 'idle'
   const batchNum = batch?.batch_number ?? 0
