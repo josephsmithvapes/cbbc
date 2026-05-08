@@ -352,8 +352,6 @@ body {
    STORY
 ───────────────────────────────────────── */
 .story {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 600px;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
@@ -461,8 +459,6 @@ body {
    MERCH TEASER
 ───────────────────────────────────────── */
 .merch {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 700px;
   padding: 0 56px;
   background: var(--mid);
   background-image: radial-gradient(circle, rgba(201,168,76,.08) 1px, transparent 1px);
@@ -530,8 +526,6 @@ body {
    EMAIL CAPTURE
 ───────────────────────────────────────── */
 .capture {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 400px;
   padding: var(--sp-2xl) 56px;
   background: var(--ink);
   text-align: center;
@@ -1363,7 +1357,6 @@ footer {
 
 /* Section scroll anchors — offset for fixed nav */
 #batches, #story, #invest { scroll-margin-top: var(--nav-h); }
-#invest { content-visibility: auto; contain-intrinsic-size: 0 800px; }
 
 /* Option C responsive */
 @media (max-width:960px) {
