@@ -20,6 +20,7 @@
 <meta name="theme-color" content="#0d0a05">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://qmzgnbcahcpmntbnmikq.supabase.co" crossorigin>
 <link rel="preload" as="image" href="/img/story-scoop.webp">
 <link rel="preload" as="image" href="/img/bottle-bccb.webp">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=DM+Mono:wght@400;500&display=swap" onload="this.rel='stylesheet'">
@@ -351,6 +352,8 @@ body {
    STORY
 ───────────────────────────────────────── */
 .story {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
@@ -458,6 +461,8 @@ body {
    MERCH TEASER
 ───────────────────────────────────────── */
 .merch {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 700px;
   padding: 0 56px;
   background: var(--mid);
   background-image: radial-gradient(circle, rgba(201,168,76,.08) 1px, transparent 1px);
@@ -525,6 +530,8 @@ body {
    EMAIL CAPTURE
 ───────────────────────────────────────── */
 .capture {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 400px;
   padding: var(--sp-2xl) 56px;
   background: var(--ink);
   text-align: center;
@@ -708,6 +715,16 @@ footer {
   *                  { animation-duration: .01ms !important;
                        animation-iteration-count: 1 !important;
                        transition-duration: .01ms !important; }
+}
+
+/* ── GPU compositing hints ── */
+.scroll-arrow, .invest-dot-pulse, .invest-status-dot { will-change: transform, opacity; }
+
+/* ── Mobile: stop paint-heavy box-shadow animation ── */
+@media (max-width: 768px) {
+  .cbbc-tier-vault { animation: none; box-shadow: 0 0 0 1px rgba(201,168,76,.28); }
+  .invest-dot-pulse { animation: none; opacity: .6; }
+  .invest-status-dot { animation: none; opacity: .8; }
 }
 </style>
 <style>
@@ -1346,6 +1363,7 @@ footer {
 
 /* Section scroll anchors — offset for fixed nav */
 #batches, #story, #invest { scroll-margin-top: var(--nav-h); }
+#invest { content-visibility: auto; contain-intrinsic-size: 0 800px; }
 
 /* Option C responsive */
 @media (max-width:960px) {
@@ -1362,7 +1380,7 @@ footer {
   .logo { margin:0 auto; }
 }
 </style>
-  <script type="module" crossorigin src="/assets/index-DTl44NCu.js"></script>
+  <script type="module" crossorigin src="/assets/index-C9inG_QS.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabase-CU2Wct4P.js">
   <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Cr0BHlHC.js">
   <link rel="modulepreload" crossorigin href="/assets/react-DRmcoaL4.js">
