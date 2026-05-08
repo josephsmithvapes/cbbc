@@ -212,7 +212,7 @@ export default function FirstBatch() {
                 <div className="fb-display">
                   {count} <span style={{ fontSize: '0.38em', opacity: .4, WebkitTextFillColor: CREAM }}>/ {target}</span>
                 </div>
-                <div className="fb-count-label">pre-orders to unlock the maiden batch</div>
+                <div className="fb-count-label">Free shipping on all Maiden batch orders.</div>
                 <div className="fb-meter-bar">
                   <div className="fb-meter-fill" style={{ width: `${pct}%` }} />
                 </div>
