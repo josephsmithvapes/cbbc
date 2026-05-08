@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { useWaitlistCount, useBatchState } from '../lib/hooks'
 
 const BATCH_TARGET_DEFAULT = 25
 const INK       = '#161108'
@@ -60,7 +59,7 @@ const css = `
   .fb-cityscape {
     position: absolute;
     inset: 0;
-    background-image: url('/img/story-scoop.png');
+    background-image: url('/img/story-scoop.webp');
     background-size: cover;
     background-position: center 60%;
     /* Darken + push toward amber/sepia — filter chain order matters */
@@ -172,20 +171,13 @@ const css = `
     0%,100% { transform: translateY(0); }
     50%      { transform: translateY(-7px); }
   }
-  .fb-anim-float { animation: fb-float 4s ease-in-out infinite; }
+  .fb-anim-float { animation: fb-float 4s ease-in-out infinite; will-change: transform; }
 `
 
 export default function FirstBatch() {
-  const [count, setCount]   = useState(null)
-  const [target, setTarget] = useState(BATCH_TARGET_DEFAULT)
-
-  useEffect(() => {
-    supabase.from('waitlist_entries').select('id', { count: 'exact' }).limit(0)
-      .then(({ count: c }) => { if (c != null) setCount(c) })
-    supabase.from('batch_state').select('batch_target').eq('id', 1).single()
-      .then(({ data, error }) => { if (!error && data?.batch_target) setTarget(data.batch_target) })
-      .catch(() => {})
-  }, [])
+  const count      = useWaitlistCount()
+  const batchState = useBatchState()
+  const target     = batchState?.batch_target ?? BATCH_TARGET_DEFAULT
 
   const pct    = count != null ? Math.min(100, (count / target) * 100) : 0
   const needed = count != null ? Math.max(0, target - count) : null

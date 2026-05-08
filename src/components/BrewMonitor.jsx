@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { useBrewState, useTemperatureReadings } from '../lib/hooks'
 
 function TempChart({ points }) {
   const W = 600, H = 72
@@ -237,47 +237,12 @@ const STATUS_LABELS = {
 }
 
 export default function BrewMonitor() {
-  const [state, setState] = useState(null)
+  const state     = useBrewState()
+  const telemetry = useTemperatureReadings(120)
   const [tick, setTick] = useState(0)
-  const [telemetry, setTelemetry] = useState([])
 
-  useEffect(() => {
-    supabase.from('brew_state').select('*').eq('id', 1).single()
-      .then(({ data }) => { if (data) setState(data) })
-
-    const channel = supabase.channel('brew_monitor')
-      .on('postgres_changes', {
-        event: 'UPDATE', schema: 'public', table: 'brew_state'
-      }, ({ new: row }) => {
-        setState(row)
-        setTick(0)
-      })
-      .subscribe()
-
-    return () => supabase.removeChannel(channel)
-  }, [])
-
-  useEffect(() => {
-    supabase.from('temperature_readings')
-      .select('temp_c, recorded_at')
-      .order('recorded_at', { ascending: false })
-      .limit(120)
-      .then(({ data }) => {
-        if (data?.length) {
-          setTelemetry(data.reverse().map(r => ({ temp_f: r.temp_c * 9 / 5 + 32 })))
-        }
-      })
-
-    const ch = supabase.channel('bm_telemetry')
-      .on('postgres_changes', {
-        event: 'INSERT', schema: 'public', table: 'temperature_readings'
-      }, ({ new: row }) => {
-        setTelemetry(prev => [...prev.slice(-119), { temp_f: row.temp_c * 9 / 5 + 32 }])
-      })
-      .subscribe()
-
-    return () => supabase.removeChannel(ch)
-  }, [])
+  // Reset tick on each server push to restart smooth interpolation
+  useEffect(() => { setTick(0) }, [state])
 
   // smooth client-side tick between 5s server pushes
   useEffect(() => {
