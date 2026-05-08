@@ -214,7 +214,7 @@ export default function FirstBatch() {
                   fill={CREAM} opacity=".15" letterSpacing="1.5">BCCB</text>
               </svg>
             </div>
-            <div className="fb-stage-title"> Reserve your spot in the <span style={{ color: GOLD }}>Maiden</span> Batch now!</div>
+            <div className="fb-stage-title"> Join the <span style={{ color: GOLD }}>Maiden</span> Batch now!</div>
             {count != null ? (
               <>
                 <div className="fb-display">

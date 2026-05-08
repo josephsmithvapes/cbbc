@@ -10,6 +10,8 @@ const GOLD_GRAD = `linear-gradient(135deg, #f0d878 0%, ${GOLD} 55%, #9a7020 100%
 const css = `
   .bp-section {
     background: ${INK};
+    background-image: radial-gradient(circle, rgba(201,168,76,.08) 1px, transparent 1px);
+    background-size: 22px 22px;
     border-top: 1px solid ${RULE};
     border-bottom: 1px solid ${RULE};
     padding: 80px 0 96px;
@@ -495,7 +497,7 @@ export default function BatchProof() {
           <div className="bp-header-layout">
             <div className="bp-header-text">
               <div className="bp-eyebrow">Full Batch Transparency · Bean to Bottle</div>
-              <h2 className="bp-headline">We Show<br/>Our Work.</h2>
+              <h2 className="bp-headline">We Show<br/>Our <span style={{background:'linear-gradient(135deg,#f0d878 0%,#c9a84c 55%,#8a6018 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}}>Work.</span></h2>
               <p className="bp-body">
                 
                 We built live telemetry into every brew — temperature logged every few seconds,
@@ -567,7 +569,7 @@ export default function BatchProof() {
                   fontSize="5.5" fill={CREAM} opacity=".28" letterSpacing=".5">ESP32</text>
                 <text x="180" y="120" textAnchor="middle"
                   fontFamily="var(--font-brand,'Space Grotesk',sans-serif)"
-                  fontSize="4" fill={CREAM} opacity=".18" letterSpacing=".3">NASOM-32</text>
+                  fontSize="4" fill={CREAM} opacity=".18" letterSpacing=".3">WROOM-32</text>
                 {/* HX711 */}
                 <rect x="208" y="92" width="40" height="42" rx="1.5"
                   stroke={CREAM} strokeWidth="1" fill={CREAM} fillOpacity=".04" opacity=".35"/>

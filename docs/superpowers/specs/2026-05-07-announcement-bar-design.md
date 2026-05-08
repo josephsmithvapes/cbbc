@@ -39,7 +39,7 @@ Premium Cold Brew · Transparency in Every Cup · Weekly · Monthly · Single
 ## Responsive
 
 - **Desktop:** single line, no wrapping needed at typical viewport widths
-- **Mobile (≤768px):** padding reduced to `10px 16px`, font stays the same, text wraps naturally to 2 lines — no special treatment needed
+- **Mobile (≤768px):** shows `Premium Cold Brew · ` (muted) followed by `Weekly · Monthly · Single` (gold) — the "Transparency in Every Cup" middle section is hidden. Single line.
 
 ## Implementation
 
@@ -47,12 +47,11 @@ Single HTML element added to `index.html` directly after the `<nav class="top-ba
 
 ```html
 <div class="announce-bar">
-  Premium Cold Brew · Transparency in Every Cup ·
-  <span class="announce-tiers">Weekly · Monthly · Single</span>
+  Premium Cold Brew<span class="announce-mid"> · Transparency in Every Cup</span> · <span class="announce-tiers">Weekly · Monthly · Single</span>
 </div>
 ```
 
-Two CSS rules added to the global stylesheet:
+CSS rules added to the global stylesheet:
 
 ```css
 .announce-bar {
@@ -72,6 +71,7 @@ Mobile override inside the existing `@media (max-width: 768px)` block:
 
 ```css
 .announce-bar { padding: 10px 16px; }
+.announce-mid { display: none; }
 ```
 
 ## Out of Scope
