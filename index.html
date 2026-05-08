@@ -15,9 +15,14 @@
 <meta name="twitter:description" content="Cold steeped 20 hours. Every reading live.">
 <meta name="twitter:image" content="https://boldcrewcoldbrew.com/img/bottle-hero.png">
 <link rel="canonical" href="https://boldcrewcoldbrew.com">
+<link rel="icon" href="/img/favicon.ico">
+<link rel="apple-touch-icon" href="/img/favicon.ico">
+<meta name="theme-color" content="#0d0a05">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Cinzel:wght@400;700&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/img/bottle-bccb.png">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=DM+Mono:wght@400;500&display=swap" onload="this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=DM+Mono:wght@400;500&display=swap"></noscript>
 <style>
 /* ─────────────────────────────────────────
    RESET & TOKENS
@@ -40,8 +45,8 @@
 
   /* type faces */
   --font-display: 'Alfa Slab One', serif;
-  --font-brand:   'Cinzel', serif;
-  --font-body:    'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-brand:   'DM Mono', monospace;
+  --font-body:    'DM Mono', monospace;
 
   /* type scale — real pixel equivalents at 16px base */
   --t-micro:  0.625rem;   /* 10px — decorative caps only */
@@ -103,19 +108,25 @@ body {
   z-index: 100;
 }
 .logo {
-  font-family: var(--font-brand);
-  font-size: var(--t-label);
-  letter-spacing: 0.38em;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
   color: var(--cream);
-  opacity: .7;
-  white-space: nowrap;
   text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  gap: 1px;
 }
 .logo-bc {
   background: var(--gold-grad);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+.logo-sub {
+  color: var(--cream);
+  opacity: .65;
 }
 .nav-divider {
   width: 1px; height: 16px;
@@ -125,7 +136,7 @@ body {
 .nav-meta {
   font-family: var(--font-brand);
   font-size: var(--t-label);
-  letter-spacing: 0.26em;
+  letter-spacing: 0.09em;
   color: var(--cream);
   opacity: .35;
   white-space: nowrap;
@@ -153,7 +164,7 @@ body {
 
 /* left column — text */
 .hero-left {
-  padding: 72px 52px 72px;
+  padding: 72px 56px 72px;
   display: flex;
   flex-direction: column;
   justify-content: center ;
@@ -206,7 +217,7 @@ body {
 .hero-eyebrow {
   font-family: var(--font-brand);
   font-size: var(--t-label);
-  letter-spacing: 0.38em;
+  letter-spacing: 0.12em;
   color: var(--gold);
   opacity: .65;
   margin-bottom: 20px;
@@ -286,7 +297,7 @@ body {
   min-height: 48px;
   font-family: var(--font-brand);
   font-size: var(--t-small);
-  letter-spacing: 0.24em;
+  letter-spacing: 0.08em;
   color: var(--cream);
   opacity: .45;
   text-decoration: none;
@@ -311,7 +322,7 @@ body {
 .scroll-hint-label {
   font-family: var(--font-brand);
   font-size: var(--t-micro);
-  letter-spacing: 0.28em;
+  letter-spacing: 0.10em;
   color: var(--cream);
   opacity: .22;
 }
@@ -368,7 +379,7 @@ body {
   z-index: 2;
   font-family: var(--font-brand);
   font-size: var(--t-micro);
-  letter-spacing: 0.3em;
+  letter-spacing: 0.10em;
   color: var(--gold);
   opacity: .45;
 }
@@ -386,7 +397,7 @@ body {
 .eyebrow {
   font-family: var(--font-brand);
   font-size: var(--t-label);
-  letter-spacing: 0.34em;
+  letter-spacing: 0.10em;
   color: var(--gold);
   opacity: .6;
   text-transform: uppercase;
@@ -394,7 +405,7 @@ body {
 .eyebrow-terra {
   font-family: var(--font-brand);
   font-size: var(--t-label);
-  letter-spacing: 0.34em;
+  letter-spacing: 0.10em;
   color: var(--terra);
   opacity: .8;
   text-transform: uppercase;
@@ -437,7 +448,7 @@ body {
 .stat-label {
   font-family: var(--font-brand);
   font-size: var(--t-micro);
-  letter-spacing: 0.24em;
+  letter-spacing: 0.08em;
   color: var(--cream);
   opacity: .42;
 }
@@ -446,8 +457,10 @@ body {
    MERCH TEASER
 ───────────────────────────────────────── */
 .merch {
-  padding: 0 5rem;
+  padding: 0 56px;
   background: var(--mid);
+  background-image: radial-gradient(circle, rgba(201,168,76,.08) 1px, transparent 1px);
+  background-size: 22px 22px;
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   display: grid;
@@ -462,16 +475,16 @@ body {
 }
 .merch-title {
   font-family: var(--font-display);
-  font-size: clamp(1.875rem, 5vw, 3.75rem);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
   color: var(--cream);
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: 0.03em;
 }
 .merch-body {
   font-size: var(--t-body);
   color: var(--muted);
   max-width: 40ch;
-  line-height: 1.8;
+  line-height: 1.85;
 }
 .merch-tags {
   display: flex;
@@ -511,7 +524,7 @@ body {
    EMAIL CAPTURE
 ───────────────────────────────────────── */
 .capture {
-  padding: var(--sp-2xl) 52px;
+  padding: var(--sp-2xl) 56px;
   background: var(--ink);
   text-align: center;
   display: flex;
@@ -522,16 +535,16 @@ body {
 }
 .capture h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.875rem, 6vw, 4rem);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
   color: var(--cream);
-  letter-spacing: 0.04em;
-  line-height: 1;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
 }
 .capture > p {
   font-size: var(--t-body);
   color: var(--muted);
   max-width: 38ch;
-  line-height: 1.8;
+  line-height: 1.85;
 }
 
 /* ─── Form ─── */
@@ -583,7 +596,7 @@ body {
 .form-note {
   font-family: var(--font-brand);
   font-size: var(--t-micro);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.06em;
   color: var(--cream);
   opacity: .28;
 }
@@ -604,7 +617,7 @@ footer {
 .footer-logo {
   font-family: var(--font-brand);
   font-size: var(--t-label);
-  letter-spacing: 0.34em;
+  letter-spacing: 0.10em;
   color: var(--gold);
   opacity: .5;
 }
@@ -636,7 +649,7 @@ footer {
   .top-bar        { padding: 0 16px; gap: 10px; }
   .nav-meta,
   .nav-divider    { display: none; }
-  .logo           { font-size: 0.8rem; letter-spacing: 0.28em; }
+  .logo           { font-size: 0.8rem; letter-spacing: 0.10em; }
 
   /* hero */
   .hero           { grid-template-columns: 1fr; min-height: 0; }
@@ -711,7 +724,7 @@ footer {
   display:flex; align-items:center; padding:0 20px;
   border-left:1px solid var(--rule);
   font-family:var(--font-brand); font-size:var(--t-micro);
-  letter-spacing:.28em; text-transform:uppercase;
+  letter-spacing:.10em; text-transform:uppercase;
   color:var(--cream); opacity:.35; text-decoration:none;
   transition:opacity .15s; white-space:nowrap; cursor:pointer;
 }
@@ -724,6 +737,9 @@ footer {
   border-bottom:1px solid var(--rule);
   padding-top:var(--nav-h);
   min-height:calc(100vh - var(--nav-h));
+  background-color: var(--dark);
+  background-image: radial-gradient(circle, rgba(201,168,76,.08) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
 .live-hero-main { border-right:1px solid var(--rule); overflow:hidden; }
 .live-hero-panel {
@@ -746,7 +762,7 @@ footer {
 .panel-photo-tag {
   position:absolute; bottom:14px; left:18px; z-index:2;
   font-family:var(--font-brand); font-size:var(--t-micro);
-  letter-spacing:.26em; color:var(--gold); opacity:.5;
+  letter-spacing:.09em; color:var(--gold); opacity:.5;
 }
 .panel-story {
   padding:22px 22px 18px; background:var(--dark);
@@ -775,7 +791,7 @@ footer {
 }
 .invest-drawer-label {
   font-family:var(--font-brand); font-size:var(--t-micro);
-  letter-spacing:.3em; text-transform:uppercase; color:var(--gold); opacity:.65;
+  letter-spacing:.10em; text-transform:uppercase; color:var(--gold); opacity:.65;
 }
 .invest-drawer-title {
   font-family:var(--font-brand); font-weight:700; font-size:1rem;
@@ -790,7 +806,7 @@ footer {
   0%,100%{opacity:1;transform:scale(1);}
   50%{opacity:.3;transform:scale(.65);}
 }
-.invest-drawer-body { padding:0 22px 22px; }
+.invest-drawer-body { padding:0 22px 22px; border-bottom:1px solid var(--gold); }
 .invest-mini-stat {
   display:flex; justify-content:space-between; align-items:baseline;
   padding:10px 0; border-bottom:1px solid var(--rule);
@@ -826,7 +842,7 @@ footer {
 .sticky-email-bar.visible { transform:translateY(0); }
 .seb-label {
   font-family:var(--font-brand); font-size:var(--t-micro);
-  letter-spacing:.28em; text-transform:uppercase;
+  letter-spacing:.10em; text-transform:uppercase;
   color:var(--cream); opacity:.45; white-space:nowrap;
 }
 .seb-input {
@@ -890,13 +906,13 @@ footer {
 .plan-card-flag {
   position:absolute; top:0; right:0;
   font-family:var(--font-brand);
-  font-size:7px; letter-spacing:.28em; text-transform:uppercase;
+  font-size:7px; letter-spacing:.10em; text-transform:uppercase;
   color:var(--ink); background:var(--gold);
   padding:4px 10px;
 }
 .plan-card-eyebrow {
   font-family:var(--font-brand);
-  font-size:8px; letter-spacing:.38em; text-transform:uppercase;
+  font-size:8px; letter-spacing:.12em; text-transform:uppercase;
   color:var(--gold); opacity:.7;
   display:block; margin-bottom:10px;
 }
@@ -929,7 +945,7 @@ footer {
 }
 .plan-stat-unit {
   font-family:var(--font-brand);
-  font-size:9px; letter-spacing:.22em; text-transform:uppercase;
+  font-size:9px; letter-spacing:.08em; text-transform:uppercase;
   color:var(--cream); opacity:.35;
 }
 /* ── feature list ── */
@@ -999,7 +1015,7 @@ footer {
 .maiden-milestone-label {
   display:flex; align-items:center; gap:7px;
   font-family:var(--font-brand);
-  font-size:var(--t-micro); letter-spacing:.28em; text-transform:uppercase;
+  font-size:var(--t-micro); letter-spacing:.10em; text-transform:uppercase;
   color:var(--gold); opacity:.75;
   margin-bottom:12px;
 }
@@ -1042,7 +1058,7 @@ footer {
 }
 .service-eyebrow {
   font-family:var(--font-brand); font-size:var(--t-micro);
-  letter-spacing:.38em; text-transform:uppercase;
+  letter-spacing:.12em; text-transform:uppercase;
   color:var(--gold); opacity:.5; margin-bottom:16px;
 }
 
@@ -1060,7 +1076,7 @@ footer {
 }
 .waitlist-label {
   font-family:var(--font-brand); font-size:var(--t-micro);
-  letter-spacing:.28em; text-transform:uppercase;
+  letter-spacing:.10em; text-transform:uppercase;
   color:var(--cream); opacity:.55;
 }
 .milestone-track {
@@ -1109,7 +1125,7 @@ footer {
 .service-tier-text { display:flex; flex-direction:column; gap:5px; flex:1; }
 .service-tier-badge {
   font-family:var(--font-brand); font-size:7px;
-  letter-spacing:.28em; text-transform:uppercase;
+  letter-spacing:.10em; text-transform:uppercase;
   color:var(--gold); opacity:.6;
 }
 .service-tier-name {
@@ -1126,7 +1142,7 @@ footer {
   align-self:flex-start; margin-top:6px;
   background:none; border:1px solid rgba(201,168,76,.3);
   color:var(--gold); font-family:var(--font-brand);
-  font-size:7px; letter-spacing:.22em; text-transform:uppercase;
+  font-size:7px; letter-spacing:.08em; text-transform:uppercase;
   padding:7px 14px; cursor:pointer; transition:border-color .15s, color .15s;
 }
 .service-tier-cta:hover { border-color:var(--gold); color:var(--gold-lt); }
@@ -1230,9 +1246,9 @@ footer {
   }
 }
 .cbbc-tier-vault-banner {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand);
   font-size: 0.6875rem;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
   color: var(--cbbc-gold, #c9a84c);
   opacity: 0.85;
@@ -1265,9 +1281,9 @@ footer {
   display: flex;
   align-items: baseline;
   gap: 6px;
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand);
   font-size: 0.625rem;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
   color: var(--cbbc-cream, #f2ede0);
   opacity: 0.7;
@@ -1283,7 +1299,7 @@ footer {
   opacity: 0.75;
 }
 .cbbc-tier-vault-reward {
-  font-family: var(--font-body, 'Space Grotesk', system-ui, sans-serif);
+  font-family: var(--font-body);
   font-size: 0.6875rem;
   letter-spacing: 0.04em;
   color: var(--cbbc-gold, #c9a84c);
@@ -1345,15 +1361,15 @@ footer {
   .logo { margin:0 auto; }
 }
 </style>
-  <script type="module" crossorigin src="/assets/index-DKLkoCim.js"></script>
+  <script type="module" crossorigin src="/assets/index-D51keOeV.js"></script>
 </head>
 <body>
 
 <!-- ── NAV ── -->
 <nav class="top-bar" aria-label="Main navigation">
-  <a href="#" class="logo"><span class="logo-bc">Bold Crew</span> Cold Brew</a>
+  <a href="#" class="logo"><span class="logo-bc">BOLD CREW</span><span class="logo-sub">COLD BREW</span></a>
   <div class="nav-divider" aria-hidden="true"></div>
-  <span class="nav-meta" aria-hidden="true">Est. 2026</span>
+  <span class="nav-meta" aria-hidden="true">Weekly | Monthly | Single</span>
   <div class="nav-tabs" role="navigation" aria-label="Site sections">
     <a class="nav-tab active" href="#live">Live</a>
     <a class="nav-tab" href="#batches">Batches</a>
@@ -1482,9 +1498,9 @@ footer {
         <div class="plan-card" role="listitem">
           <div class="plan-card-head">
             <img class="plan-card-img" src="/img/plan-weekly.svg" alt="Single cold brew bottle" loading="lazy"/>
-            <span class="plan-card-eyebrow">Weekly Batch</span>
+            <span class="plan-card-eyebrow">Weekly</span>
             <span class="plan-card-name">WEEKLY</span>
-            <span class="plan-card-sub">Fresh grind, every week. Always the newest batch.</span>
+            <span class="plan-card-sub">One six pack per week.</span>
           </div>
           <div class="plan-card-stat">
             <span class="plan-stat-qty">1 Case</span>
@@ -1505,16 +1521,16 @@ footer {
           <div class="plan-card-head">
             <span class="plan-card-flag">★ Most reserved</span>
             <img class="plan-card-img" src="/img/plan-monthly.svg" alt="Mason jar cold steep" loading="lazy"/>
-            <span class="plan-card-eyebrow">Monthly Batch</span>
+            <span class="plan-card-eyebrow">Monthly</span>
             <span class="plan-card-name">MONTHLY</span>
-            <span class="plan-card-sub">One cold steep a month. Double the volume.</span>
+            <span class="plan-card-sub">One six pack every other week.</span>
           </div>
           <div class="plan-card-stat">
             <span class="plan-stat-qty">2 Cases</span>
             <span class="plan-stat-unit">of 6 · 12 oz each</span>
           </div>
           <div class="plan-card-features">
-            <div class="plan-feature">Ships once a month</div>
+            <div class="plan-feature">Ships twice a month</div>
             <div class="plan-feature">On batch finish</div>
             <div class="plan-feature">Cancel anytime</div>
           </div>
@@ -1564,7 +1580,7 @@ footer {
   <!-- RIGHT: sticky brand panel + invest drawer -->
   <div class="live-hero-panel">
     <div class="panel-photo">
-      <img src="/img/bottle-bccb.png" alt="BCCB cold brew bottle — small batch, Los Angeles">
+      <img src="/img/bottle-bccb.png" alt="BCCB cold brew bottle — small batch, Los Angeles" width="1856" height="2304" loading="eager" fetchpriority="high">
       <span class="panel-photo-tag">SMALL BATCH · LOS ANGELES</span>
     </div>
     <div class="panel-story">
@@ -1611,7 +1627,7 @@ footer {
 <!-- ── STORY ── -->
 <section class="story" id="story" aria-label="Our story">
   <div class="story-img">
-    <img src="/img/la-cityscape.jpg" alt="Los Angeles cityscape — BCCB cold brew, born in LA">
+    <img src="/img/la-cityscape.jpg" alt="Los Angeles cityscape — BCCB cold brew, born in LA" width="4896" height="3264" loading="lazy">
     <span class="story-img-tag">LOS ANGELES · EST. 2026</span>
   </div>
   <div class="story-content">
@@ -1620,16 +1636,12 @@ footer {
     <p>BCCB was formed in 2026 to provide premium cold brew throughout Los Angeles. We've already been serving you for the last 10 years, now it's time to serve you BOLDLY.</p>
     <div class="story-stats" role="list">
       <div class="stat" role="listitem">
-        <span class="stat-num">20h</span>
-        <span class="stat-label">Steep time</span>
+        <span class="stat-num">Now Serving</span>
+        <span class="stat-label">Silver Lake, DTLA, & Koreatown</span>
       </div>
       <div class="stat" role="listitem">
         <span class="stat-num">LA</span>
-        <span class="stat-label">Est. 2019</span>
-      </div>
-      <div class="stat" role="listitem">
-        <span class="stat-num">0</span>
-        <span class="stat-label">Shortcuts</span>
+        <span class="stat-label">Est. 2026</span>
       </div>
     </div>
   </div>
@@ -1639,7 +1651,7 @@ footer {
 <section class="merch" aria-label="Merch coming soon">
   <div class="merch-left">
     <p class="eyebrow-terra">Coming Soon</p>
-    <h2 class="merch-title">THE MERCH<br>IS COLD TOO.</h2>
+    <h2 class="merch-title">THE MERCH<br>IS <span style="background:var(--gold-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">COLD</span> TOO.</h2>
     <p class="merch-body">Lifestyle gear for people who take their coffee seriously. Built the same way we brew — slow, deliberate, no compromises.</p>
     <ul class="merch-tags" aria-label="Upcoming product categories">
       <li class="tag">Headwear</li>
@@ -1649,7 +1661,7 @@ footer {
     </ul>
   </div>
   <div class="merch-photo" aria-hidden="true">
-    <img src="/img/merch-flatlay.png" alt="Bold Crew Cold Brew merchandise flatlay">
+    <img src="/img/merch-flatlay.png" alt="Bold Crew Cold Brew merchandise flatlay" width="928" height="1152" loading="lazy">
   </div>
 </section>
 
@@ -1695,7 +1707,7 @@ footer {
 .rule  { width:100%; height:1px; background:var(--rule); }
 .fleur { font-family:var(--font-brand); color:var(--gold); opacity:.25; user-select:none; }
 .chip  {
-  font-family:var(--font-brand); font-size:10px; letter-spacing:.26em;
+  font-family:var(--font-brand); font-size:10px; letter-spacing:.09em;
   text-transform:uppercase; color:var(--cream); opacity:.5;
   border:1px solid var(--rule-gold); padding:6px 14px;
 }
@@ -1719,7 +1731,7 @@ footer {
 }
 .invest-accordion-label { display:flex; flex-direction:column; gap:4px; text-align:left; }
 .invest-accordion-eyebrow {
-  font-family:var(--font-brand); font-size:10px; letter-spacing:.38em;
+  font-family:var(--font-brand); font-size:10px; letter-spacing:.12em;
   color:var(--gold); opacity:.55; text-transform:uppercase;
 }
 .invest-accordion-title {
@@ -1746,7 +1758,7 @@ footer {
 /* Status pill */
 .invest-status-pill {
   display:flex; align-items:center; gap:8px; font-family:var(--font-brand);
-  font-size:10px; letter-spacing:.24em; text-transform:uppercase;
+  font-size:10px; letter-spacing:.08em; text-transform:uppercase;
   color:var(--gold); opacity:.6; padding:6px 14px;
   border:1px solid var(--rule); flex-shrink:0;
 }
@@ -1774,8 +1786,8 @@ footer {
   line-height:.9; letter-spacing:.02em; margin:24px auto 0; max-width:760px;
 }
 .hero-band p { font-size:clamp(15px,1.6vw,18px); color:var(--muted); line-height:1.8; max-width:580px; margin:28px auto 0; }
-.section-head { padding:72px 0 40px; display:flex; flex-direction:column; gap:14px; }
-.section-head h2 { font-family:var(--font-display); font-size:clamp(28px,3.5vw,46px); line-height:.94; letter-spacing:.02em; }
+.section-head { padding:80px 0 40px; display:flex; flex-direction:column; gap:14px; }
+.section-head h2 { font-family:var(--font-display); font-size:clamp(1.75rem,3.5vw,2.75rem); line-height:1.1; letter-spacing:.03em; }
 
 /* Brew timeline */
 .brew-timeline { display:grid; grid-template-columns:1fr 40px 1fr 40px 1fr; gap:0; align-items:stretch; margin-top:8px; }
@@ -1783,22 +1795,22 @@ footer {
   background:var(--mid); padding:40px 36px;
   display:flex; flex-direction:column; gap:16px; position:relative;
 }
-.brew-step-num { font-family:var(--font-display); font-size:13px; letter-spacing:.3em; color:var(--gold); opacity:.5; }
+.brew-step-num { font-family:var(--font-display); font-size:13px; letter-spacing:.10em; color:var(--gold); opacity:.5; }
 .brew-step-icon { height:60px; display:flex; align-items:center; }
 .brew-step-title { font-family:var(--font-display); font-size:clamp(22px,2.5vw,32px); letter-spacing:.02em; }
 .brew-step p { font-size:15px; color:var(--muted); line-height:1.7; }
 .brew-step-detail {
   margin-top:auto; padding-top:20px; border-top:1px solid var(--rule);
-  font-family:var(--font-brand); font-size:11px; letter-spacing:.25em;
+  font-family:var(--font-brand); font-size:11px; letter-spacing:.08em;
   text-transform:uppercase; color:var(--gold); opacity:.6;
 }
 .brew-arrow { display:flex; align-items:center; justify-content:center; color:var(--gold); opacity:.35; }
 
 /* Market */
 .market-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:8px; }
-.market-stat { background:var(--mid); padding:44px 40px; display:flex; flex-direction:column; gap:10px; }
+.market-stat { background:var(--mid); padding:40px 36px; display:flex; flex-direction:column; gap:10px; }
 .market-stat .num { font-family:var(--font-display); font-size:clamp(40px,5vw,68px); line-height:1; }
-.market-stat .lbl { font-family:var(--font-brand); font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--cream); opacity:.38; }
+.market-stat .lbl { font-family:var(--font-brand); font-size:11px; letter-spacing:.10em; text-transform:uppercase; color:var(--cream); opacity:.38; }
 .market-stat p { font-size:15px; color:var(--muted); line-height:1.7; margin-top:10px; max-width:400px; }
 
 /* Revenue */
@@ -1806,11 +1818,11 @@ footer {
 .revenue-row { display:grid; grid-template-columns:160px 1fr auto; gap:0; align-items:stretch; background:var(--mid); }
 .revenue-label { padding:28px; border-right:1px solid var(--rule); display:flex; flex-direction:column; gap:6px; justify-content:center; }
 .revenue-label .type { font-family:var(--font-display); font-size:16px; letter-spacing:.02em; }
-.revenue-label .sub { font-family:var(--font-brand); font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:var(--cream); opacity:.35; }
+.revenue-label .sub { font-family:var(--font-brand); font-size:10px; letter-spacing:.10em; text-transform:uppercase; color:var(--cream); opacity:.35; }
 .revenue-bar-wrap { padding:28px 32px; display:flex; align-items:center; }
 .revenue-bar-track { flex:1; height:6px; background:rgba(242,237,224,.06); border-radius:3px; overflow:hidden; }
 .revenue-bar-fill { height:100%; border-radius:3px; background:var(--gold-grad); }
-.revenue-tag { padding:28px; border-left:1px solid var(--rule); font-family:var(--font-brand); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); opacity:.55; display:flex; align-items:center; white-space:nowrap; }
+.revenue-tag { padding:28px; border-left:1px solid var(--rule); font-family:var(--font-brand); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); opacity:.55; display:flex; align-items:center; white-space:nowrap; }
 
 /* Use of funds */
 .funds-layout { display:grid; grid-template-columns:340px 1fr; gap:2px; margin-top:8px; align-items:stretch; }
@@ -1820,25 +1832,25 @@ footer {
 .fund-item:last-child { border-bottom:none; }
 .fund-swatch { width:4px; min-width:4px; height:56px; border-radius:2px; margin-top:4px; }
 .fund-item-title { font-family:var(--font-display); font-size:20px; letter-spacing:.02em; margin-bottom:6px; }
-.fund-item-sub { font-family:var(--font-brand); font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:var(--gold); opacity:.55; margin-bottom:10px; }
+.fund-item-sub { font-family:var(--font-brand); font-size:10px; letter-spacing:.10em; text-transform:uppercase; color:var(--gold); opacity:.55; margin-bottom:10px; }
 .fund-item p { font-size:14px; color:var(--muted); line-height:1.7; }
 
 /* Team */
 .team-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:8px; }
-.team-card { background:var(--mid); padding:48px 44px; border-top:2px solid var(--gold); display:flex; flex-direction:column; gap:16px; }
+.team-card { background:var(--mid); padding:40px 36px; border-top:2px solid var(--gold); display:flex; flex-direction:column; gap:16px; }
 .team-card .name { font-family:var(--font-display); font-size:clamp(22px,2.5vw,32px); letter-spacing:.02em; }
-.team-card .role { font-family:var(--font-brand); font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); opacity:.65; }
+.team-card .role { font-family:var(--font-brand); font-size:11px; letter-spacing:.10em; text-transform:uppercase; color:var(--gold); opacity:.65; }
 .team-card .divider { width:40px; height:1px; background:var(--rule-gold); }
 .team-card p { font-size:15px; color:var(--muted); line-height:1.75; }
 
 /* Interest form */
-.interest-form-wrap { background:var(--dark); border:1px solid var(--rule); padding:52px 48px; margin-top:2px; display:flex; flex-direction:column; gap:28px; }
+.interest-form-wrap { background:var(--dark); border:1px solid var(--rule); padding:52px 48px; margin-top:2px; display:flex; flex-direction:column; gap:28px; background-image: radial-gradient(circle, rgba(201,168,76,.08) 1px, transparent 1px); background-size: 22px 22px; }
 .interest-form-title { font-family:var(--font-display); font-size:clamp(22px,2.5vw,32px); letter-spacing:.02em; }
 .interest-form-sub { font-size:15px; color:var(--muted); line-height:1.7; max-width:560px; }
 .interest-form-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .interest-form-fields .full { grid-column:1/-1; }
 .form-field { display:flex; flex-direction:column; gap:7px; }
-.form-field label { font-family:var(--font-brand); font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:var(--gold); opacity:.6; }
+.form-field label { font-family:var(--font-brand); font-size:10px; letter-spacing:.10em; text-transform:uppercase; color:var(--gold); opacity:.6; }
 .form-field input, .form-field select, .form-field textarea {
   background:rgba(242,237,224,.04); border:1px solid var(--rule); color:var(--cream);
   font-family:var(--font-body); font-size:15px; padding:13px 16px;
@@ -1876,7 +1888,7 @@ footer {
 .plan-download:hover { border-color:var(--rule-gold); background:rgba(201,168,76,.04); }
 .plan-download-icon { width:40px; height:40px; border:1px solid var(--rule-gold); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .plan-download-title { font-family:var(--font-display); font-size:16px; color:var(--cream); letter-spacing:.02em; }
-.plan-download-sub { font-family:var(--font-brand); font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); opacity:.55; }
+.plan-download-sub { font-family:var(--font-brand); font-size:10px; letter-spacing:.09em; text-transform:uppercase; color:var(--gold); opacity:.55; }
 .plan-download-arrow { margin-left:auto; opacity:.35; }
 
 /* CTA band */
@@ -1888,8 +1900,8 @@ footer {
   content:''; position:absolute; inset:0; pointer-events:none;
   background:radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,168,76,.08) 0%, transparent 65%);
 }
-.cta-band h2 { font-family:var(--font-display); font-size:clamp(28px,4vw,56px); line-height:.94; letter-spacing:.02em; max-width:740px; margin:20px auto 0; }
-.cta-band p { font-size:16px; color:var(--muted); line-height:1.75; max-width:500px; margin:24px auto 0; }
+.cta-band h2 { font-family:var(--font-display); font-size:clamp(1.75rem,3.5vw,2.75rem); line-height:1.1; letter-spacing:.03em; max-width:740px; margin:20px auto 0; }
+.cta-band p { font-size:var(--t-body); color:var(--muted); line-height:1.85; max-width:500px; margin:24px auto 0; }
 .cta-btn {
   display:inline-block; margin-top:36px; background:var(--gold);
   padding:18px 56px; font-family:var(--font-display); font-size:20px;
@@ -1916,7 +1928,7 @@ footer {
   .invest-accordion-header-inner { gap:10px; flex:1; min-width:0; }
   .invest-accordion-fleur { display:none; }
   .invest-accordion-label { gap:3px; }
-  .invest-accordion-eyebrow { font-size:9px; letter-spacing:.32em; }
+  .invest-accordion-eyebrow { font-size:9px; letter-spacing:.10em; }
   .invest-accordion-title { font-size:16px; line-height:1.2; }
   .invest-status-pill { display:none; }
   .invest-accordion-chevron { width:26px; height:26px; flex-shrink:0; }
@@ -1929,7 +1941,7 @@ footer {
   /* ── Body: sections ── */
   .invest-section { padding:0 16px 52px; }
   .section-head { padding:40px 0 20px; gap:10px; }
-  .section-head h2 { font-size:clamp(20px,7vw,32px); }
+  .section-head h2 { font-size:clamp(1.5rem,7vw,2.5rem); }
 
   /* ── Grids → single col ── */
   .brew-timeline { grid-template-columns:1fr; }
@@ -1940,13 +1952,13 @@ footer {
   .revenue-tag { border-left:none; border-top:1px solid var(--rule); }
 
   /* ── Cell padding ── */
-  .brew-step { padding:24px 18px; gap:10px; }
-  .market-stat { padding:26px 18px; }
+  .brew-step { padding:24px 20px; gap:10px; }
+  .market-stat { padding:24px 20px; }
   .market-stat .num { font-size:clamp(28px,9vw,48px); }
   .funds-visual { padding:28px 20px; }
   .funds-list { padding:24px 18px; }
   .fund-item { padding:18px 0; gap:14px; }
-  .team-card { padding:28px 20px; }
+  .team-card { padding:24px 20px; }
   .revenue-bar-wrap { padding:18px 20px; }
   .revenue-label { padding:18px; }
   .revenue-tag { padding:14px 18px; }
@@ -1961,8 +1973,8 @@ footer {
 
   /* ── CTA band ── */
   .cta-band { padding:44px 20px; }
-  .cta-band h2 { font-size:clamp(22px,7vw,40px); margin-top:14px; }
-  .cta-band p { font-size:14px; margin-top:16px; }
+  .cta-band h2 { font-size:clamp(1.5rem,7vw,2.5rem); margin-top:14px; }
+  .cta-band p { font-size:var(--t-body); margin-top:16px; }
   .cta-btn { padding:15px 32px; font-size:16px; margin-top:24px; }
   .pillars { flex-direction:column; max-width:100%; }
   .pillar { border-right:none; border-bottom:1px solid var(--rule); padding:22px 18px; }
@@ -1979,7 +1991,7 @@ footer {
       <span class="invest-accordion-fleur">⚜</span>
       <div class="invest-accordion-label">
         <span class="invest-accordion-eyebrow">Open Investment Round</span>
-        <span class="invest-accordion-title">INVESTMENTS &amp; CROWDSOURCING</span>
+        <span class="invest-accordion-title">INVESTMENTS &amp; CROWDFUNDING</span>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:16px;">
@@ -1999,7 +2011,7 @@ footer {
 
     <!-- Hero band -->
     <div class="hero-band grain" style="position:relative;">
-      <p class="eyebrow" style="display:inline-block;">Los Angeles · Est. 2019</p>
+      <p class="eyebrow" style="display:inline-block;">Los Angeles · Est. 2026</p>
       <h1>INVEST IN<br/><span class="gold-text">BOLD CREW</span><br/>COLD BREW.</h1>
       <p>We're building the transparency-first cold brew brand. Small batch, live brew monitoring, and a business model built to scale.</p>
       <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:36px;">
@@ -2049,7 +2061,7 @@ footer {
               <rect x="10" y="12" width="36" height="54" rx="3" stroke="#f2ede0" stroke-width="1.8" fill="none" opacity=".35"/>
               <rect x="8" y="8" width="40" height="10" rx="2" stroke="#c9a84c" stroke-width="1.6" fill="none" opacity=".6"/>
               <rect x="11" y="42" width="34" height="23" rx="2" fill="#c9a84c" fill-opacity=".12"/>
-              <text x="28" y="34" text-anchor="middle" font-family="'Cinzel',serif" font-size="13" font-weight="700" fill="#c9a84c" opacity=".9">20H</text>
+              <text x="28" y="34" text-anchor="middle" font-family="'DM Mono',monospace" font-size="13" font-weight="700" fill="#c9a84c" opacity=".9">20H</text>
               <line x1="10" y1="36" x2="15" y2="36" stroke="#c9a84c" stroke-width="1" opacity=".5"/>
               <line x1="10" y1="44" x2="13" y2="44" stroke="#c9a84c" stroke-width="1" opacity=".35"/>
               <line x1="10" y1="52" x2="13" y2="52" stroke="#c9a84c" stroke-width="1" opacity=".35"/>
@@ -2088,13 +2100,13 @@ footer {
           <circle cx="16" cy="16" r="8" stroke="#c9a84c" stroke-width="1" fill="none" opacity=".3"/>
         </svg>
         <div>
-          <span style="font-family:var(--font-brand);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);opacity:.7;">Live Brew Monitor · IoT</span>
+          <span style="font-family:var(--font-brand);font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--gold);opacity:.7;">Live Brew Monitor · IoT</span>
           <p style="font-size:14px;color:var(--muted);line-height:1.65;margin-top:6px;">An ESP32-powered sensor streams real-time batch status to every customer — Grinding → Steeping → Ready. The first cold brew you can actually watch being made.</p>
         </div>
       </div>
 
       <!-- 02 The Market -->
-      <div class="section-head" style="padding-top:80px;">
+      <div class="section-head">
         <p class="eyebrow">02 · The Market</p>
         <h2>A <span class="gold-text">$400M</span> MARKET GROWING AT 20%+.</h2>
         <div class="rule"></div>
@@ -2113,14 +2125,14 @@ footer {
         <div class="market-stat" style="grid-column:1/-1;background:var(--dark);border-top:2px solid var(--terra);">
           <div style="display:flex;gap:48px;align-items:flex-start;flex-wrap:wrap;">
             <div style="flex:1;min-width:260px;">
-              <div style="font-family:var(--font-brand);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--terra);opacity:.8;margin-bottom:14px;">Where We Play</div>
+              <div style="font-family:var(--font-brand);font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--terra);opacity:.8;margin-bottom:14px;">Where We Play</div>
               <div style="position:relative;height:120px;border:1px solid rgba(242,237,224,.08);border-radius:2px;overflow:hidden;">
                 <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(242,237,224,.08);"></div>
                 <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(242,237,224,.08);"></div>
-                <span style="position:absolute;bottom:6px;left:8px;font-family:var(--font-brand);font-size:9px;letter-spacing:.18em;color:var(--cream);opacity:.25;text-transform:uppercase;">Mass</span>
-                <span style="position:absolute;bottom:6px;right:8px;font-family:var(--font-brand);font-size:9px;letter-spacing:.18em;color:var(--cream);opacity:.25;text-transform:uppercase;">Premium</span>
-                <span style="position:absolute;top:6px;left:8px;font-family:var(--font-brand);font-size:9px;letter-spacing:.18em;color:var(--cream);opacity:.25;text-transform:uppercase;">Opaque</span>
-                <span style="position:absolute;top:6px;right:8px;font-family:var(--font-brand);font-size:9px;letter-spacing:.18em;color:var(--cream);opacity:.25;text-transform:uppercase;">Transparent</span>
+                <span style="position:absolute;bottom:6px;left:8px;font-family:var(--font-brand);font-size:9px;letter-spacing:.06em;color:var(--cream);opacity:.25;text-transform:uppercase;">Mass</span>
+                <span style="position:absolute;bottom:6px;right:8px;font-family:var(--font-brand);font-size:9px;letter-spacing:.06em;color:var(--cream);opacity:.25;text-transform:uppercase;">Premium</span>
+                <span style="position:absolute;top:6px;left:8px;font-family:var(--font-brand);font-size:9px;letter-spacing:.06em;color:var(--cream);opacity:.25;text-transform:uppercase;">Opaque</span>
+                <span style="position:absolute;top:6px;right:8px;font-family:var(--font-brand);font-size:9px;letter-spacing:.06em;color:var(--cream);opacity:.25;text-transform:uppercase;">Transparent</span>
                 <div style="position:absolute;left:22%;top:60%;transform:translate(-50%,-50%);">
                   <div style="width:8px;height:8px;border-radius:50%;background:var(--cream);opacity:.2;"></div>
                   <span style="position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--cream);opacity:.3;white-space:nowrap;font-family:var(--font-brand);letter-spacing:.12em;">Mass Brands</span>
@@ -2137,7 +2149,7 @@ footer {
               <p style="font-size:13px;color:var(--dim);margin-top:10px;line-height:1.6;">Premium price point + radical transparency = unoccupied white space in the market.</p>
             </div>
             <div style="flex:1;min-width:260px;display:flex;flex-direction:column;gap:14px;">
-              <div style="font-family:var(--font-brand);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--terra);opacity:.8;">Who We're Not Competing With</div>
+              <div style="font-family:var(--font-brand);font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--terra);opacity:.8;">Who We're Not Competing With</div>
               <p style="font-size:15px;color:var(--muted);line-height:1.75;">BCCB is not Starbucks. Not Chameleon. Not a grocery-shelf cold brew trying to win on price.</p>
               <p style="font-size:15px;color:var(--muted);line-height:1.75;">We're competing with the <strong style="color:var(--cream);">$14 craft bottle</strong> that tells you nothing about what's inside — and winning by telling you everything.</p>
             </div>
@@ -2146,7 +2158,7 @@ footer {
       </div>
 
       <!-- 03 Revenue Model -->
-      <div class="section-head" style="padding-top:80px;">
+      <div class="section-head">
         <p class="eyebrow">03 · Revenue Model</p>
         <h2>MULTIPLE <span class="gold-text">REVENUE STREAMS.</span></h2>
         <div class="rule"></div>
@@ -2187,7 +2199,7 @@ footer {
       </div>
 
       <!-- 04 Use of Funds -->
-      <div class="section-head" style="padding-top:80px;">
+      <div class="section-head">
         <p class="eyebrow">04 · Use of Funds</p>
         <h2>FUNDING THE <span class="gold-text">SCALE-UP.</span></h2>
         <div class="rule"></div>
@@ -2200,13 +2212,13 @@ footer {
               <circle cx="110" cy="110" r="80" fill="none" stroke="#c9a84c" stroke-width="28" stroke-dasharray="200 302" stroke-dashoffset="0" transform="rotate(-90 110 110)"/>
               <circle cx="110" cy="110" r="80" fill="none" stroke="#f0d878" stroke-width="28" stroke-dasharray="176 326" stroke-dashoffset="-200" transform="rotate(-90 110 110)"/>
               <circle cx="110" cy="110" r="80" fill="none" stroke="#c8673a" stroke-width="28" stroke-dasharray="126 376" stroke-dashoffset="-376" transform="rotate(-90 110 110)"/>
-              <text x="110" y="104" text-anchor="middle" font-family="'Cinzel',serif" font-size="11" letter-spacing="2" fill="#f2ede0" opacity=".35">USE OF</text>
+              <text x="110" y="104" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11" letter-spacing="2" fill="#f2ede0" opacity=".35">USE OF</text>
               <text x="110" y="122" text-anchor="middle" font-family="'Alfa Slab One',serif" font-size="16" fill="#c9a84c" opacity=".8">FUNDS</text>
             </svg>
             <div style="position:absolute;bottom:-36px;left:50%;transform:translateX(-50%);display:flex;gap:16px;white-space:nowrap;">
-              <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#c9a84c;"></div><span style="font-family:var(--font-brand);font-size:9px;letter-spacing:.18em;color:var(--cream);opacity:.45;text-transform:uppercase;">Production</span></div>
-              <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#f0d878;"></div><span style="font-family:var(--font-brand);font-size:9px;letter-spacing:.18em;color:var(--cream);opacity:.45;text-transform:uppercase;">Fulfillment</span></div>
-              <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#c8673a;"></div><span style="font-family:var(--font-brand);font-size:9px;letter-spacing:.18em;color:var(--cream);opacity:.45;text-transform:uppercase;">Growth</span></div>
+              <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#c9a84c;"></div><span style="font-family:var(--font-brand);font-size:9px;letter-spacing:.06em;color:var(--cream);opacity:.45;text-transform:uppercase;">Production</span></div>
+              <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#f0d878;"></div><span style="font-family:var(--font-brand);font-size:9px;letter-spacing:.06em;color:var(--cream);opacity:.45;text-transform:uppercase;">Fulfillment</span></div>
+              <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#c8673a;"></div><span style="font-family:var(--font-brand);font-size:9px;letter-spacing:.06em;color:var(--cream);opacity:.45;text-transform:uppercase;">Growth</span></div>
             </div>
           </div>
         </div>
@@ -2221,7 +2233,7 @@ footer {
           </div>
           <div class="fund-item">
             <div class="fund-swatch" style="background:#c8673a;"></div>
-            <div><div class="fund-item-sub">03 · Growth</div><div class="fund-item-title">Community</div><p>Channel build, content, and community to convert our waitlist into customers and establish CBBC as the transparency-first brand in specialty cold brew.</p></div>
+            <div><div class="fund-item-sub">03 · Growth</div><div class="fund-item-title">Community</div><p>Channel build, content, and community to convert our waitlist into customers and establish BCCB as the transparency-first brand in specialty cold brew.</p></div>
           </div>
         </div>
       </div>
@@ -2235,7 +2247,7 @@ footer {
           </svg>
         </div>
         <div class="plan-download-label">
-          <span class="plan-download-title">CBBC Business Plan</span>
+          <span class="plan-download-title">BCCB Business Plan</span>
           <span class="plan-download-sub">Full PDF · Detailed Line Items · Projections</span>
         </div>
         <div class="plan-download-arrow">
@@ -2246,26 +2258,26 @@ footer {
       </a>
 
       <!-- 05 The Team -->
-      <div class="section-head" style="padding-top:80px;">
+      <div class="section-head">
         <p class="eyebrow">05 · The Team</p>
         <h2>CRAFT MEETS <span class="gold-text">SCIENCE.</span></h2>
         <div class="rule"></div>
       </div>
       <div class="team-grid">
         <div class="team-card">
-          <div><div class="name">SKY MADSEN</div><div class="role" style="margin-top:8px;">Coffee Master</div></div>
+          <div><div class="name">SKY MADSEN</div><div class="role" style="margin-top:8px;">Founder | Designer | Brewer</div></div>
           <div class="divider"></div>
-          <p>7+ years professional craft coffee experience. Deep expertise in extraction, sourcing, and the sensory science of cold brew. The palate behind every BCCB batch decision.</p>
+          <p>7+ years coffee industry with a background in tech. Sky is the creative force behind BCCB's design / Operations & Co-Founder.</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
-            <div class="chip">7+ Years</div><div class="chip">Craft Coffee</div><div class="chip">Extraction</div>
+            <div class="chip">Operations</div><div class="chip">Brand</div><div class="chip">IoT Process</div>
           </div>
         </div>
         <div class="team-card">
-          <div><div class="name">CRIS ZELAYA</div><div class="role" style="margin-top:8px;">Science & Brew Chief</div></div>
+          <div><div class="name">CRIS ZELAYA</div><div class="role" style="margin-top:8px;">Founder | Head of Brewing | Brewer</div></div>
           <div class="divider"></div>
-          <p>9+ years in specialty coffee with a hard science background. Technical architect of BCCB's brew process — precise enough to monitor with an IoT sensor, consistent enough to scale.</p>
+          <p>9+ years coffee industry with a deep background in Chemistry. Cris is the technical architect of our brewing process & Co-Founder</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
-            <div class="chip">9+ Years</div><div class="chip">Science</div><div class="chip">IoT Process</div>
+            <div class="chip">Brewing</div><div class="chip">Logistics</div><div class="chip">IoT Process</div>
           </div>
         </div>
       </div>
@@ -2274,68 +2286,11 @@ footer {
 
     <!-- 06 Interest form -->
     <div style="max-width:1160px;margin:0 auto;padding:0 32px;">
-      <div class="section-head" style="padding-top:80px;">
+      <div class="section-head">
         <p class="eyebrow">06 · Get Involved</p>
         <h2>EXPRESS <span class="gold-text">YOUR INTEREST.</span></h2>
         <div class="rule"></div>
       </div>
-      <div class="interest-form-wrap">
-        <div>
-          <div class="interest-form-title">Stay in the loop.</div>
-          <p class="interest-form-sub" style="margin-top:10px;">Whether you want to invest, support, or simply follow along — leave your details and we'll be in touch. No noise. No spam. Just the real stuff.</p>
-        </div>
-        <div class="form-success-msg" id="invest-success">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;">
-            <circle cx="10" cy="10" r="9" stroke="#c9a84c" stroke-width="1.4"/>
-            <path d="M6 10l3 3 5-5" stroke="#c9a84c" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <p><strong>We've got your details.</strong>We'll reach out soon. In the meantime, follow along at boldcrewcoldbrew.com.</p>
-        </div>
-        <form id="invest-form" novalidate>
-          <div class="interest-form-fields">
-            <div class="form-field">
-              <label for="if-name">Your Name</label>
-              <input type="text" id="if-name" name="name" placeholder="First &amp; last name" autocomplete="name" required/>
-            </div>
-            <div class="form-field">
-              <label for="if-email">Email Address</label>
-              <input type="email" id="if-email" name="email" placeholder="you@example.com" autocomplete="email" required/>
-            </div>
-            <div class="form-field">
-              <label for="if-type">How do you want to get involved?</label>
-              <select id="if-type" name="type">
-                <option value="" disabled selected>Select one</option>
-                <option value="investor">Investor — equity / debt</option>
-                <option value="crowdfund">Crowdfunding supporter</option>
-                <option value="customer">Future customer</option>
-                <option value="partner">Brand / wholesale partner</option>
-                <option value="other">Other — I'll explain below</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label for="if-range">Investment range (optional)</label>
-              <select id="if-range" name="range">
-                <option value="" disabled selected>Select a range</option>
-                <option value="under1k">Under $1,000</option>
-                <option value="1k-5k">$1,000 – $5,000</option>
-                <option value="5k-25k">$5,000 – $25,000</option>
-                <option value="25k-100k">$25,000 – $100,000</option>
-                <option value="100k+">$100,000+</option>
-                <option value="prefer-not">Prefer not to say</option>
-              </select>
-            </div>
-            <div class="form-field full">
-              <label for="if-message">Anything else? (optional)</label>
-              <textarea id="if-message" name="message" placeholder="Questions, context, how you found us…"></textarea>
-            </div>
-          </div>
-          <div class="form-submit-row" style="margin-top:16px;">
-            <button type="submit" class="form-submit-btn" id="invest-submit-btn">EXPRESS INTEREST</button>
-            <p class="form-privacy">We don't share your info. Ever.</p>
-          </div>
-        </form>
-      </div>
-    </div>
 
     <!-- CTA band -->
     <div class="cta-band grain" style="position:relative;margin-top:2px;">
@@ -2353,11 +2308,76 @@ footer {
         <span class="fleur" style="font-size:20px;">⚜</span>
         <div style="width:48px;height:1px;background:var(--rule-gold);"></div>
       </div>
-      <p style="font-size:12px;color:var(--dim);margin-top:20px;font-family:var(--font-brand);letter-spacing:.2em;text-transform:uppercase;">BCCB · Los Angeles · Est. 2019</p>
+      <p style="font-size:12px;color:var(--dim);margin-top:20px;font-family:var(--font-brand);letter-spacing:.2em;text-transform:uppercase;">BCCB · Los Angeles · Est. 2026</p>
     </div>
 
   </div><!-- /.invest-accordion-body -->
 </div><!-- /.invest-accordion -->
+
+<div class="interest-form-wrap">
+  <div style="display:flex; gap:40px; justify-content:space-between; flex-wrap:wrap;">
+    <div>
+      <div class="interest-form-title">Stay in the loop.</div>
+      <p class="interest-form-sub" style="margin-top:10px;">Whether you want to invest, support, or simply follow along — leave your details and we'll be in touch. No noise. No spam. Just the real stuff.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:8px; justify-content:center;">
+      <div style="font-family:var(--font-brand); font-size:10px; letter-spacing:.10em; text-transform:uppercase; color:var(--gold); opacity:.55;">Get in touch</div>
+      <a href="mailto:admin@boldcrewcoldbrew.com" style="font-family:var(--font-brand); font-size:13px; letter-spacing:.08em; color:var(--cream); opacity:.7; text-decoration:none; transition:opacity .15s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">admin@boldcrewcoldbrew.com</a>
+      <p style="font-size:13px; color:var(--muted); line-height:1.6; margin:0; max-width:260px;">Questions about investing, wholesale, or collaborating? Drop us a line directly.</p>
+    </div>
+  </div>
+  <div class="form-success-msg" id="invest-success">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;">
+      <circle cx="10" cy="10" r="9" stroke="#c9a84c" stroke-width="1.4"/>
+      <path d="M6 10l3 3 5-5" stroke="#c9a84c" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <p><strong>We've got your details.</strong> We'll reach out soon. In the meantime, follow along at boldcrewcoldbrew.com.</p>
+  </div>
+  <form id="invest-form" novalidate>
+    <div class="interest-form-fields">
+      <div class="form-field">
+        <label for="if-name">Your Name</label>
+        <input type="text" id="if-name" name="name" placeholder="First &amp; last name" autocomplete="name" required/>
+      </div>
+      <div class="form-field">
+        <label for="if-email">Email Address</label>
+        <input type="email" id="if-email" name="email" placeholder="you@example.com" autocomplete="email" required/>
+      </div>
+      <div class="form-field">
+        <label for="if-type">How do you want to get involved?</label>
+        <select id="if-type" name="type">
+          <option value="" disabled selected>Select one</option>
+          <option value="investor">Investor — equity / debt</option>
+          <option value="crowdfund">Crowdfunding supporter</option>
+          <option value="customer">Future customer</option>
+          <option value="partner">Brand / wholesale partner</option>
+          <option value="other">Other — I'll explain below</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="if-range">Investment range (optional)</label>
+        <select id="if-range" name="range">
+          <option value="" disabled selected>Select a range</option>
+          <option value="under1k">Under $1,000</option>
+          <option value="1k-5k">$1,000 – $5,000</option>
+          <option value="5k-25k">$5,000 – $25,000</option>
+          <option value="25k-100k">$25,000 – $100,000</option>
+          <option value="100k+">$100,000+</option>
+          <option value="prefer-not">Prefer not to say</option>
+        </select>
+      </div>
+      <div class="form-field full">
+        <label for="if-message">Anything else? (optional)</label>
+        <textarea id="if-message" name="message" placeholder="Questions, context, how you found us…"></textarea>
+      </div>
+    </div>
+    <div class="form-submit-row" style="margin-top:16px;">
+      <button type="submit" class="form-submit-btn" id="invest-submit-btn">EXPRESS INTEREST</button>
+      <p class="form-privacy">We don't share your info. Ever.</p>
+    </div>
+  </form>
+</div>
+
 </div><!-- /#invest -->
 
 <script>
@@ -2464,7 +2484,7 @@ footer {
 <!-- ── FOOTER ── -->
 <footer>
   <span class="footer-logo"><span class="logo-bc">Bold Crew</span> Cold Brew</span>
-  <small class="footer-copy">© 2019–2026 BCCB · Los Angeles · All rights reserved</small>
+  <small class="footer-copy">© 2026 BCCB · Los Angeles · All rights reserved</small>
 </footer>
 
 <!-- visually hidden utility -->
