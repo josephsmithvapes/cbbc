@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabase'
 
+let _channelId = 0
+const uid = () => `${++_channelId}-${Date.now()}`
+
 export function useBatchState() {
   const [data, setData] = useState(null)
 
@@ -8,7 +11,7 @@ export function useBatchState() {
     supabase.from('batch_state').select('*').eq('id', 1).single()
       .then(({ data }) => { if (data) setData(data) })
 
-    const ch = supabase.channel('batch-state')
+    const ch = supabase.channel(`batch-state-${uid()}`)
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'batch_state' },
         ({ new: row }) => setData(row))
       .subscribe()
@@ -26,7 +29,7 @@ export function useBrewState() {
     supabase.from('brew_state').select('*').eq('id', 1).single()
       .then(({ data }) => { if (data) setData(data) })
 
-    const ch = supabase.channel('brew-state')
+    const ch = supabase.channel(`brew-state-${uid()}`)
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'brew_state' },
         ({ new: row }) => setData(row))
       .subscribe()
@@ -60,7 +63,7 @@ export function useTemperatureReadings(limit = 120) {
         if (data?.length) setReadings(toTempF(data.reverse()))
       })
 
-    const ch = supabase.channel('temperature-readings')
+    const ch = supabase.channel(`temperature-readings-${uid()}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'temperature_readings' },
         ({ new: row }) => setReadings(prev => [...prev.slice(-(limit - 1)), toTempF([row])[0]]))
       .subscribe()
