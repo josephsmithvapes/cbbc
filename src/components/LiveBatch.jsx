@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useBatchState } from '../lib/hooks'
 
 const STEEP_HOURS = 20
