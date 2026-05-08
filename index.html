@@ -630,6 +630,37 @@ footer {
   color: var(--cream);
   opacity: .28;
 }
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.footer-social a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-brand);
+  font-size: var(--t-micro);
+  letter-spacing: .10em;
+  color: var(--cream);
+  opacity: .35;
+  text-decoration: none;
+  transition: opacity .15s;
+}
+.footer-social a:hover { opacity: .7; }
+.footer-social svg { width: 14px; height: 14px; flex-shrink: 0; }
+.seb-tiktok {
+  display: flex;
+  align-items: center;
+  color: var(--cream);
+  opacity: .28;
+  text-decoration: none;
+  flex-shrink: 0;
+  padding: 0 2px;
+  transition: opacity .15s;
+}
+.seb-tiktok:hover { opacity: .7; }
+.seb-tiktok svg { width: 16px; height: 16px; display: block; }
 
 /* ─────────────────────────────────────────
    RESPONSIVE — TABLET  769–1024px
@@ -2481,6 +2512,9 @@ footer {
   <span class="seb-label">First pour. First to know.</span>
   <input class="seb-input" type="email" id="seb-email" placeholder="you@domain.com" autocomplete="email">
   <button class="seb-join" onclick="submitStickyEmail()">JOIN THE LIST</button>
+  <a class="seb-tiktok" href="https://www.tiktok.com/@boldcrewcoldbrew" target="_blank" rel="noopener" aria-label="Follow us on TikTok">
+    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+  </a>
   <button class="seb-dismiss" onclick="dismissStickyBar()" aria-label="Dismiss">×</button>
 </div>
 
@@ -2495,6 +2529,12 @@ footer {
 <!-- ── FOOTER ── -->
 <footer>
   <span class="footer-logo"><span class="logo-bc">Bold Crew</span> Cold Brew</span>
+  <div class="footer-social">
+    <a href="https://www.tiktok.com/@boldcrewcoldbrew" target="_blank" rel="noopener" aria-label="Follow Bold Crew Cold Brew on TikTok">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+      @BoldCrewColdBrew
+    </a>
+  </div>
   <small class="footer-copy">© 2026 BCCB · Los Angeles · All rights reserved</small>
 </footer>
 
