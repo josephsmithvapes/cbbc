@@ -81,7 +81,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
   .fb-cityscape {
     position: absolute;
     inset: 0;
-    background-image: url('/img/story-scoop.png');
+    background-image: url('/img/story-scoop.webp');
     background-size: cover;
     background-position: center 60%;
     /* Darken + push toward amber/sepia — filter chain order matters */
