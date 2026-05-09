@@ -134,6 +134,7 @@ function PastBatchRow({ b, onEdit }) {
 
 export default function AdminPanel() {
   const { session, loading } = useAuth()
+  const userId = session?.user?.id ?? null
   const [email, setEmail]   = useState('')
   const [pw, setPw]         = useState('')
   const [pwErr, setPwErr]   = useState(false)
@@ -161,7 +162,7 @@ export default function AdminPanel() {
         ({ new: row }) => setBatch(row))
       .subscribe()
     return () => supabase.removeChannel(ch)
-  }, [session])
+  }, [userId])
 
   useEffect(() => {
     if (!session) return
@@ -176,7 +177,7 @@ export default function AdminPanel() {
       })
     // Load all past batches
     loadPastBatches()
-  }, [session])
+  }, [userId])
 
   function loadPastBatches() {
     supabase.from('batches').select('*').order('steep_start', { ascending: false })
