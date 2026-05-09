@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useBrewState, useTemperatureReadings } from '../lib/hooks'
 import { CREAM, GOLD, GOLD_GRAD } from '../theme'
-import { fmt } from '../lib/utils'
 import styles from './BrewTelemetry.module.css'
 
 function TempChart({ points }) {
