@@ -11,8 +11,8 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('react') || id.includes('react-dom')) return 'react'
-          if (id.includes('@supabase')) return 'supabase'
+          if (id.includes('react') || id.includes('react-dom')) return 'react';
+          if (id.includes('@supabase')) return 'supabase';
         },
       },
     },
