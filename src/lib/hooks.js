@@ -1,8 +1,29 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabase'
+import { toTempF } from './utils'
 
 let _channelId = 0
 const uid = () => `${++_channelId}-${Date.now()}`
+
+export function useAuth() {
+  const [session, setSession] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setLoading(false)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  return { session, loading }
+}
 
 export function useBatchState() {
   const [data, setData] = useState(null)
@@ -72,8 +93,4 @@ export function useTemperatureReadings(limit = 120) {
   }, [limit])
 
   return readings
-}
-
-function toTempF(rows) {
-  return rows.map(r => ({ temp_f: r.temp_c * 9 / 5 + 32 }))
 }
