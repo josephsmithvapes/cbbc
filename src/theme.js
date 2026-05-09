@@ -1,0 +1,5 @@
+export const INK       = '#161108'
+export const GOLD      = '#c9a84c'
+export const CREAM     = '#f2ede0'
+export const RULE      = 'rgba(201,168,76,.15)'
+export const GOLD_GRAD = 'linear-gradient(135deg, #f0d878 0%, #c9a84c 55%, #9a7020 100%)'
