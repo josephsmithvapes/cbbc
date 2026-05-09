@@ -231,7 +231,7 @@ export default function AdminPanel() {
     const { error } = await supabase.from('batch_state').update(update).eq('id', 1)
     if (!error) {
       setBatch(prev => ({ ...prev, ...update }))
-      // Keep brew_state in sync so BrewMonitor reflects admin stage without ESP32
+      // Keep brew_state in sync so BrewTelemetry reflects admin stage without ESP32
       const statusMap = { grinding: 'BREWING', steeping: 'BREWING', ready: 'READY', idle: 'IDLE' }
       const mappedStatus = statusMap[stage]
       if (mappedStatus) await supabase.from('brew_state').update({ status: mappedStatus }).eq('id', 1)
