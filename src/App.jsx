@@ -1,20 +1,21 @@
-import { useState, lazy, Suspense } from 'react'
-import FirstBatch from './components/FirstBatch'
-import LiveBatch from './components/LiveBatch'
-import BrewMonitor from './components/BrewMonitor'
+import { lazy, Suspense } from 'react'
+import WaitlistSection from './components/WaitlistSection'
+import BrewStageDisplay from './components/BrewStageDisplay'
+import BrewTelemetry from './components/BrewTelemetry'
 
 const AdminPanel = lazy(() => import('./pages/AdminPanel'))
 
 export default function App() {
-  const [isAdmin] = useState(() => new URLSearchParams(window.location.search).has('admin'))
+  const isAdmin = import.meta.env.DEV &&
+    new URLSearchParams(window.location.search).has('admin')
 
   if (isAdmin) return <Suspense fallback={null}><AdminPanel /></Suspense>
 
   return (
     <>
-      <FirstBatch />
-      <LiveBatch />
-      <BrewMonitor />
+      <WaitlistSection />
+      <BrewStageDisplay />
+      <BrewTelemetry />
     </>
   )
 }
