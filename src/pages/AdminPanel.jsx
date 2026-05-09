@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-
-const PASS  = import.meta.env.VITE_ADMIN_PASS
+import { useAuth } from '../lib/hooks'
 const INK   = '#161108'
 const GOLD  = '#c9a84c'
 const CREAM = '#f2ede0'
@@ -134,9 +133,11 @@ function PastBatchRow({ b, onEdit }) {
 }
 
 export default function AdminPanel() {
-  const [authed, setAuthed]       = useState(() => sessionStorage.getItem('cbbc_admin') === '1')
-  const [pw, setPw]               = useState('')
-  const [pwErr, setPwErr]         = useState(false)
+  const { session, loading } = useAuth()
+  const [email, setEmail]   = useState('')
+  const [pw, setPw]         = useState('')
+  const [pwErr, setPwErr]   = useState(false)
+  const [authLoading, setAuthLoading] = useState(false)
   const [batch, setBatch]         = useState(null)
   const [saving, setSaving]       = useState(false)
   const [flash, setFlash]         = useState('')
@@ -152,7 +153,7 @@ export default function AdminPanel() {
   const [savingTarget, setSavingTarget]   = useState(false)
 
   useEffect(() => {
-    if (!authed) return
+    if (!session) return
     supabase.from('batch_state').select('*').eq('id', 1).single()
       .then(({ data }) => { if (data) { setBatch(data); if (data.batch_target) setBatchTarget(data.batch_target) } })
     const ch = supabase.channel('admin-batch')
@@ -160,10 +161,10 @@ export default function AdminPanel() {
         ({ new: row }) => setBatch(row))
       .subscribe()
     return () => supabase.removeChannel(ch)
-  }, [authed])
+  }, [session])
 
   useEffect(() => {
-    if (!authed) return
+    if (!session) return
     // Load active batch (no steep_end)
     supabase.from('batches').select('*').is('steep_end', null)
       .order('steep_start', { ascending: false }).limit(1).single()
@@ -175,7 +176,7 @@ export default function AdminPanel() {
       })
     // Load all past batches
     loadPastBatches()
-  }, [authed])
+  }, [session])
 
   function loadPastBatches() {
     supabase.from('batches').select('*').order('steep_start', { ascending: false })
@@ -193,10 +194,13 @@ export default function AdminPanel() {
     setSavingTarget(false)
   }
 
-  function login(e) {
+  async function login(e) {
     e.preventDefault()
-    if (pw === PASS) { sessionStorage.setItem('cbbc_admin', '1'); setAuthed(true) }
-    else { setPwErr(true); setPw(''); setTimeout(() => setPwErr(false), 1600) }
+    setAuthLoading(true)
+    setPwErr(false)
+    const { error } = await supabase.auth.signInWithPassword({ email, password: pw })
+    if (error) { setPwErr(true); setPw(''); setTimeout(() => setPwErr(false), 1600) }
+    setAuthLoading(false)
   }
 
   async function setStage(stage) {
@@ -290,18 +294,27 @@ export default function AdminPanel() {
     setSaving(false)
   }
 
-  function logout() { sessionStorage.removeItem('cbbc_admin'); window.location.href = '/' }
+  async function logout() {
+    await supabase.auth.signOut()
+  }
 
   // ── Login screen ────────────────────────────────────────────────────────────
-  if (!authed) return (
+  if (loading) return null
+
+  if (!session) return (
     <div style={{ position:'fixed', inset:0, background:INK, display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999 }}>
       <form onSubmit={login} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:24, padding:48, border:'1px solid rgba(201,168,76,.2)', maxWidth:360, width:'90%' }}>
         <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.4em', opacity:.7, fontFamily:"'Cinzel',serif" }}>BOLD CREW COLD BREW</div>
         <div style={{ color:CREAM, fontSize:'1.6rem', letterSpacing:'.1em', fontFamily:"'Alfa Slab One',serif" }}>ADMIN</div>
-        <input type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="password" autoFocus
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="email" autoFocus
+          style={{ ...FIELD, textAlign:'center' }} />
+        <input type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="password"
           style={{ ...FIELD, border:`2px solid ${pwErr ? '#c0392b' : 'rgba(201,168,76,.3)'}`, textAlign:'center' }} />
-        {pwErr && <div style={{ color:'#c0392b', fontSize:'var(--t-micro,.625rem)', letterSpacing:'.15em', marginTop:-12, fontFamily:"'Cinzel',serif" }}>INCORRECT PASSWORD</div>}
-        <button type="submit" style={{ width:'100%', padding:'14px', background:GOLD, border:'none', cursor:'pointer', fontFamily:"'Alfa Slab One',serif", fontSize:'1rem', letterSpacing:'.06em', color:INK }}>ENTER</button>
+        {pwErr && <div style={{ color:'#c0392b', fontSize:'var(--t-micro,.625rem)', letterSpacing:'.15em', marginTop:-12, fontFamily:"'Cinzel',serif" }}>INCORRECT CREDENTIALS</div>}
+        <button type="submit" disabled={authLoading}
+          style={{ width:'100%', padding:'14px', background:GOLD, border:'none', cursor:'pointer', fontFamily:"'Alfa Slab One',serif", fontSize:'1rem', letterSpacing:'.06em', color:INK, opacity: authLoading ? .5 : 1 }}>
+          {authLoading ? '...' : 'ENTER'}
+        </button>
       </form>
     </div>
   )
