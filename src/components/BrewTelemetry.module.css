@@ -4,6 +4,7 @@
     background: #161108;
     border-bottom: 1px solid rgba(201,168,76,.15);
     font-family: var(--font-brand, 'Space Grotesk', sans-serif);
+    scroll-margin-top: var(--nav-h);
   }
   .header {
     display: flex;
@@ -164,6 +165,21 @@
     color: #f2ede0;
     opacity: .15;
   }
+
+.chartLoading {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.spinner {
+  color: #c9a84c;
+  opacity: 0.4;
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
 
   @media (max-width: 600px) {
     .grid { grid-template-columns: repeat(2, 1fr); }
