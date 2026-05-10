@@ -770,14 +770,13 @@ footer {
 /* Live hero — IoT data IS the hero */
 .live-hero {
   display:grid; grid-template-columns:1fr 370px;
-  border-bottom:1px solid var(--rule);
   padding-top:var(--nav-h);
   min-height:calc(100vh - var(--nav-h));
   background-color: var(--dark);
   background-image: radial-gradient(circle, rgba(201,168,76,.08) 1px, transparent 1px);
   background-size: 22px 22px;
 }
-.live-hero-main { border-right:1px solid var(--rule); overflow:hidden; }
+.live-hero-main { border-right:1px solid var(--rule); overflow:hidden; display:flex; flex-direction:column; }
 .live-hero-panel {
   display:flex; flex-direction:column;
   position:sticky; top:var(--nav-h);
@@ -1078,8 +1077,9 @@ footer {
 /* Service strip */
 .service-strip {
   padding:24px 32px 20px;
-  border-bottom:1px solid var(--rule);
   background:var(--dark);
+  flex:1;
+  display:flex; flex-direction:column;
 }
 .service-eyebrow {
   font-family:var(--font-brand); font-size:var(--t-micro);
@@ -1178,6 +1178,7 @@ footer {
   padding-top:12px; border-top:1px solid var(--rule);
   font-family:var(--font-brand); font-size:var(--t-micro);
   letter-spacing:.14em; color:var(--cream); opacity:.3;
+  margin-top:auto;
 }
 .service-track-bar span { flex:1; }
 .service-link {
@@ -1386,10 +1387,11 @@ footer {
   .logo { margin:0 auto; }
 }
 </style>
-  <script type="module" crossorigin src="/assets/index-DYYRg830.js"></script>
+  <script type="module" crossorigin src="/assets/index-B_bUQe9T.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabase-CU2Wct4P.js">
   <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Cr0BHlHC.js">
   <link rel="modulepreload" crossorigin href="/assets/react-DRmcoaL4.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-rM65VoK_.css">
 </head>
 <body>
 
@@ -1601,8 +1603,6 @@ footer {
         <button class="service-link" onclick="document.getElementById('batches').scrollIntoView({behavior:'smooth'})">See the archive →</button>
       </div>
     </div>
-
-    <div id="brew-mount" tabindex="-1"></div>
   </div>
 
   <!-- RIGHT: sticky brand panel — full photo overlay -->
@@ -1631,10 +1631,7 @@ footer {
 
 </section>
 
-<!-- ── BATCH PROOF (React) ── -->
-<section id="batches" aria-label="Past batches">
-  <div id="batch-mount"></div>
-</section>
+<div id="brew-mount" tabindex="-1"></div>
 
 <!-- ── STORY ── -->
 <section class="story" id="story" aria-label="Our story">
