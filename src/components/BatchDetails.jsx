@@ -23,7 +23,7 @@ function fmtDate(d) {
 
 function MiniChart({ data, gradId }) {
   const W = 600, H = 130
-  if (data.length < 2) return null
+  if (!data || data.length < 2) return <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height: 130, display: 'block' }}></svg>
 
   const temps = data.map(p => p.temp_f)
   const lo = Math.min(...temps), hi = Math.max(...temps)
@@ -74,10 +74,18 @@ function MiniChart({ data, gradId }) {
   )
 }
 
-function BrewCard({ brew, onEnter, onLeave }) {
+function BrewCard({ brew, onPlayBatch, onEnter, onLeave }) {
   const { meta } = brew
+  const isL = brew.isLoading
   return (
-    <div className={styles.card} onMouseEnter={onEnter} onMouseLeave={onLeave}>
+    <div 
+      className={styles.card} 
+      onMouseEnter={onEnter} 
+      onMouseLeave={onLeave} 
+      onClick={() => meta?.id && onPlayBatch?.(meta.id)} 
+      style={{ cursor: onPlayBatch ? 'pointer' : 'default' }} 
+      title={onPlayBatch ? "Play replay" : ""}
+    >
       <div className={styles.cardHeader}>
         <div>
           {meta?.name
@@ -101,19 +109,19 @@ function BrewCard({ brew, onEnter, onLeave }) {
 
       <div className={styles.stats}>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{brew.tempMin.toFixed(1)}°F</span>
+          <span className={styles.statVal}>{isL ? '--' : `${brew.tempMin.toFixed(1)}°F`}</span>
           <span className={styles.statLbl}>Low</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{brew.tempMax.toFixed(1)}°F</span>
+          <span className={styles.statVal}>{isL ? '--' : `${brew.tempMax.toFixed(1)}°F`}</span>
           <span className={styles.statLbl}>High</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{brew.tempAvg.toFixed(1)}°F</span>
+          <span className={styles.statVal}>{isL ? '--' : `${brew.tempAvg.toFixed(1)}°F`}</span>
           <span className={styles.statLbl}>Avg</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{brew.points.toLocaleString()}</span>
+          <span className={styles.statVal}>{isL ? '--' : brew.points.toLocaleString()}</span>
           <span className={styles.statLbl}>Readings</span>
         </div>
       </div>
@@ -127,8 +135,9 @@ function BrewCard({ brew, onEnter, onLeave }) {
   )
 }
 
-export default function BatchDetails() {
+export default function BatchDetails({ onPlayBatch }) {
   const [brews, setBrews] = useState(null)
+  const [metaList, setMetaList] = useState(null)
   const carouselRef = useRef(null)
   const velRef = useRef(0)
   const isDraggingRef = useRef(false)
@@ -137,6 +146,20 @@ export default function BatchDetails() {
   const lastXRef = useRef(0)
   const lastTimeRef = useRef(0)
   const rafRef = useRef(null)
+  const sectionRef = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  // Defer heavy fetching until the section approaches the viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true)
+        observer.disconnect()
+      }
+    }, { rootMargin: '400px' })
+    if (sectionRef.current) observer.observe(sectionRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   // Momentum animation loop
   useEffect(() => {
@@ -193,53 +216,63 @@ export default function BatchDetails() {
   const handleTouchMove  = (e) => { e.preventDefault(); moveDrag(e.touches[0].clientX) }
   const handleTouchEnd   = endDrag
 
+  // 1. Fetch Metadata immediately
   useEffect(() => {
-    async function load() {
-      const all = []
-      const PAGE = 1000
-      let from = 0
-      while (true) {
-        const { data } = await supabase.from('temperature_readings')
-          .select('brew_id, temp_c, recorded_at')
+    async function fetchMeta() {
+      const { data: batchMeta, error } = await supabase.from('batches')
+        .select('*')
+        .not('steep_end', 'is', null)
+        .order('steep_start', { ascending: false })
+        .limit(12)
+
+      if (error || !batchMeta?.length) { 
+        setBrews([])
+        return 
+      }
+      setMetaList(batchMeta)
+
+      const initial = batchMeta.map(meta => {
+        const t0 = new Date(meta.steep_start).getTime()
+        const t1 = new Date(meta.steep_end).getTime()
+        return {
+          id: meta.id || `batch-${meta.batch_number}-${t0}`,
+          date: new Date(meta.steep_start),
+          duration: (t1 - t0) / 1000,
+          meta,
+          chartData: [],
+          isLoading: true
+        }
+      })
+      
+      initial.sort((a, b) => a.date - b.date)
+      setBrews(initial)
+    }
+    fetchMeta()
+  }, [])
+
+  // 2. Fetch Heavy Data when visible
+  useEffect(() => {
+    if (!isVisible || !metaList) return
+
+    async function fetchHeavy() {
+      const batchPromises = metaList.map(async (meta) => {
+        const { data: readings } = await supabase.from('temperature_readings')
+          .select('temp_c, recorded_at')
+          .gte('recorded_at', meta.steep_start)
+          .lte('recorded_at', meta.steep_end)
           .order('recorded_at', { ascending: true })
-          .range(from, from + PAGE - 1)
-        if (!data?.length) break
-        all.push(...data)
-        if (data.length < PAGE) break
-        from += PAGE
-      }
+          .limit(1000) // Hard cap to prevent API limits draining
 
-      if (!all.length) { setBrews([]); return }
+        if (!readings || readings.length < 2) return null
 
-      const GAP_MS = 6 * 60 * 60 * 1000
-      const batches = []
-      let current = [all[0]]
-      for (let i = 1; i < all.length; i++) {
-        const gap = new Date(all[i].recorded_at) - new Date(all[i - 1].recorded_at)
-        if (gap > GAP_MS) { batches.push(current); current = [] }
-        current.push(all[i])
-      }
-      batches.push(current)
-
-      const { data: batchMeta } = await supabase.from('batches')
-        .select('*').order('steep_start', { ascending: true })
-
-      const processed = batches
-        .filter(readings => readings.length >= 2)
-        .map((readings, idx) => {
-          const t0 = new Date(readings[0].recorded_at).getTime()
-          const t1 = new Date(readings[readings.length - 1].recorded_at).getTime()
+        const t0 = new Date(meta.steep_start).getTime()
+        const t1 = new Date(meta.steep_end).getTime()
           const temps_f = readings.map(r => r.temp_c * 9 / 5 + 32)
           const avg = temps_f.reduce((a, b) => a + b, 0) / temps_f.length
 
-          const meta = batchMeta?.find(b => {
-            const bs = new Date(b.steep_start).getTime()
-            return bs >= t0 - 4 * 60 * 60 * 1000 && bs <= t1
-          }) ?? null
-
           return {
-            id: `batch-${idx}-${t0}`,
-            date: new Date(readings[0].recorded_at),
+            id: meta.id || `batch-${meta.batch_number}-${t0}`,
+            date: new Date(meta.steep_start),
             duration: (t1 - t0) / 1000,
             tempMin: Math.min(...temps_f),
             tempMax: Math.max(...temps_f),
@@ -250,21 +283,27 @@ export default function BatchDetails() {
               temp_f: r.temp_c * 9 / 5 + 32,
               elapsed_s: (new Date(r.recorded_at).getTime() - t0) / 1000,
             })), 200),
+            isLoading: false
           }
-        })
+      })
+
+      const processed = (await Promise.all(batchPromises)).filter(Boolean)
+      
+      // Sort chronologically for the carousel (oldest first, matching original behavior)
+      processed.sort((a, b) => a.date - b.date)
 
       setBrews(processed)
     }
-    load()
-  }, [])
+    fetchHeavy()
+  }, [isVisible, metaList])
 
   return (
-    <section className={styles.section}>
+    <section className={styles.section} ref={sectionRef}>
       <div className={styles.inner}>
         <div className={styles.headerLayout}>
           <div className={styles.headerText}>
             <div className={styles.eyebrow}>Full Batch Transparency · Bean to Bottle</div>
-            <h2 className={styles.headline}>We Show<br/>Our <span style={{background:'linear-gradient(135deg,#f0d878 0%,#c9a84c 55%,#8a6018 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}}>Work.</span></h2>
+            <h2 className={styles.headline}>We <span className={styles.goldText}>Show</span><br/>Our <span className={styles.goldText}>Work.</span></h2>
             <p className={styles.body}>
 
               We built live telemetry into every brew — temperature logged every few seconds,
@@ -383,7 +422,31 @@ export default function BatchDetails() {
         </div>
       </div>
 
-      {brews === null && <div className={styles.empty}>Loading batch data…</div>}
+      {brews === null && (
+        <div className={styles.empty} role="status">
+          <svg
+            className={styles.spinner}
+            aria-hidden="true"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <line x1="4" y1="18" x2="20" y2="18" />
+            <path d="M12 10v4" />
+            <path d="M10 14h4" />
+          </svg>
+          <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
+            Loading batch data…
+          </span>
+        </div>
+      )}
       {brews?.length === 0 && <div className={styles.empty}>No batches recorded yet.</div>}
       {brews?.length > 0 && (
         <div
@@ -402,6 +465,7 @@ export default function BatchDetails() {
               <BrewCard
                 key={brew.id}
                 brew={brew}
+                onPlayBatch={onPlayBatch}
                 onEnter={() => {}}
                 onLeave={() => {}}
               />

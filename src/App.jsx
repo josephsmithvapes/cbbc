@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState } from 'react'
+import HeroSection from './components/HeroSection'
 import WaitlistSection from './components/WaitlistSection'
 import BrewStageDisplay from './components/BrewStageDisplay'
 import BrewTelemetry from './components/BrewTelemetry'
@@ -16,6 +17,7 @@ export default function App() {
 
   return (
     <>
+      <HeroSection />
       <WaitlistSection />
       <BrewStageDisplay />
       <BrewTelemetry requestedBatchId={requestedBatchId} />
