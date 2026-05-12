@@ -12,21 +12,9 @@ function useIsMobile() {
   return isMobile
 }
 
-function useReducedMotion() {
-  const mq = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)')
-  const [reduced, setReduced] = useState(mq ? mq.matches : false)
-  useEffect(() => {
-    if (!mq) return
-    const handler = (e) => setReduced(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
-  return reduced
-}
 
 export default function HeroSection() {
   const isMobile = useIsMobile()
-  const reducedMotion = useReducedMotion()
   const [sheetOpen, setSheetOpen] = useState(false)
   const [vaultOpen, setVaultOpen] = useState(false)
   const count    = useWaitlistCount() || 0
@@ -298,9 +286,7 @@ export default function HeroSection() {
               >
                 {/* Crosshair reticle */}
                 <circle cx="400" cy="480" r="6" fill="#c9a84c"/>
-                <circle cx="400" cy="480" r="28" stroke="#c9a84c" strokeWidth="1.5" fill="none" opacity="0.6" strokeDasharray="4 4">
-                  {!reducedMotion && <animateTransform attributeName="transform" type="rotate" from="0 400 480" to="360 400 480" dur="10s" repeatCount="indefinite" />}
-                </circle>
+                <circle className={styles.svgSpinCircle} cx="400" cy="480" r="28" stroke="#c9a84c" strokeWidth="1.5" fill="none" opacity="0.6" strokeDasharray="4 4"/>
                 <circle cx="400" cy="480" r="50" stroke="#c9a84c" strokeWidth="1" fill="none" opacity="0.25"/>
                 <line x1="356" y1="480" x2="372" y2="480" stroke="#c9a84c" strokeWidth="1.5" opacity="0.6" strokeLinecap="round"/>
                 <line x1="428" y1="480" x2="444" y2="480" stroke="#c9a84c" strokeWidth="1.5" opacity="0.6" strokeLinecap="round"/>
