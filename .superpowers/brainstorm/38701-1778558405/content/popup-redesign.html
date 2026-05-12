@@ -1,0 +1,207 @@
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @keyframes rotate { to { transform: rotate(360deg); } }
+  @keyframes bounce-arrow { 0%,100%{transform:translate(0,0)} 50%{transform:translate(4px,-4px)} }
+  @keyframes pulse-ring { 0%,100%{opacity:0.8} 50%{opacity:0.3} }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  @keyframes scanline { from{transform:translateY(0)} to{transform:translateY(120px)} }
+
+  .phones {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .col-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; color: rgba(201,168,76,0.6);
+    letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .phone {
+    width: 200px; height: 340px;
+    background: #0d0a05;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+  .phone svg { width: 100%; height: 100%; }
+</style>
+
+<h2>Live batch data callout — redesign</h2>
+<p class="subtitle">Same polyline connector, same position on the bottle. Four directions for the box itself.</p>
+
+<div class="phones">
+
+  <!-- CURRENT -->
+  <div class="col">
+    <span class="col-label">Current</span>
+    <div class="phone">
+      <svg viewBox="0 0 800 993" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="993" fill="#0d0a05"/>
+        <image href="/img/bottle-bccb.webp" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clipPath="url(#bm-cur)" opacity="0.8"/>
+        <defs><clipPath id="bm-cur"><path d="M330 170 h140 v60 c0 60 70 100 70 160 v400 a30 30 0 0 1 -30 30 h-220 a30 30 0 0 1 -30 -30 v-400 c0 -60 70 -100 70 -160 Z"/></clipPath></defs>
+        <circle cx="400" cy="480" r="6" fill="#c9a84c"/>
+        <circle cx="400" cy="480" r="16" stroke="#c9a84c" stroke-width="2" fill="none" opacity="0.8" stroke-dasharray="4 4"/>
+        <polyline points="400,480 460,480 500,560" stroke="#c9a84c" stroke-width="2" opacity="0.6"/>
+        <rect x="464" y="564" width="280" height="120" rx="10" fill="rgba(201,168,76,0.15)"/>
+        <rect x="460" y="560" width="280" height="120" rx="10" fill="rgba(13,10,5,0.95)" stroke="#c9a84c" stroke-width="2"/>
+        <rect x="466" y="566" width="268" height="108" rx="6" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.3"/>
+        <text x="484" y="602" font-family="var(--font-brand)" font-size="18" fill="#f2ede0" opacity="0.6" letter-spacing="0.1em">TAP TO VIEW</text>
+        <text x="696" y="604" font-family="var(--font-brand)" font-size="24" fill="#c9a84c" opacity="0.9">↗</text>
+        <line x1="466" y1="620" x2="734" y2="620" stroke="#c9a84c" stroke-width="1" opacity="0.3"/>
+        <text x="484" y="660" font-family="serif" font-size="26" fill="#c9a84c" letter-spacing="0.05em">LIVE BATCH DATA</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- A: DATA TERMINAL -->
+  <div class="col">
+    <span class="col-label">A — Terminal</span>
+    <div class="phone option" data-choice="a" onclick="toggleSelect(this)">
+      <svg viewBox="0 0 800 993" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="993" fill="#0d0a05"/>
+        <image href="/img/bottle-bccb.webp" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clipPath="url(#bm-a)" opacity="0.8"/>
+        <defs><clipPath id="bm-a"><path d="M330 170 h140 v60 c0 60 70 100 70 160 v400 a30 30 0 0 1 -30 30 h-220 a30 30 0 0 1 -30 -30 v-400 c0 -60 70 -100 70 -160 Z"/></clipPath></defs>
+
+        <circle cx="400" cy="480" r="6" fill="#c9a84c"/>
+        <circle cx="400" cy="480" r="16" stroke="#c9a84c" stroke-width="2" fill="none" opacity="0.8" stroke-dasharray="4 4"/>
+        <polyline points="400,480 460,480 500,555" stroke="#c9a84c" stroke-width="2" opacity="0.6"/>
+
+        <!-- terminal-style box -->
+        <rect x="458" y="553" width="300" height="160" rx="4" fill="rgba(13,10,5,0.97)" stroke="#c9a84c" stroke-width="1.5"/>
+        <!-- header bar -->
+        <rect x="458" y="553" width="300" height="28" rx="0" fill="rgba(201,168,76,0.12)"/>
+        <rect x="458" y="553" width="300" height="28" rx="4 4 0 0" fill="rgba(201,168,76,0.12)"/>
+        <circle cx="476" cy="567" r="5" fill="rgba(201,168,76,0.3)"/>
+        <circle cx="492" cy="567" r="5" fill="rgba(201,168,76,0.15)"/>
+        <text x="514" y="572" font-family="monospace" font-size="13" fill="rgba(201,168,76,0.7)" letter-spacing="0.12em">BATCH_01.LIVE</text>
+
+        <!-- data rows -->
+        <text x="474" y="606" font-family="monospace" font-size="13" fill="rgba(242,237,224,0.4)" letter-spacing="0.08em">TEMP_F</text>
+        <text x="636" y="606" font-family="monospace" font-size="13" fill="#c9a84c" letter-spacing="0.06em">38.2°</text>
+
+        <text x="474" y="630" font-family="monospace" font-size="13" fill="rgba(242,237,224,0.4)" letter-spacing="0.08em">STATUS</text>
+        <text x="620" y="630" font-family="monospace" font-size="13" fill="#c9a84c" letter-spacing="0.06em">STEEP</text>
+
+        <text x="474" y="654" font-family="monospace" font-size="13" fill="rgba(242,237,224,0.4)" letter-spacing="0.08em">REMAIN</text>
+        <text x="606" y="654" font-family="monospace" font-size="13" fill="#c9a84c" letter-spacing="0.06em">16:42</text>
+
+        <line x1="474" y1="668" x2="742" y2="668" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <text x="474" y="695" font-family="monospace" font-size="14" fill="rgba(201,168,76,0.5)" letter-spacing="0.1em">▶ TAP FOR FULL DATA</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- B: BADGE / PILL -->
+  <div class="col">
+    <span class="col-label">B — Badge</span>
+    <div class="phone option" data-choice="b" onclick="toggleSelect(this)">
+      <svg viewBox="0 0 800 993" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="993" fill="#0d0a05"/>
+        <image href="/img/bottle-bccb.webp" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clipPath="url(#bm-b)" opacity="0.8"/>
+        <defs><clipPath id="bm-b"><path d="M330 170 h140 v60 c0 60 70 100 70 160 v400 a30 30 0 0 1 -30 30 h-220 a30 30 0 0 1 -30 -30 v-400 c0 -60 70 -100 70 -160 Z"/></clipPath></defs>
+
+        <circle cx="400" cy="480" r="6" fill="#c9a84c"/>
+        <circle cx="400" cy="480" r="16" stroke="#c9a84c" stroke-width="2" fill="none" opacity="0.8" stroke-dasharray="4 4"/>
+        <polyline points="400,480 440,580" stroke="#c9a84c" stroke-width="2" opacity="0.6"/>
+
+        <!-- pill badge -->
+        <rect x="300" y="580" width="280" height="56" rx="28" fill="rgba(13,10,5,0.95)" stroke="#c9a84c" stroke-width="1.5"/>
+        <!-- live dot -->
+        <circle cx="328" cy="608" r="6" fill="#c9a84c" opacity="0.9"/>
+        <circle cx="328" cy="608" r="10" stroke="#c9a84c" stroke-width="1" fill="none" opacity="0.4"/>
+        <text x="348" y="614" font-family="monospace" font-size="20" fill="#f2ede0" letter-spacing="0.08em">LIVE  38.2°F</text>
+        <text x="534" y="614" font-family="monospace" font-size="20" fill="rgba(201,168,76,0.6)" letter-spacing="0.06em">  →</text>
+
+        <!-- second line label -->
+        <text x="300" y="662" font-family="monospace" font-size="14" fill="rgba(201,168,76,0.45)" letter-spacing="0.12em" text-anchor="middle" x="440">BATCH #01 · COLD STEEP</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- C: CORNER BRACKET -->
+  <div class="col">
+    <span class="col-label">C — Bracket</span>
+    <div class="phone option" data-choice="c" onclick="toggleSelect(this)">
+      <svg viewBox="0 0 800 993" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="993" fill="#0d0a05"/>
+        <image href="/img/bottle-bccb.webp" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clipPath="url(#bm-c)" opacity="0.8"/>
+        <defs><clipPath id="bm-c"><path d="M330 170 h140 v60 c0 60 70 100 70 160 v400 a30 30 0 0 1 -30 30 h-220 a30 30 0 0 1 -30 -30 v-400 c0 -60 70 -100 70 -160 Z"/></clipPath></defs>
+
+        <circle cx="400" cy="480" r="6" fill="#c9a84c"/>
+        <circle cx="400" cy="480" r="16" stroke="#c9a84c" stroke-width="2" fill="none" opacity="0.8" stroke-dasharray="4 4"/>
+        <polyline points="400,480 460,480 510,555" stroke="#c9a84c" stroke-width="2" opacity="0.6"/>
+
+        <!-- bracket corners only, no fill box -->
+        <path d="M468,555 L468,548 L478,548" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M750,555 L750,548 L740,548" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M468,715 L468,722 L478,722" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M750,715 L750,722 L740,722" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+        <!-- content — no box, just text floating in space -->
+        <text x="488" y="592" font-family="monospace" font-size="16" fill="rgba(201,168,76,0.5)" letter-spacing="0.2em">BATCH #01</text>
+        <text x="488" y="635" font-family="serif" font-size="42" fill="#c9a84c" letter-spacing="0.04em">38.2°F</text>
+        <text x="488" y="668" font-family="monospace" font-size="14" fill="rgba(242,237,224,0.4)" letter-spacing="0.12em">COLD STEEP · 16H LEFT</text>
+        <line x1="488" y1="685" x2="740" y2="685" stroke="rgba(201,168,76,0.2)" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="488" y="710" font-family="monospace" font-size="14" fill="rgba(201,168,76,0.45)" letter-spacing="0.15em">TAP FOR LIVE FEED ↗</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- D: MINIMAL CROSSHAIR -->
+  <div class="col">
+    <span class="col-label">D — Crosshair</span>
+    <div class="phone option" data-choice="d" onclick="toggleSelect(this)">
+      <svg viewBox="0 0 800 993" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="993" fill="#0d0a05"/>
+        <image href="/img/bottle-bccb.webp" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clipPath="url(#bm-d)" opacity="0.8"/>
+        <defs><clipPath id="bm-d"><path d="M330 170 h140 v60 c0 60 70 100 70 160 v400 a30 30 0 0 1 -30 30 h-220 a30 30 0 0 1 -30 -30 v-400 c0 -60 70 -100 70 -160 Z"/></clipPath></defs>
+
+        <!-- crosshair rings on bottle -->
+        <circle cx="400" cy="480" r="6" fill="#c9a84c"/>
+        <circle cx="400" cy="480" r="28" stroke="#c9a84c" stroke-width="1.5" fill="none" opacity="0.6" stroke-dasharray="4 4"/>
+        <circle cx="400" cy="480" r="50" stroke="#c9a84c" stroke-width="1" fill="none" opacity="0.25"/>
+        <line x1="360" y1="480" x2="375" y2="480" stroke="#c9a84c" stroke-width="1.5" opacity="0.6"/>
+        <line x1="425" y1="480" x2="440" y2="480" stroke="#c9a84c" stroke-width="1.5" opacity="0.6"/>
+        <line x1="400" y1="440" x2="400" y2="455" stroke="#c9a84c" stroke-width="1.5" opacity="0.6"/>
+        <line x1="400" y1="505" x2="400" y2="520" stroke="#c9a84c" stroke-width="1.5" opacity="0.6"/>
+
+        <!-- L-bracket callout line -->
+        <polyline points="450,480 580,480 580,560" stroke="#c9a84c" stroke-width="1.5" opacity="0.5" stroke-dasharray="6 4"/>
+        <circle cx="580" cy="560" r="3" fill="#c9a84c" opacity="0.7"/>
+
+        <!-- just two key metrics, very airy -->
+        <text x="596" y="570" font-family="monospace" font-size="16" fill="rgba(201,168,76,0.5)" letter-spacing="0.15em">TEMP</text>
+        <text x="596" y="618" font-family="serif" font-size="52" fill="#c9a84c" letter-spacing="0.02em">38.2°</text>
+        <text x="596" y="650" font-family="monospace" font-size="14" fill="rgba(242,237,224,0.3)" letter-spacing="0.1em">STEEPING · LIVE</text>
+
+        <!-- minimal tap cue -->
+        <text x="596" y="700" font-family="monospace" font-size="13" fill="rgba(201,168,76,0.35)" letter-spacing="0.15em">[ TAP TO EXPAND ]</text>
+      </svg>
+    </div>
+  </div>
+
+</div>
+
+<div class="options" style="margin-top:20px;">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content"><h3>Terminal</h3><p>Looks like a real data readout. Header bar with dots, labeled rows, temp/status/remaining. Most info density.</p></div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content"><h3>Badge / Pill</h3><p>Compact pill shape with live dot + temp on one line. Clean and modern. Least intrusive on the bottle art.</p></div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content"><h3>Bracket</h3><p>Corner brackets only, no filled box — text floats in space. Temp is big and readable. Very blueprint.</p></div>
+  </div>
+  <div class="option" data-choice="d" onclick="toggleSelect(this)">
+    <div class="letter">D</div>
+    <div class="content"><h3>Crosshair</h3><p>Multi-ring targeting reticle on the bottle, dashed callout line, big temp number. Most dramatic.</p></div>
+  </div>
+</div>

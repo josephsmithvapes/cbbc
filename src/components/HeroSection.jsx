@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useWaitlistCount } from '../lib/hooks'
+import { useWaitlistCount, useBrewState } from '../lib/hooks'
 import styles from './HeroSection.module.css'
 
 function useIsMobile() {
@@ -12,11 +12,25 @@ function useIsMobile() {
   return isMobile
 }
 
+function useReducedMotion() {
+  const mq = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)')
+  const [reduced, setReduced] = useState(mq ? mq.matches : false)
+  useEffect(() => {
+    if (!mq) return
+    const handler = (e) => setReduced(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+  return reduced
+}
+
 export default function HeroSection() {
   const isMobile = useIsMobile()
+  const reducedMotion = useReducedMotion()
   const [sheetOpen, setSheetOpen] = useState(false)
   const [vaultOpen, setVaultOpen] = useState(false)
-  const count = useWaitlistCount() || 0
+  const count    = useWaitlistCount() || 0
+  const brewState = useBrewState()
 
   // Lock body scroll when the mobile bottom sheet is open
   useEffect(() => {
@@ -31,8 +45,11 @@ export default function HeroSection() {
   const handleReserve = (tier) => {
     window._bccbTier = tier
     if (isMobile) setSheetOpen(false)
-    document.querySelector('.capture')?.scrollIntoView({ behavior: 'smooth' })
-    setTimeout(() => document.getElementById('email')?.focus(), 400)
+    // Defer scroll until after React clears body overflow lock
+    setTimeout(() => {
+      document.querySelector('.capture')?.scrollIntoView({ behavior: 'smooth' })
+      setTimeout(() => document.getElementById('email')?.focus(), 350)
+    }, 50)
   }
 
   // Calculate real-time vault percentages directly from the hook!
@@ -45,10 +62,10 @@ export default function HeroSection() {
       {/* Weekly */}
       <div className={styles.planCard} role="listitem">
         <div className={styles.planCardHead}>
-          <img className={styles.planCardImg} src="/img/plan-weekly.svg" alt="Single cold brew bottle" loading="lazy"/>
+          <img className={styles.planCardImg} src="/img/plan-weekly.svg" alt="Single cold brew bottle" width="72" height="72" loading="lazy"/>
           <span className={styles.planCardEyebrow}>Weekly</span>
           <span className={styles.planCardName}>WEEKLY</span>
-          <span className={styles.planCardSub}>One six pack per week.</span>
+          <span className={styles.planCardSub}>Six bottles, every week.</span>
         </div>
         <div className={styles.planCardStat}>
           <span className={styles.planStatQty}>1 Case</span>
@@ -68,10 +85,10 @@ export default function HeroSection() {
       <div className={`${styles.planCard} ${styles.isFeatured}`} role="listitem">
         <div className={styles.planCardHead}>
           <span className={styles.planCardFlag}>★ Most reserved</span>
-          <img className={styles.planCardImg} src="/img/plan-monthly.svg" alt="Mason jar cold steep" loading="lazy"/>
+          <img className={styles.planCardImg} src="/img/plan-monthly.svg" alt="Mason jar cold steep" width="72" height="72" loading="lazy"/>
           <span className={styles.planCardEyebrow}>Monthly</span>
           <span className={styles.planCardName}>MONTHLY</span>
-          <span className={styles.planCardSub}>One six pack every other week.</span>
+          <span className={styles.planCardSub}>Twelve bottles, twice a month.</span>
         </div>
         <div className={styles.planCardStat}>
           <span className={styles.planStatQty}>2 Cases</span>
@@ -90,10 +107,10 @@ export default function HeroSection() {
       {/* Single */}
       <div className={styles.planCard} role="listitem">
         <div className={styles.planCardHead}>
-          <img className={styles.planCardImg} src="/img/plan-single.svg" alt="Cold brew glass over ice" loading="lazy"/>
+          <img className={styles.planCardImg} src="/img/plan-single.svg" alt="Cold brew glass over ice" width="72" height="72" loading="lazy"/>
           <span className={styles.planCardEyebrow}>Single Batch</span>
           <span className={styles.planCardName}>SINGLE</span>
-          <span className={styles.planCardSub}>Order when you're ready.</span>
+          <span className={styles.planCardSub}>One batch. Your call.</span>
         </div>
         <div className={styles.planCardStat}>
           <span className={styles.planStatQty}>1 Case</span>
@@ -201,7 +218,7 @@ export default function HeroSection() {
             <div className={styles.vaultTrigger}>
               <div className={styles.vaultBanner}>
                 <span className={styles.vaultStar} aria-hidden="true">☆</span>
-                <span style={{color: '#c9a84c'}}>Maiden</span> investors unlock exclusive benefits — Be one of the first to Join the Crew!
+                <span style={{color: '#c9a84c'}}>Maiden</span> reservations unlock founding-member status.
               </div>
               <svg className={styles.vaultChevron} width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                 <path d="M2 5l5 5 5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
@@ -263,7 +280,6 @@ export default function HeroSection() {
                   <stop offset="100%" stopColor="#c8673a"/>
                 </linearGradient>
               </defs>
-              <image href="/img/bottle-bccb.webp" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" opacity="0.15" />
               <path d="M0 200h800 M0 400h800 M0 600h800 M0 800h800" stroke="rgba(242,237,224,0.03)" strokeWidth="1"/>
               <path d="M200 0v993 M400 0v993 M600 0v993" stroke="rgba(242,237,224,0.03)" strokeWidth="1"/>
               <image href="/img/bottle-bccb.webp" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clipPath="url(#bottle-mask)" opacity="0.8"/>
@@ -272,51 +288,43 @@ export default function HeroSection() {
               <path d="M330 170 h140 v60 c0 60 70 100 70 160 v400 a30 30 0 0 1 -30 30 h-220 a30 30 0 0 1 -30 -30 v-400 c0 -60 70 -100 70 -160 Z" stroke="rgba(201,168,76,0.5)" strokeWidth="3" strokeDasharray="6 6"/>
               <path d="M330 170 h140 v60 c0 60 70 100 70 160 v400 a30 30 0 0 1 -30 30 h-220 a30 30 0 0 1 -30 -30 v-400 c0 -60 70 -100 70 -160 Z" stroke="#c9a84c" strokeWidth="2" opacity="0.8"/>
               <rect x="300" y="80" width="200" height="90" rx="8" stroke="#c9a84c" strokeWidth="3" fill="rgba(13,10,5,0.6)"/>
-              <g 
-                onClick={() => document.getElementById('telemetry')?.scrollIntoView({ behavior: 'smooth' })} 
+              <g
+                onClick={() => document.getElementById('telemetry')?.scrollIntoView({ behavior: 'smooth' })}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); document.getElementById('telemetry')?.scrollIntoView({ behavior: 'smooth' }); } }}
-                style={{ cursor: 'pointer' }} 
-                role="button" 
+                style={{ cursor: 'pointer' }}
+                role="button"
                 aria-label="View live telemetry"
                 tabIndex="0"
               >
-                {/* Target dot on bottle */}
+                {/* Crosshair reticle */}
                 <circle cx="400" cy="480" r="6" fill="#c9a84c"/>
-                <circle cx="400" cy="480" r="16" stroke="#c9a84c" strokeWidth="2" fill="none" opacity="0.8" strokeDasharray="4 4">
-                  <animateTransform attributeName="transform" type="rotate" from="0 400 480" to="360 400 480" dur="6s" repeatCount="indefinite" />
+                <circle cx="400" cy="480" r="28" stroke="#c9a84c" strokeWidth="1.5" fill="none" opacity="0.6" strokeDasharray="4 4">
+                  {!reducedMotion && <animateTransform attributeName="transform" type="rotate" from="0 400 480" to="360 400 480" dur="10s" repeatCount="indefinite" />}
                 </circle>
-                <circle cx="400" cy="480" r="26" stroke="#c9a84c" strokeWidth="1" fill="none" opacity="0.3"/>
-                
-                {/* Callout Line */}
-                <polyline points="400,480 460,480 500,560" fill="none" stroke="#c9a84c" strokeWidth="2" opacity="0.6"/>
+                <circle cx="400" cy="480" r="50" stroke="#c9a84c" strokeWidth="1" fill="none" opacity="0.25"/>
+                <line x1="356" y1="480" x2="372" y2="480" stroke="#c9a84c" strokeWidth="1.5" opacity="0.6" strokeLinecap="round"/>
+                <line x1="428" y1="480" x2="444" y2="480" stroke="#c9a84c" strokeWidth="1.5" opacity="0.6" strokeLinecap="round"/>
+                <line x1="400" y1="436" x2="400" y2="452" stroke="#c9a84c" strokeWidth="1.5" opacity="0.6" strokeLinecap="round"/>
+                <line x1="400" y1="508" x2="400" y2="524" stroke="#c9a84c" strokeWidth="1.5" opacity="0.6" strokeLinecap="round"/>
 
-                {/* Sun Rays emerging from behind the box */}
-                <g opacity="0.35">
-                  <animateTransform attributeName="transform" type="rotate" from="0 600 620" to="360 600 620" dur="30s" repeatCount="indefinite" />
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <line key={i} x1="600" y1="620" x2="600" y2="450" stroke="#c9a84c" strokeWidth="1.5" strokeDasharray="3 6" transform={`rotate(${i * 30} 600 620)`} />
-                  ))}
-                </g>
-                
-                {/* CTA Box (Width 280, Height 120, Centered at X=600 -> x=460, y=560) */}
-                <rect x="464" y="564" width="280" height="120" rx="10" fill="rgba(201,168,76,0.15)" />
-                <rect x="460" y="560" width="280" height="120" rx="10" fill="rgba(13,10,5,0.95)" stroke="#c9a84c" strokeWidth="2"/>
-                <rect x="466" y="566" width="268" height="108" rx="6" fill="none" stroke="#c9a84c" strokeWidth="1" opacity="0.3"/>
-                
-                {/* Content */}
-                <text x="484" y="602" fontFamily="var(--font-brand)" fontSize="18" fill="#f2ede0" opacity="0.6" letterSpacing="0.1em">TAP TO VIEW</text>
-                <g>
-                  <animateTransform attributeName="transform" type="translate" values="0,0; 4,-4; 0,0" dur="2s" repeatCount="indefinite" />
-                  <text x="696" y="604" fontFamily="var(--font-brand)" fontSize="24" fill="#c9a84c" opacity="0.9">↗</text>
-                </g>
-                
-                <line x1="466" y1="620" x2="734" y2="620" stroke="#c9a84c" strokeWidth="1" opacity="0.3"/>
-                <text x="484" y="660" fontFamily="var(--font-display)" fontSize="26" fill="#c9a84c" letterSpacing="0.05em">LIVE BATCH DATA</text>
+                {/* L-bracket callout */}
+                <polyline points="450,480 580,480 580,560" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.5" strokeDasharray="6 4"/>
+                <circle cx="580" cy="560" r="3" fill="#c9a84c" opacity="0.7"/>
+
+                {/* Data readout */}
+                <text x="596" y="578" fontFamily="var(--font-brand)" fontSize="18" fill="rgba(201,168,76,0.5)" letterSpacing="0.2em">TEMP</text>
+                <text x="596" y="642" fontFamily="var(--font-display)" fontSize="58" fill="#c9a84c" letterSpacing="0.02em">
+                  {brewState?.current_temp_f != null ? `${brewState.current_temp_f.toFixed(1)}°` : '--°'}
+                </text>
+                <text x="596" y="674" fontFamily="var(--font-brand)" fontSize="16" fill="rgba(242,237,224,0.3)" letterSpacing="0.1em">
+                  {brewState?.status ?? 'STEEPING'} · LIVE
+                </text>
+                <text x="596" y="718" fontFamily="var(--font-brand)" fontSize="15" fill="rgba(201,168,76,0.35)" letterSpacing="0.15em">[ PULL LIVE DATA ]</text>
               </g>
             </svg>
           ) : (
             // Desktop Image
-            <img src="/img/bottle-bccb.webp" alt="BCCB cold brew bottle — small batch, Los Angeles" width="800" height="993" loading="eager" className={styles.desktopImg} />
+            <img src="/img/bottle-bccb.webp" alt="BCCB cold brew bottle — small batch, Los Angeles" width="800" height="993" loading="eager" fetchpriority="high" className={styles.desktopImg} />
           )}
           <span className={styles.photoTag}>SMALL BATCH · LOS ANGELES</span>
           <div className={styles.overlay}>
