@@ -35,21 +35,21 @@ export default function WaitlistSection() {
             </svg>
           </div>
           <div className={styles.stageTitle}>
-            Join the <span style={{ color: GOLD }}>Maiden</span> Batch now!
+            Stake your claim. <span style={{ color: GOLD }}>Maiden</span> batch.
           </div>
           {count != null ? (
             <>
               <div className={styles.display}>
                 {count} <span style={{ fontSize: '0.38em', opacity: .4, WebkitTextFillColor: CREAM }}>/ {target}</span>
               </div>
-              <div className={styles.countLabel}>Free shipping on all Maiden batch orders.</div>
+              <div className={styles.countLabel}>Free shipping · Maiden batch only.</div>
               <div className={styles.meterBar}>
                 <div className={styles.meterFill} style={{ width: `${pct}%` }} />
               </div>
               <div className={styles.sub}>
                 {needed > 0
-                  ? `${needed} more and we brew batch #01`
-                  : "Batch #01 confirmed — we're brewing"}
+                  ? `${needed} more to trigger Batch #01.`
+                  : "Batch #01 locked. We're brewing."}
               </div>
             </>
           ) : (

@@ -1,0 +1,376 @@
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @keyframes spin-slow   { to { transform: rotate(360deg); } }
+  @keyframes spin-medium { to { transform: rotate(360deg); } }
+  @keyframes spin-fast   { to { transform: rotate(360deg); } }
+
+  /* respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .sun { animation: none !important; }
+  }
+
+  .wrap {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .phone {
+    width: 220px;
+    flex-shrink: 0;
+    background: #0d0a05;
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    font-family: 'DM Mono', 'Courier New', monospace;
+  }
+
+  .spine {
+    position: absolute;
+    left: 16px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(201,168,76,0.5) 0px,
+      rgba(201,168,76,0.5) 4px,
+      transparent 4px,
+      transparent 9px
+    );
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 4%, black 96%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 4%, black 96%, transparent 100%);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* ── spinning suns — positioned along spine ── */
+  .sun {
+    position: absolute;
+    left: 16px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 11;
+    transform-origin: center center;
+  }
+  /* sizes */
+  .sun-lg { width: 28px; height: 28px; }
+  .sun-md { width: 18px; height: 18px; }
+  .sun-sm { width: 12px; height: 12px; }
+  /* speeds */
+  .sun-lg { animation: spin-slow   22s linear infinite; }
+  .sun-md { animation: spin-medium 14s linear infinite; }
+  .sun-sm { animation: spin-fast   8s  linear infinite; }
+
+  /* ── sections ── */
+  .nav-stub {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px 0 28px;
+    border-bottom: 1px solid rgba(242,237,224,0.06);
+    position: relative;
+  }
+  .nav-logo { font-size: 8px; color: rgba(242,237,224,0.7); letter-spacing: 0.15em; }
+
+  .hero-stub {
+    height: 80px;
+    background: radial-gradient(circle, rgba(201,168,76,.05) 1px, transparent 1px);
+    background-size: 12px 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 12px;
+    border-bottom: 1px solid rgba(242,237,224,0.06);
+  }
+  .hero-tag { font-size: 7px; color: rgba(201,168,76,0.5); letter-spacing: 0.15em; }
+
+  .pg-section {
+    padding: 14px 12px 14px 28px;
+    border-bottom: 1px solid rgba(242,237,224,0.06);
+    position: relative;
+  }
+  .section-mark {
+    position: absolute;
+    left: 0; top: 14px;
+    display: flex;
+    align-items: center;
+  }
+  .s-dot {
+    width: 8px; height: 8px;
+    border: 1.5px solid rgba(201,168,76,0.65);
+    border-radius: 50%;
+    background: #0d0a05;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+  .s-tick {
+    width: 10px; height: 1px;
+    background: rgba(201,168,76,0.4);
+    flex-shrink: 0;
+  }
+  .s-label {
+    font-size: 6px;
+    color: rgba(201,168,76,0.55);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .s-eyebrow {
+    font-size: 6px; color: rgba(201,168,76,0.5);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 4px; margin-top: 14px;
+  }
+  .s-title {
+    font-size: 13px; color: rgba(242,237,224,0.85);
+    letter-spacing: 0.06em; line-height: 1.2; margin-bottom: 3px;
+  }
+  .s-sub {
+    font-size: 7px; color: rgba(242,237,224,0.3);
+    letter-spacing: 0.1em; line-height: 1.5;
+  }
+  .s-data { display: flex; gap: 6px; margin-top: 6px; }
+  .data-chip {
+    font-size: 6.5px; color: rgba(201,168,76,0.75);
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 2px 5px; letter-spacing: 0.12em;
+  }
+  .mini-chart { width: 100%; height: 20px; margin-top: 6px; }
+  .footer-stub {
+    padding: 10px 12px 10px 28px;
+    position: relative;
+  }
+
+  /* annotation panel */
+  .annotations { flex: 1; min-width: 180px; padding-top: 8px; }
+  .ann-item { display: flex; gap: 10px; margin-bottom: 16px; align-items: flex-start; }
+  .ann-num {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    color: rgba(201,168,76,0.6); letter-spacing: 0.15em;
+    flex-shrink: 0; padding-top: 1px; min-width: 20px;
+  }
+  .ann-text h4 {
+    font-size: 11px; color: rgba(242,237,224,0.8);
+    font-weight: normal; margin-bottom: 3px; letter-spacing: 0.05em;
+  }
+  .ann-text p { font-size: 10px; color: rgba(242,237,224,0.4); line-height: 1.5; }
+
+  /* sun size legend */
+  .legend { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .legend-row { display: flex; align-items: center; gap: 10px; }
+  .legend-sun { flex-shrink: 0; }
+  .legend-text { font-size: 10px; color: rgba(242,237,224,0.4); line-height: 1.4; }
+</style>
+
+<h2>Spine + spinning suns</h2>
+<p class="subtitle">CSS <code>animation: rotate</code> only — no JS, respects prefers-reduced-motion</p>
+
+<div class="wrap">
+
+  <!-- PHONE -->
+  <div class="phone option" data-choice="a" onclick="toggleSelect(this)" style="cursor:pointer">
+    <div class="spine"></div>
+
+    <!-- SUN 1 — large, near hero/waitlist boundary -->
+    <svg class="sun sun-lg" style="top: 108px; margin-left:-14px;"
+         viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <g opacity="0.35">
+        <line x1="14" y1="1"  x2="14" y2="5"  stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="14" y1="23" x2="14" y2="27" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="1"  y1="14" x2="5"  y2="14" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="23" y1="14" x2="27" y2="14" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="4"  y1="4"  x2="7"  y2="7"  stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="21" y1="21" x2="24" y2="24" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="24" y1="4"  x2="21" y2="7"  stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="7"  y1="21" x2="4"  y2="24" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+      </g>
+      <circle cx="14" cy="14" r="4" stroke="#c9a84c" stroke-width="1.2" stroke-opacity="0.55" fill="none"/>
+    </svg>
+
+    <!-- SUN 2 — small, near telemetry -->
+    <svg class="sun sun-sm" style="top: 228px; margin-left:-6px;"
+         viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <g opacity="0.4">
+        <line x1="6" y1="0.5" x2="6" y2="2.5"   stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <line x1="6" y1="9.5" x2="6" y2="11.5"  stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <line x1="0.5" y1="6" x2="2.5" y2="6"   stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <line x1="9.5" y1="6" x2="11.5" y2="6"  stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <line x1="1.8" y1="1.8" x2="3.1" y2="3.1" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <line x1="8.9" y1="8.9" x2="10.2" y2="10.2" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <line x1="10.2" y1="1.8" x2="8.9" y2="3.1" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <line x1="3.1"  y1="8.9" x2="1.8" y2="10.2" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+      </g>
+      <circle cx="6" cy="6" r="1.8" stroke="#c9a84c" stroke-width="1" stroke-opacity="0.5" fill="none"/>
+    </svg>
+
+    <!-- SUN 3 — medium, near story -->
+    <svg class="sun sun-md" style="top: 346px; margin-left:-9px;"
+         viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <g opacity="0.3">
+        <line x1="9" y1="1"  x2="9" y2="4"  stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="9" y1="14" x2="9" y2="17" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="1"  y1="9" x2="4"  y2="9" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="14" y1="9" x2="17" y2="9" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="3"  y1="3"  x2="5"  y2="5"  stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="13" y1="13" x2="15" y2="15" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="15" y1="3"  x2="13" y2="5"  stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="5"  y1="13" x2="3"  y2="15" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+      </g>
+      <circle cx="9" cy="9" r="2.8" stroke="#c9a84c" stroke-width="1.1" stroke-opacity="0.45" fill="none"/>
+    </svg>
+
+    <!-- NAV -->
+    <div class="nav-stub">
+      <span class="nav-logo">BOLD CREW COLD BREW</span>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero-stub">
+      <div class="section-mark" style="top:50%;transform:translateY(-50%)">
+        <div class="s-dot"></div>
+        <div class="s-tick"></div>
+        <span class="s-label">LIVE BREW</span>
+      </div>
+      <span class="hero-tag">BATCH #01 · LIVE</span>
+    </div>
+
+    <!-- WAITLIST -->
+    <div class="pg-section">
+      <div class="section-mark">
+        <div class="s-dot"></div><div class="s-tick"></div>
+        <span class="s-label">§01 · RESERVE</span>
+      </div>
+      <div class="s-eyebrow">JOIN THE CREW</div>
+      <div class="s-title">Reserve Batch #01</div>
+      <div class="s-sub">Weekly · Monthly · Single</div>
+    </div>
+
+    <!-- BREW STAGE -->
+    <div class="pg-section">
+      <div class="section-mark">
+        <div class="s-dot"></div><div class="s-tick"></div>
+        <span class="s-label">§02 · STAGE</span>
+      </div>
+      <div class="s-eyebrow">CURRENT STAGE</div>
+      <div class="s-title">Cold Steep</div>
+      <div class="s-data">
+        <span class="data-chip">16 HRS LEFT</span>
+        <span class="data-chip">IN PROGRESS</span>
+      </div>
+    </div>
+
+    <!-- TELEMETRY -->
+    <div class="pg-section">
+      <div class="section-mark">
+        <div class="s-dot"></div><div class="s-tick"></div>
+        <span class="s-label">§03 · TELEMETRY</span>
+      </div>
+      <div class="s-eyebrow">LIVE DATA</div>
+      <div class="s-title">38.2°F</div>
+      <svg class="mini-chart" viewBox="0 0 160 20" preserveAspectRatio="none">
+        <polyline points="0,14 20,12 40,13 60,10 80,11 100,8 120,9 140,7 160,6"
+          fill="none" stroke="rgba(201,168,76,0.45)" stroke-width="1.2" stroke-linejoin="round"/>
+        <circle cx="160" cy="6" r="2" fill="#c9a84c" opacity="0.7"/>
+      </svg>
+    </div>
+
+    <!-- ARCHIVE -->
+    <div class="pg-section">
+      <div class="section-mark">
+        <div class="s-dot"></div><div class="s-tick"></div>
+        <span class="s-label">§04 · ARCHIVE</span>
+      </div>
+      <div class="s-eyebrow">PAST BATCHES</div>
+      <div class="s-title">3 Completed</div>
+      <div class="s-sub">Full temp curves · tasting notes</div>
+    </div>
+
+    <!-- STORY -->
+    <div class="pg-section">
+      <div class="section-mark">
+        <div class="s-dot"></div><div class="s-tick"></div>
+        <span class="s-label">§05 · STORY</span>
+      </div>
+      <div class="s-eyebrow">OUR STORY</div>
+      <div class="s-title">Los Angeles</div>
+      <div class="s-sub">Est. 2026 · Small batch</div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-stub">
+      <div class="section-mark" style="top:50%;transform:translateY(-50%)">
+        <div class="s-dot" style="border-color:rgba(201,168,76,0.2)"></div>
+        <div class="s-tick" style="background:rgba(201,168,76,0.15)"></div>
+        <span class="s-label" style="opacity:0.4">EOF</span>
+      </div>
+      <span style="font-size:6px;color:rgba(242,237,224,0.12);letter-spacing:0.15em;">© 2026 BCCB · LOS ANGELES</span>
+    </div>
+  </div>
+
+  <!-- ANNOTATIONS -->
+  <div class="annotations">
+    <p style="font-size:10px;color:rgba(242,237,224,0.5);margin-bottom:14px;line-height:1.5;">Three suns, three sizes, three speeds — scattered at natural breakpoints along the spine.</p>
+
+    <div class="legend">
+      <div class="legend-row">
+        <svg class="legend-sun" width="28" height="28" viewBox="0 0 28 28" fill="none" style="animation: spin-slow 22s linear infinite; flex-shrink:0;">
+          <g opacity="0.55">
+            <line x1="14" y1="1"  x2="14" y2="5"  stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="14" y1="23" x2="14" y2="27" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="1"  y1="14" x2="5"  y2="14" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="23" y1="14" x2="27" y2="14" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="4"  y1="4"  x2="7"  y2="7"  stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="21" y1="21" x2="24" y2="24" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="24" y1="4"  x2="21" y2="7"  stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="7"  y1="21" x2="4"  y2="24" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+          </g>
+          <circle cx="14" cy="14" r="4" stroke="#c9a84c" stroke-width="1.2" stroke-opacity="0.7" fill="none"/>
+        </svg>
+        <div class="legend-text"><strong style="color:rgba(242,237,224,0.7)">28px — slow (22s)</strong><br>At hero/waitlist boundary. Most visible, anchors the top.</div>
+      </div>
+
+      <div class="legend-row">
+        <svg class="legend-sun" width="18" height="18" viewBox="0 0 18 18" fill="none" style="animation: spin-medium 14s linear infinite; flex-shrink:0;">
+          <g opacity="0.5">
+            <line x1="9" y1="1" x2="9" y2="4" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="9" y1="14" x2="9" y2="17" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="1" y1="9" x2="4" y2="9" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="14" y1="9" x2="17" y2="9" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="3" y1="3" x2="5" y2="5" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="13" y1="13" x2="15" y2="15" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="15" y1="3" x2="13" y2="5" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="5" y1="13" x2="3" y2="15" stroke="#c9a84c" stroke-width="1.1" stroke-linecap="round"/>
+          </g>
+          <circle cx="9" cy="9" r="2.8" stroke="#c9a84c" stroke-width="1.1" stroke-opacity="0.55" fill="none"/>
+        </svg>
+        <div class="legend-text"><strong style="color:rgba(242,237,224,0.7)">18px — medium (14s)</strong><br>Near the story section. Mid-page visual pause.</div>
+      </div>
+
+      <div class="legend-row">
+        <svg class="legend-sun" width="12" height="12" viewBox="0 0 12 12" fill="none" style="animation: spin-fast 8s linear infinite; flex-shrink:0;">
+          <g opacity="0.55">
+            <line x1="6" y1="0.5" x2="6" y2="2.5" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+            <line x1="6" y1="9.5" x2="6" y2="11.5" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+            <line x1="0.5" y1="6" x2="2.5" y2="6" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+            <line x1="9.5" y1="6" x2="11.5" y2="6" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+            <line x1="1.8" y1="1.8" x2="3.1" y2="3.1" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+            <line x1="8.9" y1="8.9" x2="10.2" y2="10.2" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+            <line x1="10.2" y1="1.8" x2="8.9" y2="3.1" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+            <line x1="3.1" y1="8.9" x2="1.8" y2="10.2" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+          </g>
+          <circle cx="6" cy="6" r="1.8" stroke="#c9a84c" stroke-width="1" stroke-opacity="0.5" fill="none"/>
+        </svg>
+        <div class="legend-text"><strong style="color:rgba(242,237,224,0.7)">12px — fast (8s)</strong><br>Near telemetry — suggests live data energy.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;padding:10px;border:1px solid rgba(201,168,76,0.15);border-radius:4px;">
+      <p style="font-size:9px;color:rgba(201,168,76,0.6);letter-spacing:0.12em;margin-bottom:6px;">PERFORMANCE NOTE</p>
+      <p style="font-size:10px;color:rgba(242,237,224,0.35);line-height:1.5;">CSS <code style="color:rgba(201,168,76,0.5)">animation</code> runs on the compositor thread — no main thread cost. Each sun is an inline SVG (~200 bytes). <code style="color:rgba(201,168,76,0.5)">prefers-reduced-motion</code> stops all rotation instantly.</p>
+    </div>
+  </div>
+
+</div>

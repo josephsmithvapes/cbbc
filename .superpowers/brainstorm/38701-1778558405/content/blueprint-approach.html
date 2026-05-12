@@ -1,0 +1,435 @@
+<style>
+  .preview-wrap {
+    display: flex;
+    gap: 16px;
+    margin: 0 -8px;
+  }
+  .phone-frame {
+    flex: 1;
+    background: #0d0a05;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 16px;
+    overflow: hidden;
+    min-height: 480px;
+    position: relative;
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 9px;
+    color: #f2ede0;
+  }
+  .phone-label {
+    font-size: 10px;
+    color: rgba(201,168,76,0.7);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  /* ── OPTION A: Vertical Spine ── */
+  .spine-line {
+    position: absolute;
+    left: 18px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(201,168,76,0.5) 8%,
+      rgba(201,168,76,0.5) 92%,
+      transparent 100%
+    );
+  }
+  .spine-node {
+    position: absolute;
+    left: 14px;
+    width: 9px;
+    height: 9px;
+    border: 1.5px solid #c9a84c;
+    background: #0d0a05;
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  .spine-callout {
+    position: absolute;
+    left: 28px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transform: translateY(-50%);
+  }
+  .spine-tick {
+    width: 12px;
+    height: 1px;
+    background: rgba(201,168,76,0.5);
+    flex-shrink: 0;
+  }
+  .spine-label {
+    font-size: 7px;
+    letter-spacing: 0.15em;
+    color: rgba(201,168,76,0.8);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .spine-section-block {
+    margin-left: 40px;
+    padding: 6px 8px 6px 0;
+    border-bottom: 1px solid rgba(242,237,224,0.06);
+  }
+  .spine-section-block .title {
+    font-size: 8px;
+    color: rgba(242,237,224,0.4);
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+  .spine-section-block .content {
+    font-size: 8px;
+    color: rgba(242,237,224,0.2);
+  }
+
+  /* ── OPTION B: Per-section Callouts ── */
+  .section-block {
+    padding: 10px 10px 10px 10px;
+    border-bottom: 1px solid rgba(242,237,224,0.06);
+    position: relative;
+  }
+  .callout-svg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+  }
+  .section-content {
+    position: relative;
+    z-index: 1;
+  }
+  .data-pill {
+    display: inline-block;
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 2px 6px;
+    font-size: 8px;
+    color: #c9a84c;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .data-value {
+    font-size: 14px;
+    color: #f2ede0;
+    letter-spacing: 0.05em;
+  }
+  .data-label {
+    font-size: 7px;
+    color: rgba(242,237,224,0.35);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  /* ── OPTION C: Scroll Thread ── */
+  .thread-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    padding: 0;
+    border-bottom: 1px solid rgba(242,237,224,0.06);
+  }
+  .thread-rail {
+    width: 32px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 12px;
+  }
+  .thread-dot {
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid #c9a84c;
+    border-radius: 50%;
+    background: #0d0a05;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+  .thread-dot.active {
+    background: rgba(201,168,76,0.15);
+  }
+  .thread-vert {
+    width: 1px;
+    flex: 1;
+    min-height: 40px;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(201,168,76,0.45) 0px,
+      rgba(201,168,76,0.45) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+    margin-top: 4px;
+  }
+  .thread-content {
+    flex: 1;
+    padding: 10px 10px 10px 0;
+  }
+  .thread-eyebrow {
+    font-size: 7px;
+    color: rgba(201,168,76,0.7);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .thread-title {
+    font-size: 10px;
+    color: rgba(242,237,224,0.8);
+    letter-spacing: 0.08em;
+    margin-bottom: 3px;
+  }
+  .thread-sub {
+    font-size: 7px;
+    color: rgba(242,237,224,0.3);
+    letter-spacing: 0.06em;
+  }
+  .thread-num {
+    font-size: 7px;
+    color: rgba(201,168,76,0.5);
+    letter-spacing: 0.15em;
+    margin-top: 3px;
+  }
+</style>
+
+<h2>Blueprint lines — which approach?</h2>
+<p class="subtitle">Three ways to carry the hero's blueprint aesthetic down the full mobile page</p>
+
+<div class="preview-wrap">
+
+  <!-- OPTION A -->
+  <div>
+    <p class="phone-label">A — Spine</p>
+    <div class="phone-frame option" data-choice="a" onclick="toggleSelect(this)" style="cursor:pointer;">
+      <div class="spine-line"></div>
+
+      <!-- Hero stub -->
+      <div style="height:70px; background: radial-gradient(circle, rgba(201,168,76,.06) 1px, transparent 1px); background-size:12px 12px; position:relative; display:flex; align-items:center; justify-content:flex-end; padding-right:10px;">
+        <span style="font-size:7px; color:rgba(201,168,76,0.5); letter-spacing:0.1em;">LIVE BREW</span>
+        <div class="spine-node" style="top:35px;"></div>
+        <div class="spine-callout" style="top:35px;">
+          <div class="spine-tick"></div>
+          <span class="spine-label">§01 · LIVE BREW</span>
+        </div>
+      </div>
+
+      <div class="spine-section-block" style="position:relative;">
+        <div class="spine-node" style="top:-1px; position:absolute; left:-26px;"></div>
+        <div class="spine-callout" style="top:-1px; position:absolute; left:-12px;">
+          <div class="spine-tick"></div>
+          <span class="spine-label">§02 · WAITLIST</span>
+        </div>
+        <div class="title">RESERVE</div>
+        <div class="content">Join the crew · 47 members</div>
+      </div>
+
+      <div class="spine-section-block" style="position:relative;">
+        <div class="spine-node" style="top:-1px; position:absolute; left:-26px;"></div>
+        <div class="spine-callout" style="top:-1px; position:absolute; left:-12px;">
+          <div class="spine-tick"></div>
+          <span class="spine-label">§03 · STAGE</span>
+        </div>
+        <div class="title">BREW STAGE</div>
+        <div class="content">Cold steep · 16 hrs remaining</div>
+      </div>
+
+      <div class="spine-section-block" style="position:relative;">
+        <div class="spine-node" style="top:-1px; position:absolute; left:-26px;"></div>
+        <div class="spine-callout" style="top:-1px; position:absolute; left:-12px;">
+          <div class="spine-tick"></div>
+          <span class="spine-label">§04 · TELEMETRY</span>
+        </div>
+        <div class="title">LIVE TELEMETRY</div>
+        <div class="content">38.2°F · batch #01</div>
+      </div>
+
+      <div class="spine-section-block" style="position:relative;">
+        <div class="spine-node" style="top:-1px; position:absolute; left:-26px;"></div>
+        <div class="spine-callout" style="top:-1px; position:absolute; left:-12px;">
+          <div class="spine-tick"></div>
+          <span class="spine-label">§05 · ARCHIVE</span>
+        </div>
+        <div class="title">BATCH ARCHIVE</div>
+        <div class="content">3 completed batches</div>
+      </div>
+
+      <div style="position:absolute; bottom:6px; left:24px; font-size:6px; color:rgba(201,168,76,0.3); letter-spacing:0.12em;">BCCB · LOS ANGELES</div>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div>
+    <p class="phone-label">B — Callouts</p>
+    <div class="phone-frame option" data-choice="b" onclick="toggleSelect(this)" style="cursor:pointer;">
+
+      <!-- Hero stub -->
+      <div style="height:70px; background: radial-gradient(circle, rgba(201,168,76,.06) 1px, transparent 1px); background-size:12px 12px; position:relative; display:flex; align-items:center; justify-content:flex-end; padding-right:10px;">
+        <span style="font-size:7px; color:rgba(201,168,76,0.5); letter-spacing:0.1em;">LIVE BREW</span>
+      </div>
+
+      <!-- Brew stage with callout lines -->
+      <div class="section-block" style="min-height:72px;">
+        <svg class="callout-svg" viewBox="0 0 160 72" preserveAspectRatio="none">
+          <circle cx="28" cy="36" r="4" stroke="#c9a84c" stroke-opacity="0.7" stroke-width="1.2" fill="none"/>
+          <line x1="32" y1="36" x2="52" y2="36" stroke="#c9a84c" stroke-opacity="0.4" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <line x1="52" y1="16" x2="52" y2="56" stroke="#c9a84c" stroke-opacity="0.25" stroke-width="0.8"/>
+          <line x1="52" y1="16" x2="158" y2="16" stroke="#c9a84c" stroke-opacity="0.25" stroke-width="0.8" stroke-dasharray="3 3"/>
+          <line x1="52" y1="56" x2="158" y2="56" stroke="#c9a84c" stroke-opacity="0.25" stroke-width="0.8" stroke-dasharray="3 3"/>
+        </svg>
+        <div class="section-content" style="padding-left:46px;">
+          <div class="data-pill">STAGE</div>
+          <div class="data-value" style="font-size:12px;">COLD STEEP</div>
+          <div class="data-label">16 HRS REMAINING</div>
+        </div>
+      </div>
+
+      <!-- Telemetry with callout lines -->
+      <div class="section-block" style="min-height:72px;">
+        <svg class="callout-svg" viewBox="0 0 160 72" preserveAspectRatio="none">
+          <circle cx="128" cy="36" r="4" stroke="#c9a84c" stroke-opacity="0.7" stroke-width="1.2" fill="none"/>
+          <line x1="124" y1="36" x2="104" y2="36" stroke="#c9a84c" stroke-opacity="0.4" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <line x1="104" y1="14" x2="104" y2="58" stroke="#c9a84c" stroke-opacity="0.25" stroke-width="0.8"/>
+          <line x1="2" y1="14" x2="104" y2="14" stroke="#c9a84c" stroke-opacity="0.25" stroke-width="0.8" stroke-dasharray="3 3"/>
+          <line x1="2" y1="58" x2="104" y2="58" stroke="#c9a84c" stroke-opacity="0.25" stroke-width="0.8" stroke-dasharray="3 3"/>
+        </svg>
+        <div class="section-content" style="padding-right:46px;">
+          <div class="data-pill">TEMP</div>
+          <div class="data-value">38.2°F</div>
+          <div class="data-label">BATCH #01 · LIVE</div>
+        </div>
+      </div>
+
+      <!-- Archive -->
+      <div class="section-block" style="min-height:72px;">
+        <svg class="callout-svg" viewBox="0 0 160 72" preserveAspectRatio="none">
+          <line x1="8" y1="8" x2="152" y2="8" stroke="#c9a84c" stroke-opacity="0.2" stroke-width="0.8" stroke-dasharray="2 3"/>
+          <line x1="8" y1="64" x2="152" y2="64" stroke="#c9a84c" stroke-opacity="0.2" stroke-width="0.8" stroke-dasharray="2 3"/>
+          <line x1="8" y1="8" x2="8" y2="64" stroke="#c9a84c" stroke-opacity="0.2" stroke-width="0.8"/>
+          <line x1="152" y1="8" x2="152" y2="64" stroke="#c9a84c" stroke-opacity="0.2" stroke-width="0.8"/>
+          <circle cx="8" cy="8" r="2" fill="#c9a84c" fill-opacity="0.4"/>
+          <circle cx="152" cy="8" r="2" fill="#c9a84c" fill-opacity="0.4"/>
+          <circle cx="8" cy="64" r="2" fill="#c9a84c" fill-opacity="0.4"/>
+          <circle cx="152" cy="64" r="2" fill="#c9a84c" fill-opacity="0.4"/>
+        </svg>
+        <div class="section-content" style="padding:4px 10px;">
+          <div class="data-pill">ARCHIVE</div>
+          <div class="data-value" style="font-size:12px;">PAST BATCHES</div>
+          <div class="data-label">3 COMPLETED</div>
+        </div>
+      </div>
+
+      <!-- Waitlist -->
+      <div class="section-block" style="min-height:60px; display:flex; align-items:center; justify-content:center;">
+        <svg style="position:absolute; left:0; top:0; width:100%; height:100%;" viewBox="0 0 160 60" preserveAspectRatio="none">
+          <polyline points="80,6 110,6 120,30 110,54 80,54" stroke="#c9a84c" stroke-opacity="0.25" stroke-width="0.8" fill="none" stroke-dasharray="3 3"/>
+          <polyline points="80,6 50,6 40,30 50,54 80,54" stroke="#c9a84c" stroke-opacity="0.25" stroke-width="0.8" fill="none" stroke-dasharray="3 3"/>
+        </svg>
+        <span style="font-size:8px; color:rgba(201,168,76,0.7); letter-spacing:0.15em; position:relative;">JOIN THE CREW →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div>
+    <p class="phone-label">C — Thread</p>
+    <div class="phone-frame option" data-choice="c" onclick="toggleSelect(this)" style="cursor:pointer;">
+
+      <!-- Hero stub -->
+      <div style="height:70px; background: radial-gradient(circle, rgba(201,168,76,.06) 1px, transparent 1px); background-size:12px 12px; position:relative; display:flex; align-items:center; justify-content:flex-end; padding-right:10px;">
+        <span style="font-size:7px; color:rgba(201,168,76,0.5); letter-spacing:0.1em;">LIVE BREW</span>
+      </div>
+
+      <div class="thread-section">
+        <div class="thread-rail">
+          <div class="thread-dot active"></div>
+          <div class="thread-vert"></div>
+        </div>
+        <div class="thread-content">
+          <div class="thread-eyebrow">§01</div>
+          <div class="thread-title">WAITLIST</div>
+          <div class="thread-sub">Join the crew · reserve batch #01</div>
+          <div class="thread-num">47 RESERVATIONS</div>
+        </div>
+      </div>
+
+      <div class="thread-section">
+        <div class="thread-rail">
+          <div class="thread-dot active"></div>
+          <div class="thread-vert"></div>
+        </div>
+        <div class="thread-content">
+          <div class="thread-eyebrow">§02</div>
+          <div class="thread-title">BREW STAGE</div>
+          <div class="thread-sub">Cold steep · in progress</div>
+          <div class="thread-num">16 HRS REMAINING</div>
+        </div>
+      </div>
+
+      <div class="thread-section">
+        <div class="thread-rail">
+          <div class="thread-dot active"></div>
+          <div class="thread-vert"></div>
+        </div>
+        <div class="thread-content">
+          <div class="thread-eyebrow">§03</div>
+          <div class="thread-title">LIVE TELEMETRY</div>
+          <div class="thread-sub">Temperature · batch data</div>
+          <div class="thread-num">38.2°F · BATCH #01</div>
+        </div>
+      </div>
+
+      <div class="thread-section">
+        <div class="thread-rail">
+          <div class="thread-dot active"></div>
+          <div class="thread-vert"></div>
+        </div>
+        <div class="thread-content">
+          <div class="thread-eyebrow">§04</div>
+          <div class="thread-title">BATCH ARCHIVE</div>
+          <div class="thread-sub">Past batches · tasting notes</div>
+          <div class="thread-num">3 COMPLETED</div>
+        </div>
+      </div>
+
+      <div class="thread-section" style="border-bottom:none;">
+        <div class="thread-rail">
+          <div class="thread-dot"></div>
+        </div>
+        <div class="thread-content">
+          <div class="thread-eyebrow">§05</div>
+          <div class="thread-title">OUR STORY</div>
+          <div class="thread-sub">Los Angeles · est. 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="options" style="margin-top:20px;">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Spine — vertical rule + section callouts</h3>
+      <p>A single dashed gold line runs the full left edge with horizontal tick marks and section labels at each boundary. Clean, technical, minimal. Matches the "spec sheet" quality of the hero.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Callouts — per-section annotation overlays</h3>
+      <p>Each section gets its own blueprint callout lines and bracket corners, like the hero SVG's polyline-to-CTA-box pattern. More expressive, more work per section.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Thread — scroll-connected nodes</h3>
+      <p>A dashed vertical thread with a dot node at each section, like a timeline or wiring diagram. Structured, guides the eye top to bottom, section numbers as spec references.</p>
+    </div>
+  </div>
+</div>

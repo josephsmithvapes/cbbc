@@ -21,7 +21,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://qmzgnbcahcpmntbnmikq.supabase.co" crossorigin>
-<link rel="preload" as="image" href="/img/story-scoop.webp">
 <link rel="preload" as="image" href="/img/bottle-bccb.webp">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=DM+Mono:wght@400;500&display=swap" onload="this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=DM+Mono:wght@400;500&display=swap"></noscript>
@@ -830,7 +829,7 @@ footer {
   <div class="story-content">
     <p class="eyebrow">Our Story</p>
     <h2>BUILT SLOW.<br>MADE <span class="gold-text">BOLD.</span><br>ALWAYS COLD.</h2>
-    <p>BCCB was formed in 2026 to provide premium cold brew throughout Los Angeles. We've already been serving you for the last 10 years, now it's time to serve you BOLDLY.</p>
+    <p>We've spent a decade in specialty coffee learning what it should taste like. BCCB is what we built with that knowledge.</p>
     <div class="story-stats" role="list">
       <div class="stat" role="listitem">
         <span class="stat-num">Now Serving</span>
@@ -978,7 +977,7 @@ footer {
   content:''; position:absolute; inset:0; pointer-events:none;
   background:radial-gradient(ellipse 70% 60% at 50% 60%, rgba(201,168,76,.09) 0%, transparent 65%);
 }
-.hero-band h1 {
+.hero-band h2 {
   font-family:var(--font-display); font-size:clamp(40px,6vw,80px);
   line-height:.9; letter-spacing:.02em; margin:24px auto 0; max-width:760px;
 }
@@ -1132,7 +1131,7 @@ footer {
 
   /* ── Body: hero band ── */
   .hero-band { padding:40px 20px 36px; }
-  .hero-band h1 { font-size:clamp(28px,10vw,48px); margin-top:14px; }
+  .hero-band h2 { font-size:clamp(28px,10vw,48px); margin-top:14px; }
   .hero-band p { font-size:14px; margin-top:14px; }
 
   /* ── Body: sections ── */
@@ -1209,7 +1208,7 @@ footer {
     <!-- Hero band -->
     <div class="hero-band grain" style="position:relative;">
       <p class="eyebrow" style="display:inline-block;">Los Angeles · Est. 2026</p>
-      <h1>INVEST IN<br/><span class="gold-text">BOLD CREW</span><br/>COLD BREW.</h1>
+      <h2>INVEST IN<br/><span class="gold-text">BOLD CREW</span><br/>COLD BREW.</h2>
       <p>We're building the transparency-first cold brew brand. Small batch, live brew monitoring, and a business model built to scale.</p>
       <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:36px;">
         <div style="width:48px;height:1px;background:var(--rule-gold);"></div>
@@ -1464,7 +1463,7 @@ footer {
         <div class="team-card">
           <div><div class="name">SKY MADSEN</div><div class="role" style="margin-top:8px;">Founder | Designer | Brewer</div></div>
           <div class="divider"></div>
-          <p>7+ years coffee industry with a background in tech. Sky is the creative force behind BCCB's design / Operations & Co-Founder.</p>
+          <p>7 years in specialty coffee. Background in software and systems design. Runs brand, operations, and the IoT infrastructure keeping every batch on record.</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
             <div class="chip">Operations</div><div class="chip">Brand</div><div class="chip">IoT Process</div>
           </div>
@@ -1472,7 +1471,7 @@ footer {
         <div class="team-card">
           <div><div class="name">CRIS ZELAYA</div><div class="role" style="margin-top:8px;">Founder | Head of Brewing | Brewer</div></div>
           <div class="divider"></div>
-          <p>9+ years coffee industry with a deep background in Chemistry. Cris is the technical architect of our brewing process & Co-Founder</p>
+          <p>9 years in specialty coffee. Chemistry background. Designed the 20-hour cold steep protocol from the ground up — every variable dialed, nothing left to chance.</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
             <div class="chip">Brewing</div><div class="chip">Logistics</div><div class="chip">IoT Process</div>
           </div>
@@ -1498,7 +1497,7 @@ footer {
         <div class="pillar"><div class="pillar-title gold-text">OPERATIONS</div><p>Every dollar deployed against a specific scale-up goal in the plan.</p></div>
         <div class="pillar"><div class="pillar-title gold-text">PASSION</div><p>Built slow. Made bold. Always cold. No shortcuts.</p></div>
       </div>
-      <p>Learn more. Get involved. Get in touch.</p>
+      <p>Read the plan. Back the brand. Get in touch.</p>
       <a class="cta-btn" href="mailto:moleculardeveloper@gmail.com">GET IN TOUCH</a>
       <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:48px;">
         <div style="width:48px;height:1px;background:var(--rule-gold);"></div>
@@ -1600,8 +1599,8 @@ footer {
     var type    = document.getElementById('if-type').value;
     var range   = document.getElementById('if-range').value;
     var message = document.getElementById('if-message').value.trim();
-    if (!name || !email || !type) {
-      var el = !name ? document.getElementById('if-name') : !email ? document.getElementById('if-email') : document.getElementById('if-type');
+    if (!name || !email || !email.includes('@') || !type) {
+      var el = !name ? document.getElementById('if-name') : (!email || !email.includes('@')) ? document.getElementById('if-email') : document.getElementById('if-type');
       el.focus(); el.style.borderColor='rgba(200,103,58,.7)';
       setTimeout(function() { el.style.borderColor=''; }, 2000);
       return;
@@ -1640,25 +1639,6 @@ footer {
     });
   })();
 
-  /* email capture — AJAX submit so user stays on page */
-  var mcForm = document.getElementById('mc-form');
-  if (mcForm) {
-    mcForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      var emailVal = document.getElementById('email').value.trim();
-      var btn = document.getElementById('btn');
-      if (!emailVal) return;
-      btn.disabled = true; btn.textContent = '…';
-      var fd = new FormData();
-      fd.append('email', emailVal);
-      fetch('https://buttondown.email/api/emails/embed-subscribe/verifiedbysky', {
-        method: 'POST', body: fd, mode: 'no-cors'
-      }).catch(function(){}).finally(function() {
-        btn.textContent = "YOU'RE IN ✓"; btn.classList.add('done');
-        if (window._addToWaitlist) window._addToWaitlist(emailVal, window._bccbTier || 'general');
-      });
-    });
-  }
 })();
 </script>
 
