@@ -1,25 +1,23 @@
 .wrap {
   width: 100%;
-  border-bottom: 1px solid rgba(201,168,76,.15);
+  border-bottom: 1px solid var(--rule);
   position: relative;
   overflow: hidden;
-  background: #161108;
+  background: var(--paper-soft);
 }
 
-/* ── SHARED BODY ── */
 .body {
   min-height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 52px 64px;
-  background: #161108;
+  background: var(--paper-soft);
 }
 @media (max-width: 700px) {
   .body { padding: 40px 20px; min-height: 240px; }
 }
 
-/* ── SHARED INNER LAYOUT (matches steeping) ── */
 .inner {
   display: flex;
   flex-direction: column;
@@ -28,52 +26,40 @@
   text-align: center;
 }
 
-/* stage title — small caps label above the main display */
 .stageTitle {
   font-family: var(--font-display);
   font-size: clamp(1.4rem, 4vw, 2.4rem);
   letter-spacing: .06em;
-  color: #f2ede0;
-  opacity: .6;
+  color: var(--ink);
 }
 
-/* main display — gold gradient, large, like the countdown */
 .display {
   font-family: var(--font-display);
   font-size: clamp(2.8rem, 9vw, 6rem);
   line-height: 1;
   letter-spacing: .04em;
-  background: linear-gradient(135deg, #f0d878 0%, #c9a84c 55%, #9a7020 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--sepia);
 }
 .display.dim {
-  background: none;
-  -webkit-text-fill-color: #f2ede0;
-  opacity: .12;
+  color: var(--fade);
   font-size: clamp(2rem, 6vw, 4rem);
 }
 
-/* sub-label */
 .sub {
   font-family: var(--font-brand);
   font-size: var(--t-small, 0.8125rem);
   letter-spacing: .2em;
-  color: #f2ede0;
-  opacity: .28;
+  color: var(--fade);
   text-transform: uppercase;
 }
 .batchTag {
   font-family: var(--font-brand);
   font-size: var(--t-label, 0.6875rem);
   letter-spacing: .28em;
-  color: #f2ede0;
-  opacity: .22;
+  color: var(--fade);
   text-transform: uppercase;
 }
 
-/* SVG wrapper — same proportions for all stages */
 .svgWrap {
   height: 110px;
   display: flex;
@@ -91,12 +77,18 @@
   48%,100%{ transform: translate(0,0) rotate(0deg); }
 }
 .animShudder { animation: shudder 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .animShudder { animation: none; }
+}
 
 /* STEEPING jar fill wave */
 .jarFill { animation: liqWave 3s ease-in-out infinite; }
 @keyframes liqWave {
   0%,100% { opacity:.65; }
   50%     { opacity:1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jarFill { animation: none; opacity: .65; }
 }
 
 /* READY cup ice float */
@@ -106,3 +98,6 @@
 .ice1 { animation: ice1Anim 2.8s ease-in-out infinite; }
 .ice2 { animation: ice2Anim 2.2s ease-in-out .4s infinite; }
 .ice3 { animation: ice3Anim 3.2s ease-in-out .8s infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .ice1, .ice2, .ice3 { animation: none; }
+}
