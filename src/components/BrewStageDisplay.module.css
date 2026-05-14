@@ -1,9 +1,9 @@
 .wrap {
   width: 100%;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid rgba(232,227,211,.07);
   position: relative;
   overflow: hidden;
-  background: var(--paper-soft);
+  background: var(--dark-bg, #191410);
 }
 
 .body {
@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: center;
   padding: 52px 64px;
-  background: var(--paper-soft);
+  background: var(--dark-bg, #191410);
 }
 @media (max-width: 700px) {
   .body { padding: 40px 20px; min-height: 240px; }
@@ -30,7 +30,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.4rem, 4vw, 2.4rem);
   letter-spacing: .06em;
-  color: var(--ink);
+  color: rgba(232,227,211,.8);
 }
 
 .display {
@@ -38,10 +38,10 @@
   font-size: clamp(2.8rem, 9vw, 6rem);
   line-height: 1;
   letter-spacing: .04em;
-  color: var(--gold);
+  color: var(--gold, #c9a84c);
 }
 .display.dim {
-  color: var(--fade);
+  color: rgba(232,227,211,.2);
   font-size: clamp(2rem, 6vw, 4rem);
 }
 
@@ -49,14 +49,14 @@
   font-family: var(--font-brand);
   font-size: var(--t-small, 0.8125rem);
   letter-spacing: .2em;
-  color: var(--fade);
+  color: rgba(232,227,211,.3);
   text-transform: uppercase;
 }
 .batchTag {
   font-family: var(--font-brand);
   font-size: var(--t-label, 0.6875rem);
   letter-spacing: .28em;
-  color: var(--fade);
+  color: rgba(232,227,211,.3);
   text-transform: uppercase;
 }
 
