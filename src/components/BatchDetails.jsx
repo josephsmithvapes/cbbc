@@ -65,7 +65,7 @@ function MiniChart({ data, gradId }) {
         <line key={h}
           x1={toX(h * 3600).toFixed(1)} y1={0}
           x2={toX(h * 3600).toFixed(1)} y2={H}
-          stroke="rgba(201,168,76,.06)" strokeWidth="1" />
+          stroke="rgba(201,168,76,.12)" strokeWidth="1" />
       ))}
       <path d={areaD} fill={`url(#mc-${gradId})`} />
       <polyline points={linePts} fill="none" stroke={GOLD}
