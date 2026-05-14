@@ -1,0 +1,1 @@
+var e=`#c9a84c`,t=`rgba(13,10,5,.14)`,n=`#f0ece0`;export{e as n,t as r,n as t};
