@@ -741,6 +741,88 @@ body {
   .status-dot { animation: none; }
   * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* ─────────────────────────────────────────
+   STICKY EMAIL BAR
+───────────────────────────────────────── */
+.sticky-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 200;
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+  padding: 14px var(--pad-x);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  transform: translateY(100%);
+  transition: transform .3s ease;
+}
+.sticky-bar.visible { transform: translateY(0); }
+.sticky-bar-label {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 2vw, 18px);
+  color: var(--ink);
+  white-space: nowrap;
+}
+.sticky-bar-form {
+  display: flex;
+  flex: 1;
+  max-width: 400px;
+  min-width: 200px;
+}
+.sticky-bar-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-right: none;
+  font-family: var(--font-brand);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.sticky-bar-input::placeholder { color: var(--fade); }
+.sticky-bar-input.error { border-color: var(--red); }
+.sticky-bar-btn {
+  padding: 10px 20px;
+  background: var(--red);
+  color: var(--paper);
+  border: 2px solid var(--red);
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: .05em;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: 0;
+  transition: background .15s, border-color .15s;
+}
+.sticky-bar-btn:hover,
+.sticky-bar-btn:focus-visible { background: var(--red-dk); border-color: var(--red-dk); }
+.sticky-bar-btn.done { background: var(--ink); border-color: var(--ink); cursor: default; }
+.sticky-bar-dismiss {
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--fade);
+  cursor: pointer;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+.sticky-bar-dismiss:hover { color: var(--ink); }
+@media (max-width: 540px) {
+  .sticky-bar { gap: 10px; padding: 12px 16px; }
+  .sticky-bar-form { max-width: 100%; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticky-bar { transition: none; }
+}
 </style>
 </head>
 
@@ -1338,6 +1420,89 @@ body {
   pollTempCurve();
   setInterval(pollBrewState,  10000);
   setInterval(pollTempCurve,  30000);
+})();
+</script>
+
+<!-- ── STICKY EMAIL BAR ──────────────────────────────── -->
+<div class="sticky-bar" id="sticky-bar" role="complementary" aria-label="Email signup">
+  <span class="sticky-bar-label">Get the dispatch.</span>
+  <form class="sticky-bar-form" id="sticky-form" novalidate aria-label="Sticky email signup">
+    <label for="sticky-email" class="visually-hidden">Email address</label>
+    <input
+      type="email"
+      id="sticky-email"
+      class="sticky-bar-input"
+      placeholder="you@domain"
+      autocomplete="email"
+      required>
+    <button type="submit" class="sticky-bar-btn" id="sticky-btn">WITNESS →</button>
+  </form>
+  <button class="sticky-bar-dismiss" id="sticky-dismiss" aria-label="Dismiss email signup">×</button>
+</div>
+
+<script>
+(function () {
+  var DISMISS_KEY = 'bccb_sticky_dismissed';
+  var bar         = document.getElementById('sticky-bar');
+  var form        = document.getElementById('sticky-form');
+  var input       = document.getElementById('sticky-email');
+  var btn         = document.getElementById('sticky-btn');
+  var dismissBtn  = document.getElementById('sticky-dismiss');
+
+  if (!bar) return;
+
+  // Suppress for 7 days after dismiss
+  try {
+    var ts = localStorage.getItem(DISMISS_KEY);
+    if (ts && Date.now() - Number(ts) < 7 * 864e5) return;
+  } catch (_) {}
+
+  // Show bar when .commitments scrolls out of view
+  var trigger = document.querySelector('.commitments');
+  if (trigger && 'IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) {
+        bar.classList.add('visible');
+      } else {
+        bar.classList.remove('visible');
+      }
+    }, { threshold: 0 });
+    obs.observe(trigger);
+  }
+
+  // Dismiss
+  function dismiss() {
+    bar.classList.remove('visible');
+    try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (_) {}
+  }
+  dismissBtn.addEventListener('click', dismiss);
+
+  // Submit — posts to same Buttondown endpoint as main form
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var val = input.value.trim();
+    if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+      input.classList.add('error');
+      input.focus();
+      return;
+    }
+    input.classList.remove('error');
+    btn.disabled = true;
+    btn.textContent = '…';
+    var fd = new FormData();
+    fd.append('email', val);
+    fetch('https://buttondown.email/api/emails/embed-subscribe/verifiedbysky', {
+      method: 'POST', body: fd, mode: 'no-cors'
+    }).catch(function () {}).finally(function () {
+      btn.textContent = 'SENT ✓';
+      btn.classList.add('done');
+      setTimeout(dismiss, 2000);
+    });
+  });
+
+  input.addEventListener('input', function () {
+    input.classList.remove('error');
+  });
 })();
 </script>
 
