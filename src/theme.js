@@ -1,5 +1,8 @@
-export const INK       = '#161108'
-export const GOLD      = '#c9a84c'
-export const CREAM     = '#f2ede0'
-export const RULE      = 'rgba(201,168,76,.15)'
-export const GOLD_GRAD = 'linear-gradient(135deg, #f0d878 0%, #c9a84c 55%, #9a7020 100%)'
+export const INK       = '#0d0a05'
+export const PAPER     = '#e8e3d3'
+export const SEPIA     = '#7a4f28'
+export const RED       = '#c8421f'
+export const RULE      = 'rgba(13,10,5,.14)'
+export const CREAM     = '#e8e3d3'    // alias — kept so JSX needn't change
+export const GOLD      = '#7a4f28'    // alias → sepia
+export const GOLD_GRAD = '#7a4f28'    // alias → sepia (no gradient)
