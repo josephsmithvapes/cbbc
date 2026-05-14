@@ -28,7 +28,7 @@
   --ink:        #0d0a05;
   --red:        #c8421f;
   --red-dk:     #8a3320;
-  --sepia:      #7a4f28;
+  --gold:       #c9a84c;
   --fade:       rgba(13,10,5,.42);
   --rule:       rgba(13,10,5,.14);
   --rule-light: rgba(13,10,5,.10);
@@ -259,98 +259,6 @@ body {
   .commitment-body { grid-column: 2; max-width: 100%; }
 }
 
-/* ─────────────────────────────────────────
-   LIVE STATUS BAND
-───────────────────────────────────────── */
-.status {
-  background: var(--ink);
-  color: var(--paper);
-  border-bottom: 1px solid var(--ink);
-  padding: 18px var(--pad-x);
-  display: grid;
-  grid-template-columns: auto repeat(4, 1fr) auto;
-  gap: 24px;
-  align-items: center;
-}
-.status-pill {
-  display: flex; align-items: center; gap: 10px;
-}
-.status-dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--red);
-  box-shadow: 0 0 12px var(--red);
-  animation: pulse 2s ease-in-out infinite;
-  transition: opacity .4s;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: .55; transform: scale(.7); }
-}
-.status-pill-label {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  letter-spacing: .26em;
-  color: var(--red);
-  font-weight: 700;
-}
-.reading {
-  border-left: 1px solid rgba(232,227,211,.25);
-  padding-left: 24px;
-}
-.reading-label {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: .28em;
-  color: rgba(232,227,211,.5);
-}
-.reading-value {
-  font-family: var(--f-display);
-  font-size: 22px;
-  line-height: 1.1;
-  margin-top: 4px;
-}
-.status-meta {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .22em;
-  color: rgba(232,227,211,.5);
-  text-align: right;
-}
-@media (max-width: 900px) {
-  .status {
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    padding: 16px var(--pad-x);
-  }
-  .status-pill { grid-column: 1 / -1; }
-  .reading { padding-left: 16px; }
-  .status-meta { grid-column: 1 / -1; text-align: left; }
-}
-
-/* ─────────────────────────────────────────
-   TEMPERATURE STRIP
-───────────────────────────────────────── */
-.strip {
-  padding: 12px var(--pad-x) 18px;
-  background: var(--ink);
-  border-bottom: 1px solid var(--ink);
-}
-.strip svg { width: 100%; height: 80px; display: block; }
-.strip-axis {
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .22em;
-  color: rgba(232,227,211,.5);
-  margin-top: 6px;
-}
-.strip-axis .now   { color: var(--paper); }
-.strip-axis .future { color: var(--red); }
-@media (max-width: 720px) {
-  .strip-axis span:nth-child(2),
-  .strip-axis span:nth-child(4) { display: none; }
-}
 
 /* ─────────────────────────────────────────
    STORY SECTION — 30 DAYS OF BREWING
@@ -738,8 +646,7 @@ body {
 ───────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .status-dot { animation: none; }
-  * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+* { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 
 /* ─────────────────────────────────────────
@@ -924,56 +831,9 @@ body {
   </article>
 </section>
 
-<!-- ── LIVE STATUS BAND ────────────────────────────────── -->
-<section class="status" id="live" aria-label="Live brew monitor">
-  <div class="status-pill">
-    <span class="status-dot" aria-hidden="true" id="status-dot"></span>
-    <span class="status-pill-label" data-live="batch-label">LAST BATCH · 014</span>
-  </div>
-  <div class="reading">
-    <div class="reading-label">TEMP</div>
-    <div class="reading-value" data-live="temp">—°F</div>
-  </div>
-  <div class="reading">
-    <div class="reading-label">STEEP</div>
-    <div class="reading-value" data-live="steep">—:— / 20:00</div>
-  </div>
-  <div class="reading">
-    <div class="reading-label">TDS</div>
-    <div class="reading-value" data-live="tds">—%</div>
-  </div>
-  <div class="reading">
-    <div class="reading-label">AGITATION</div>
-    <div class="reading-value" data-live="agi">—</div>
-  </div>
-  <div class="status-meta">
-    <span data-live="stream-status">— STANDBY</span><br>
-    <span data-live="age">—</span>
-  </div>
-</section>
-
-<!-- ── TEMPERATURE STRIP ──────────────────────────────── -->
-<section class="strip" aria-label="Temperature history">
-  <svg viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
-    <line x1="0" x2="1200" y1="40" y2="40" stroke="rgba(232,227,211,.18)" stroke-dasharray="6 8"/>
-    <polyline id="strip-path"
-      points="0,65 200,50 400,38 600,32 800,30 1000,29 1200,29"
-      fill="none" stroke="#c8421f" stroke-width="2.4"
-      stroke-linejoin="round" stroke-linecap="round"/>
-    <circle id="strip-dot" cx="1200" cy="29" r="5" fill="#c8421f"/>
-  </svg>
-  <div class="strip-axis">
-    <span id="strip-label-start">—</span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span class="now" id="strip-label-now">NOW</span>
-    <span class="future" id="strip-label-end">—</span>
-  </div>
-</section>
-
 <!-- ── BREW MONITOR + BATCH ARCHIVE (React) ───────────── -->
-<div id="brew-mount" tabindex="-1"></div>
+<div id="live" tabindex="-1"></div>
+<div id="brew-mount"></div>
 
 <!-- ── STORY — 30 DAYS OF BREWING ─────────────────────── -->
 <section class="story" id="story" aria-label="30 Days of Brewing">
@@ -1299,129 +1159,6 @@ body {
 })();
 </script>
 
-<!-- ─────────────────────────────────────────
-     LIVE DATA — SUPABASE POLLING
-     Anon key is intentionally public (RLS enforced).
-───────────────────────────────────────── -->
-<script>
-(function () {
-  var SB  = 'https://qmzgnbcahcpmntbnmikq.supabase.co';
-  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtemduYmNhaGNwbW50Ym5taWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjU1MTEsImV4cCI6MjA5MjA0MTUxMX0.LLJ_5OnNqxMMFDvDM-0kq3KxIfrfblufW7tYdfWpbyQ';
-
-  var lastUpdate = null;
-
-  function set(key, val) {
-    document.querySelectorAll('[data-live="' + key + '"]').forEach(function (el) {
-      el.textContent = val;
-    });
-  }
-
-  function fmtH(s) {
-    if (s == null || s < 0) return '--:--';
-    var h = Math.floor(s / 3600);
-    var m = Math.floor((s % 3600) / 60);
-    return h + ':' + String(m).padStart(2, '0');
-  }
-
-  function fmtAge(ts) {
-    if (!ts) return '';
-    var sec = Math.round((Date.now() - new Date(ts)) / 1000);
-    if (sec < 60)   return sec + 's ago';
-    if (sec < 3600) return Math.floor(sec / 60) + 'm ago';
-    return Math.floor(sec / 3600) + 'h ago';
-  }
-
-  function applyState(row) {
-    if (!row) return;
-    lastUpdate = row.last_update;
-
-    var isBrewing = row.status === 'BREWING' || row.status === 'POURING';
-    var batchNum  = String(row.batch_number || '').padStart(3, '0');
-
-    set('batch-label',    isBrewing ? 'LIVE · BATCH ' + batchNum : 'LAST BATCH · ' + batchNum);
-    set('stream-status',  isBrewing ? '↗ STREAMING' : '— STANDBY');
-    set('agi',            row.agitation || (isBrewing ? 'STATIC' : '—'));
-
-    if (row.current_temp_f != null) {
-      set('temp', row.current_temp_f.toFixed(1) + '°F');
-    }
-
-    if (row.elapsed_seconds != null && row.target_duration_seconds != null) {
-      set('steep', fmtH(row.elapsed_seconds) + ' / ' + fmtH(row.target_duration_seconds));
-    }
-
-    var dot = document.getElementById('status-dot');
-    if (dot) dot.style.opacity = isBrewing ? '1' : '0.25';
-  }
-
-  function pollBrewState() {
-    fetch(SB + '/rest/v1/brew_state?id=eq.1&select=*', {
-      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
-    })
-      .then(function (r) { return r.json(); })
-      .then(function (data) { if (data && data[0]) applyState(data[0]); })
-      .catch(function () {});
-  }
-
-  function renderStripCurve(readings) {
-    var path = document.getElementById('strip-path');
-    var dot  = document.getElementById('strip-dot');
-    var W = 1200, H = 80, PAD = 10;
-
-    var temps = readings.map(function (r) { return r.temp_c * 9 / 5 + 32; });
-    if (temps.length < 2) return;
-
-    var lo    = Math.min.apply(null, temps);
-    var hi    = Math.max.apply(null, temps);
-    var range = hi - lo || 1;
-
-    var pts = temps.map(function (t, i) {
-      var x = ((i / (temps.length - 1)) * W).toFixed(1);
-      var y = (H - PAD - ((t - lo) / range) * (H - PAD * 2)).toFixed(1);
-      return x + ',' + y;
-    }).join(' ');
-
-    path.setAttribute('points', pts);
-
-    var lastY = (H - PAD - ((temps[temps.length - 1] - lo) / range) * (H - PAD * 2)).toFixed(1);
-    dot.setAttribute('cy', lastY);
-
-    // Update axis labels from first/last timestamp
-    var first = readings[0].recorded_at;
-    var last  = readings[readings.length - 1].recorded_at;
-    var fmt   = function (ts) {
-      var d = new Date(ts);
-      return d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0');
-    };
-    var startEl = document.getElementById('strip-label-start');
-    var nowEl   = document.getElementById('strip-label-now');
-    if (startEl) startEl.textContent = fmt(first);
-    if (nowEl)   nowEl.textContent   = fmt(last) + ' · NOW';
-  }
-
-  function pollTempCurve() {
-    fetch(SB + '/rest/v1/temperature_readings?select=temp_c,recorded_at&order=recorded_at.desc&limit=120', {
-      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
-    })
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        if (data && data.length >= 2) renderStripCurve(data.reverse());
-      })
-      .catch(function () {});
-  }
-
-  // Update age display every second
-  setInterval(function () {
-    if (lastUpdate) set('age', fmtAge(lastUpdate));
-  }, 1000);
-
-  // Poll every 10s for brew state, every 30s for temp curve
-  pollBrewState();
-  pollTempCurve();
-  setInterval(pollBrewState,  10000);
-  setInterval(pollTempCurve,  30000);
-})();
-</script>
 
 <!-- ── STICKY EMAIL BAR ──────────────────────────────── -->
 <div class="sticky-bar" id="sticky-bar" role="complementary" aria-label="Email signup">
@@ -1452,26 +1189,28 @@ body {
   if (!bar) return;
 
   // Suppress for 7 days after dismiss
+  var dismissed = false;
   try {
     var ts = localStorage.getItem(DISMISS_KEY);
-    if (ts && Date.now() - Number(ts) < 7 * 864e5) return;
+    if (ts && Date.now() - Number(ts) < 7 * 864e5) dismissed = true;
   } catch (_) {}
 
   // Show bar when .commitments scrolls out of view
   var trigger = document.querySelector('.commitments');
-  if (trigger && 'IntersectionObserver' in window) {
-    var obs = new IntersectionObserver(function (entries) {
-      if (!entries[0].isIntersecting) {
-        bar.classList.add('visible');
-      } else {
-        bar.classList.remove('visible');
-      }
-    }, { threshold: 0 });
-    obs.observe(trigger);
+  function checkBar() {
+    if (dismissed) return;
+    if (!trigger) return;
+    if (trigger.getBoundingClientRect().bottom < 0) {
+      bar.classList.add('visible');
+    } else {
+      bar.classList.remove('visible');
+    }
   }
+  window.addEventListener('scroll', checkBar, { passive: true });
 
   // Dismiss
   function dismiss() {
+    dismissed = true;
     bar.classList.remove('visible');
     try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (_) {}
   }

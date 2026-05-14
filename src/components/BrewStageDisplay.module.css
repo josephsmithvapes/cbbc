@@ -38,7 +38,7 @@
   font-size: clamp(2.8rem, 9vw, 6rem);
   line-height: 1;
   letter-spacing: .04em;
-  color: var(--sepia);
+  color: var(--gold);
 }
 .display.dim {
   color: var(--fade);
