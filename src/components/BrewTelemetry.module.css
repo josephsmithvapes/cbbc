@@ -21,7 +21,7 @@
 .batchTag {
   font-size: var(--t-label, 0.6875rem);
   letter-spacing: .28em;
-  color: var(--sepia);
+  color: var(--gold);
   text-transform: uppercase;
 }
 
@@ -62,7 +62,7 @@
   font-size: clamp(2.8rem, 9vw, 6rem);
   line-height: 1;
   letter-spacing: .04em;
-  color: var(--sepia);
+  color: var(--gold);
   margin-bottom: 8px;
 }
 
@@ -89,7 +89,7 @@
 .metricValue {
   font-family: var(--font-display, 'Alfa Slab One', serif);
   font-size: clamp(1.4rem, 4vw, 2rem);
-  color: var(--sepia);
+  color: var(--gold);
   line-height: 1.1;
 }
 .metricUnit {
@@ -103,7 +103,7 @@
 
 .progressBar {
   height: 2px;
-  background: rgba(122,79,40,.15);
+  background: rgba(201,168,76,.15);
   border-radius: 1px;
   overflow: hidden;
   margin-bottom: 12px;
@@ -163,7 +163,7 @@
   justify-content: center;
 }
 .spinner {
-  color: var(--sepia);
+  color: var(--gold);
   opacity: 0.5;
   animation: spin 2s linear infinite;
 }

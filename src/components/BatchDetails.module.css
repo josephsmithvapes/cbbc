@@ -25,7 +25,7 @@
   margin: 0 0 20px;
 }
 .goldText {
-  color: var(--sepia);
+  color: var(--gold);
 }
 .body {
   font-family: var(--font-brand, 'Space Grotesk', sans-serif);
@@ -47,8 +47,8 @@
   font-size: var(--t-micro, 0.625rem);
   letter-spacing: .26em;
   text-transform: uppercase;
-  color: var(--sepia);
-  border: 1px solid rgba(122,79,40,.25);
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,.25);
   padding: 5px 12px;
 }
 .headerLayout {
@@ -77,7 +77,7 @@
   text-align: center;
 }
 .spinner {
-  color: var(--sepia);
+  color: var(--gold);
   opacity: 0.5;
   animation: spin 2s linear infinite;
   margin: 0 auto;
@@ -148,13 +148,13 @@
 .duration {
   font-family: var(--font-display, 'Alfa Slab One', serif);
   font-size: 1.15rem;
-  color: var(--sepia);
+  color: var(--gold);
   letter-spacing: .02em;
 }
 .name {
   font-family: var(--font-display, 'Alfa Slab One', serif);
   font-size: 1rem;
-  color: var(--sepia);
+  color: var(--gold);
   line-height: 1.2;
 }
 .metaRow {
@@ -195,7 +195,7 @@
   display: block;
   font-family: var(--font-display, 'Alfa Slab One', serif);
   font-size: clamp(1rem, 2.5vw, 1.25rem);
-  color: var(--sepia);
+  color: var(--gold);
   line-height: 1.2;
   margin-bottom: 3px;
 }
