@@ -29,6 +29,7 @@
   --red:        #c8421f;
   --red-dk:     #8a3320;
   --gold:       #c9a84c;
+  --dark-bg:    #191410;
   --fade:       rgba(13,10,5,.42);
   --rule:       rgba(13,10,5,.14);
   --rule-light: rgba(13,10,5,.10);
@@ -148,7 +149,7 @@ body {
 }
 .masthead-title {
   font-family: var(--f-display);
-  font-size: clamp(72px, 17vw, 220px);
+  font-size: clamp(72px, 8vw, 220px);
   line-height: .82;
   letter-spacing: -.01em;
   color: var(--ink);
@@ -176,9 +177,10 @@ body {
   margin-bottom: 14px;
 }
 .masthead-blurb p {
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: clamp(16px, 2vw, 20px);
+  line-height: 1.65;
   color: var(--ink);
+  font-weight: 500;
 }
 @media (max-width: 900px) {
   .masthead-row { flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -189,16 +191,13 @@ body {
    COMMITMENTS — 8 numbered statements
 ───────────────────────────────────────── */
 .commitments {
-  padding: clamp(40px, 6vw, 64px) var(--pad-x);
-  border-bottom: 1px solid var(--ink);
+  padding: clamp(32px, 5vw, 56px) var(--pad-x);
+  border-bottom: none;
 }
 .commitments-head {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 32px;
-  padding-bottom: 32px;
+  padding-bottom: 28px;
   border-bottom: 3px solid var(--ink);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 .commitments-eyebrow {
   font-family: var(--f-mono);
@@ -206,11 +205,11 @@ body {
   letter-spacing: .32em;
   color: var(--gold);
   font-weight: 700;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 .commitments-h2 {
   font-family: var(--f-display);
-  font-size: clamp(28px, 5vw, 56px);
+  font-size: clamp(26px, 4.5vw, 52px);
   line-height: .95;
   letter-spacing: .01em;
   text-transform: uppercase;
@@ -220,43 +219,72 @@ body {
   color: var(--gold);
   font-style: italic;
 }
-.commitment {
-  display: grid;
-  grid-template-columns: 120px 1fr 1fr;
-  gap: 32px;
-  padding: 32px 0;
-  border-bottom: 1px solid var(--rule);
-  align-items: baseline;
-}
+.commitment { border-bottom: 1px solid var(--rule); }
 .commitment:last-child { border-bottom: none; }
+.commitment-btn {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 72px 1fr 32px;
+  gap: 16px 24px;
+  align-items: center;
+  padding: 20px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+.commitment-btn:hover .commitment-head { color: var(--gold); }
+.commitment-btn[aria-expanded="true"] .commitment-arrow {
+  transform: rotate(45deg);
+  color: var(--gold);
+}
 .commitment-n {
   font-family: var(--f-display);
-  font-size: clamp(48px, 7vw, 76px);
-  line-height: .85;
+  font-size: clamp(28px, 3.5vw, 40px);
+  line-height: 1;
   letter-spacing: .01em;
-  color: var(--gold);
+  color: rgba(201,168,76,.38);
 }
 .commitment-head {
   font-family: var(--f-display);
-  font-size: clamp(22px, 3vw, 38px);
-  line-height: 1.02;
+  font-size: clamp(17px, 2vw, 24px);
+  line-height: 1.1;
   letter-spacing: .01em;
   text-transform: uppercase;
   color: var(--ink);
+  transition: color .15s;
+}
+.commitment-arrow {
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(13,10,5,.22);
+  transition: transform .22s ease, color .15s;
+  user-select: none;
+  justify-self: end;
 }
 .commitment-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .28s ease, padding-bottom .28s ease;
+  padding: 0 0 0 96px;
   font-size: 15px;
-  line-height: 1.65;
+  line-height: 1.7;
   color: var(--ink);
-  max-width: 44ch;
+  opacity: .65;
+  max-width: 54ch;
 }
-@media (max-width: 900px) {
-  .commitments-head { grid-template-columns: 1fr; }
-  .commitment {
-    grid-template-columns: 72px 1fr;
-    gap: 20px;
-  }
-  .commitment-body { grid-column: 2; max-width: 100%; }
+.commitment-body.open {
+  max-height: 240px;
+  padding-bottom: 28px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .commitment-body, .commitment-arrow { transition: none; }
+}
+@media (max-width: 640px) {
+  .commitment-btn { grid-template-columns: 48px 1fr 28px; gap: 10px 14px; }
+  .commitment-body { padding-left: 62px; }
 }
 
 
@@ -265,7 +293,7 @@ body {
 ───────────────────────────────────────── */
 .story {
   padding: clamp(40px, 6vw, 64px) var(--pad-x);
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
 }
 
 .story-masthead {
@@ -398,7 +426,7 @@ body {
 /* data */
 .brew-data {
   padding: clamp(20px, 3vw, 32px);
-  background: #f5f0e4;
+  background: var(--paper-soft);
 }
 .brew-data-label {
   font-family: var(--f-mono);
@@ -644,9 +672,27 @@ body {
 /* ─────────────────────────────────────────
    NAV SCROLL HIGHLIGHT
 ───────────────────────────────────────── */
+/* ─────────────────────────────────────────
+   MONITOR BRIDGE — paper → dark transition
+───────────────────────────────────────── */
+.monitor-bridge {
+  background: var(--dark-bg);
+  padding: 13px var(--pad-x);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.monitor-bridge-label {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: .44em;
+  color: rgba(232,227,211,.22);
+  text-transform: uppercase;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-* { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 
 /* ─────────────────────────────────────────
@@ -773,66 +819,88 @@ body {
 <!-- ── THE COMMITMENTS ─────────────────────────────────── -->
 <section class="commitments" aria-label="Eight commitments">
   <div class="commitments-head">
-    <div></div>
-    <div>
-      <div class="commitments-eyebrow">WHAT WE WILL DO — AND NOT DO</div>
-      <h2 class="commitments-h2">
-        Eight commitments. <em>Hold us to them.</em>
-      </h2>
-    </div>
+    <div class="commitments-eyebrow">WHAT WE WILL DO — AND NOT DO</div>
+    <h2 class="commitments-h2">Eight commitments. <em>Hold us to them.</em></h2>
   </div>
 
   <article class="commitment">
-    <div class="commitment-n">01</div>
-    <h3 class="commitment-head">Log every batch.</h3>
-    <p class="commitment-body">Every coffee we make goes through an instrumented brew rig. Temperature, weight, time, agitation — recorded automatically. No batch is exempt.</p>
+    <button class="commitment-btn" aria-expanded="false" aria-controls="c01-body">
+      <span class="commitment-n" aria-hidden="true">01</span>
+      <h3 class="commitment-head">Log every batch.</h3>
+      <span class="commitment-arrow" aria-hidden="true">+</span>
+    </button>
+    <div class="commitment-body" id="c01-body">Every coffee we make goes through an instrumented brew rig. Temperature, weight, time, agitation — recorded automatically. No batch is exempt.</div>
   </article>
 
   <article class="commitment">
-    <div class="commitment-n">02</div>
-    <h3 class="commitment-head">Stream it live.</h3>
-    <p class="commitment-body">Readings post to this page sub-second. While we're brewing, you can watch. While we're not, the archive is here for you to read.</p>
+    <button class="commitment-btn" aria-expanded="false" aria-controls="c02-body">
+      <span class="commitment-n" aria-hidden="true">02</span>
+      <h3 class="commitment-head">Stream it live.</h3>
+      <span class="commitment-arrow" aria-hidden="true">+</span>
+    </button>
+    <div class="commitment-body" id="c02-body">Readings post to this page sub-second. While we're brewing, you can watch. While we're not, the archive is here for you to read.</div>
   </article>
 
   <article class="commitment">
-    <div class="commitment-n">03</div>
-    <h3 class="commitment-head">Publish the misses.</h3>
-    <p class="commitment-body">Including the brews that fail. Including the ones we dump. Especially those. A transparency claim that excludes failures is a marketing claim.</p>
+    <button class="commitment-btn" aria-expanded="false" aria-controls="c03-body">
+      <span class="commitment-n" aria-hidden="true">03</span>
+      <h3 class="commitment-head">Publish the misses.</h3>
+      <span class="commitment-arrow" aria-hidden="true">+</span>
+    </button>
+    <div class="commitment-body" id="c03-body">Including the brews that fail. Including the ones we dump. Especially those. A transparency claim that excludes failures is a marketing claim.</div>
   </article>
 
   <article class="commitment">
-    <div class="commitment-n">04</div>
-    <h3 class="commitment-head">Never edit the record.</h3>
-    <p class="commitment-body">Once a reading is published it cannot be revised. Errata get appended below the original, signed and dated.</p>
+    <button class="commitment-btn" aria-expanded="false" aria-controls="c04-body">
+      <span class="commitment-n" aria-hidden="true">04</span>
+      <h3 class="commitment-head">Never edit the record.</h3>
+      <span class="commitment-arrow" aria-hidden="true">+</span>
+    </button>
+    <div class="commitment-body" id="c04-body">Once a reading is published it cannot be revised. Errata get appended below the original, signed and dated.</div>
   </article>
 
   <article class="commitment">
-    <div class="commitment-n">05</div>
-    <h3 class="commitment-head">No product. Yet.</h3>
-    <p class="commitment-body">We are not asking for your money. There is no store. There is no subscription. When that changes, you will hear it from us first — by email.</p>
+    <button class="commitment-btn" aria-expanded="false" aria-controls="c05-body">
+      <span class="commitment-n" aria-hidden="true">05</span>
+      <h3 class="commitment-head">No product. Yet.</h3>
+      <span class="commitment-arrow" aria-hidden="true">+</span>
+    </button>
+    <div class="commitment-body" id="c05-body">We are not asking for your money. There is no store. There is no subscription. When that changes, you will hear it from us first — by email.</div>
   </article>
 
   <article class="commitment">
-    <div class="commitment-n">06</div>
-    <h3 class="commitment-head">No outside money. Yet.</h3>
-    <p class="commitment-body">Bootstrapped on purpose. If we eventually take outside capital, the terms will be published on this same page.</p>
+    <button class="commitment-btn" aria-expanded="false" aria-controls="c06-body">
+      <span class="commitment-n" aria-hidden="true">06</span>
+      <h3 class="commitment-head">No outside money. Yet.</h3>
+      <span class="commitment-arrow" aria-hidden="true">+</span>
+    </button>
+    <div class="commitment-body" id="c06-body">Bootstrapped on purpose. If we eventually take outside capital, the terms will be published on this same page.</div>
   </article>
 
   <article class="commitment">
-    <div class="commitment-n">07</div>
-    <h3 class="commitment-head">Two people, named.</h3>
-    <p class="commitment-body">Cris Zelaya runs the process and the IoT. Sky Madsen runs palate and sourcing. If a decision was made, one of us made it. We will sign our names to it.</p>
+    <button class="commitment-btn" aria-expanded="false" aria-controls="c07-body">
+      <span class="commitment-n" aria-hidden="true">07</span>
+      <h3 class="commitment-head">Two people, named.</h3>
+      <span class="commitment-arrow" aria-hidden="true">+</span>
+    </button>
+    <div class="commitment-body" id="c07-body">Cris Zelaya runs the process and the IoT. Sky Madsen runs palate and sourcing. If a decision was made, one of us made it. We will sign our names to it.</div>
   </article>
 
   <article class="commitment">
-    <div class="commitment-n">08</div>
-    <h3 class="commitment-head">The data outranks the story.</h3>
-    <p class="commitment-body">If the marketing says one thing and the sensor log says another, the sensor log wins. Every time.</p>
+    <button class="commitment-btn" aria-expanded="false" aria-controls="c08-body">
+      <span class="commitment-n" aria-hidden="true">08</span>
+      <h3 class="commitment-head">The data outranks the story.</h3>
+      <span class="commitment-arrow" aria-hidden="true">+</span>
+    </button>
+    <div class="commitment-body" id="c08-body">If the marketing says one thing and the sensor log says another, the sensor log wins. Every time.</div>
   </article>
 </section>
 
 <!-- ── BREW MONITOR + BATCH ARCHIVE (React) ───────────── -->
 <div id="live" tabindex="-1"></div>
+<div class="monitor-bridge" aria-hidden="true">
+  <span class="monitor-bridge-label">· COMMITMENTS 01 &amp; 02 — LIVE ·</span>
+</div>
 <div id="brew-mount"></div>
 
 <!-- ── STORY — 30 DAYS OF BREWING ─────────────────────── -->
@@ -896,9 +964,9 @@ body {
             <line x1="0" x2="300" y1="20" y2="20" stroke="rgba(232,227,211,.1)" stroke-dasharray="4 6"/>
             <polyline
               points="0,34 40,30 80,20 130,14 180,12 240,11 300,11"
-              fill="none" stroke="#c8421f" stroke-width="1.8"
+              fill="none" stroke="#c9a84c" stroke-width="1.8"
               stroke-linejoin="round" stroke-linecap="round"/>
-            <circle cx="300" cy="11" r="3" fill="#c8421f"/>
+            <circle cx="300" cy="11" r="3" fill="#c9a84c"/>
           </svg>
         </div>
       </div>
@@ -954,9 +1022,9 @@ body {
           <line x1="0" x2="300" y1="20" y2="20" stroke="rgba(232,227,211,.1)" stroke-dasharray="4 6"/>
           <polyline
             points="0,28 60,22 120,18 180,17 240,17 300,17"
-            fill="none" stroke="#c8421f" stroke-width="1.8"
+            fill="none" stroke="#c9a84c" stroke-width="1.8"
             stroke-linejoin="round" stroke-linecap="round"/>
-          <circle cx="300" cy="17" r="3" fill="#c8421f"/>
+          <circle cx="300" cy="17" r="3" fill="#c9a84c"/>
         </svg>
       </div>
     </div>
@@ -1011,9 +1079,9 @@ body {
           <line x1="0" x2="300" y1="20" y2="20" stroke="rgba(232,227,211,.1)" stroke-dasharray="4 6"/>
           <polyline
             points="0,24 80,20 160,19 220,18 280,18 300,18"
-            fill="none" stroke="#c8421f" stroke-width="1.8"
+            fill="none" stroke="#c9a84c" stroke-width="1.8"
             stroke-linejoin="round" stroke-linecap="round"/>
-          <circle cx="300" cy="18" r="3" fill="#c8421f"/>
+          <circle cx="300" cy="18" r="3" fill="#c9a84c"/>
         </svg>
       </div>
     </div>
@@ -1159,6 +1227,21 @@ body {
 })();
 </script>
 
+<!-- ─────────────────────────────────────────
+     COMMITMENTS ACCORDION
+───────────────────────────────────────── -->
+<script>
+(function () {
+  document.querySelectorAll('.commitment-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      var body = document.getElementById(btn.getAttribute('aria-controls'));
+      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      if (body) body.classList.toggle('open', !expanded);
+    });
+  });
+})();
+</script>
 
 <!-- ── STICKY EMAIL BAR ──────────────────────────────── -->
 <div class="sticky-bar" id="sticky-bar" role="complementary" aria-label="Email signup">
