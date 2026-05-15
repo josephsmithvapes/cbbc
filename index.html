@@ -684,11 +684,13 @@ body {
   background: #1a1610;
   border-color: rgba(232,227,211,.18);
 }
+.goals-product .gp-slot img,
 .goals-product .gp-slot image-slot {
   flex: 1;
   width: 100%;
   height: 100%;
   min-height: 260px;
+  display: block;
 }
 .goals-product .gp-name {
   font-family: var(--f-display);
@@ -1178,7 +1180,7 @@ body {
   border-top: 1px solid var(--rule-light);
   padding-top: 20px;
 }
-.brew-rig-photo image-slot {
+.brew-rig-photo img {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -1706,15 +1708,12 @@ body {
 
         <div class="brew-rig-photo">
           <div class="brew-data-label">· THE RIG ·</div>
-          <image-slot
-            id="story-rig-photo"
-            shape="rect"
-            fit="cover"
-            placeholder="Drop overhead photo — breadboard + ESP32 setup"
+          <img
             src="/img/rig-breadboard-overhead.webp"
-            aria-label="BCCB brew rig — ESP32 and breadboard overhead view"
+            alt="BCCB brew rig — ESP32 and breadboard overhead view"
             loading="lazy"
-          ></image-slot>
+            width="400" height="300"
+          >
         </div>
 
       </div>
@@ -1841,7 +1840,7 @@ body {
           shape="rect"
           fit="cover"
           placeholder="Drop photo — light coffee bag (no branding)"
-          src="/img/light-bag-unbranded.webp"
+          src="/img/exciting-bright.png"
           aria-label="Exciting Bright — light roast whole bean coffee bag"
           loading="lazy"
         ></image-slot>
@@ -1860,7 +1859,7 @@ body {
           shape="rect"
           fit="cover"
           placeholder="Drop photo — dark coffee bag (no branding)"
-          src="/img/unbranded-black-bag.webp"
+          src="/img/quality-brown.png"
           aria-label="Quality Brown — bold dark roast whole bean coffee bag"
           loading="lazy"
         ></image-slot>
