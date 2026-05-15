@@ -15,7 +15,10 @@
 <meta name="theme-color" content="#e8e3d3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Space+Grotesk:wght@400;500;700&family=Caveat:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://qmzgnbcahcpmntbnmikq.supabase.co">
+<link rel="preconnect" href="https://qmzgnbcahcpmntbnmikq.supabase.co" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Space+Grotesk:wght@400;500;700&family=Caveat:wght@400;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Space+Grotesk:wght@400;500;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet"></noscript>
 
 <style>
@@ -30,13 +33,13 @@
   --red:        #c8421f;
   --red-dk:     #8a3320;
   --gold:       #c9a84c;
-  --fade:       rgba(13,10,5,.42);
+  --fade:       rgba(13,10,5,.60);
   --rule:       rgba(13,10,5,.14);
   --rule-light: rgba(13,10,5,.10);
 
   /* ── Typography — one stack, dual-named for HTML + React CSS modules ── */
-  --font-display: 'Alfa Slab One', Georgia, serif;
-  --font-brand:   'Space Grotesk', system-ui, sans-serif;
+  --font-display: 'Alfa Slab One', serif;
+  --font-brand:   'Space Grotesk', sans-serif;
   --f-display:    var(--font-display);
   --f-sans:       var(--font-brand);
   --f-mono:       var(--font-brand);
@@ -1170,6 +1173,18 @@ body {
   color: var(--gold);
 }
 
+.brew-rig-photo {
+  margin-top: 28px;
+  border-top: 1px solid var(--rule-light);
+  padding-top: 20px;
+}
+.brew-rig-photo image-slot {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--rule);
+}
+
 @media (max-width: 720px) {
   .brew-day-body { grid-template-columns: 1fr; }
   .brew-narrative { border-right: none; border-bottom: 1px solid var(--rule-light); }
@@ -1510,118 +1525,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .sticky-bar { transition: none; }
 }
-
-/* ─────────────────────────────────────────
-   MOBILE — iPhone & narrow viewports
-───────────────────────────────────────── */
-@media (max-width: 430px) {
-
-  /* Nav */
-  .nav { gap: 8px; padding: 12px 16px; }
-  .nav-tabs { gap: 10px; }
-  .nav-tabs a { letter-spacing: .1em; }
-
-  /* Masthead */
-  .masthead-title {
-    font-size: clamp(38px, 10.5vw, 56px);
-    column-gap: .08em;
-  }
-  .masthead-sub {
-    font-size: clamp(11px, 3.2vw, 14px);
-    letter-spacing: .14em;
-  }
-  .masthead-kicker-note { white-space: normal; max-width: 9ch; }
-
-  /* Tracking strip */
-  .tracking-strip { padding: 24px 16px; }
-  .tracking-eyebrow { white-space: normal; }
-  .tracking-process { gap: 14px 6px; }
-
-  /* Goals */
-  .goals { padding: 32px 16px; }
-  .goals-lede { gap: 12px; padding: 16px 0 24px; }
-  .goals-lede h3 { font-size: clamp(17px, 5vw, 22px); }
-  .goals-lineup { gap: 16px; padding-bottom: 24px; }
-  .goals-product .gp-slot { min-height: 200px; }
-  .goals-product { padding: 12px 12px; }
-  .goals-phase { grid-template-columns: 48px 1fr; gap: 6px 10px; }
-  .goals-phase .ph-num { font-size: clamp(26px, 7vw, 36px); }
-  .goals-phase .ph-body { grid-column: 2; font-size: 12px; }
-  .goals-phase .ph-meta { grid-column: 2; flex-direction: row; gap: 10px; }
-  .goals-qr {
-    grid-template-columns: 1fr;
-    padding: 16px;
-    gap: 10px;
-    text-align: left;
-  }
-  .goals-qr-mock { width: 60px; }
-  .goals-phases-head { gap: 4px; }
-
-  /* Story section */
-  .story { padding: 32px 16px; }
-  .brew-day-header {
-    padding: 12px 16px;
-    margin-left: 0;
-    margin-right: 0;
-    gap: 10px;
-  }
-  .brew-day-collapsed {
-    padding: 12px 16px;
-    margin-left: 0;
-    margin-right: 0;
-    width: 100%;
-    gap: 12px;
-  }
-  .brew-day-num { font-size: 22px; min-width: 40px; }
-  .brew-day-name { font-size: 13px; }
-  .brew-narrative { padding: 16px 14px; }
-  .brew-data { padding: 16px 14px; }
-  .brew-readings { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .brew-reading-val { font-size: 18px; }
-
-  /* Commitments */
-  .commitments { padding: 32px 16px; }
-  .commitment { padding: 18px 14px; gap: 8px; }
-  .commitment-n { font-size: 26px; }
-  .commitment-head { font-size: clamp(14px, 4vw, 17px); }
-  .commitments-h2 { font-size: clamp(22px, 6vw, 32px); }
-
-  /* Signoff & email */
-  .signoff { padding: 32px 16px; }
-  .signatures { gap: 20px; padding-left: 10px; }
-  .signature .sig-name { font-size: 34px; }
-  .signup { padding: 0; }
-  .email-input { padding: 12px 12px; font-size: 14px; }
-  .email-submit { padding: 12px 14px; font-size: 13px; }
-  .signoff-eyebrow { font-size: 9px; }
-
-  /* Footer */
-  .footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 14px 16px;
-    font-size: 9px;
-  }
-  .footer-social { gap: 6px; }
-
-  /* Sticky bar */
-  .sticky-bar {
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 10px 14px;
-  }
-  .sticky-bar-label {
-    font-size: 13px;
-    white-space: normal;
-    flex: 1 1 100%;
-  }
-  .sticky-bar-form { max-width: 100%; width: 100%; flex: 1 1 100%; }
-  .sticky-bar-input { padding: 9px 10px; font-size: 13px; }
-  .sticky-bar-btn { padding: 9px 14px; font-size: 12px; }
-}
 </style>
-  <script type="module" crossorigin src="/assets/index-DUFt7Xp1.js"></script>
+  <script type="module" crossorigin src="/assets/index-tQaxyDnd.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Cr0BHlHC.js">
   <link rel="modulepreload" crossorigin href="/assets/react-DRmcoaL4.js">
 </head>
@@ -1656,7 +1561,7 @@ body {
   <!-- LEFT COLUMN -->
   <div class="masthead-left">
     <div class="masthead-meta" aria-hidden="true">
-      <span>LOS ANGELES · 13 MAY 2026</span>
+      <span>LOS ANGELES · BCCB LAB</span>
     </div>
 
     <div class="masthead-title" aria-label="Bold Crew Cold Brew">
@@ -1767,7 +1672,7 @@ body {
   <div class="story-masthead">
     <div>
       <div class="story-eyebrow">· 30 DAYS OF BREWING ·</div>
-      <div class="story-title">The Origin Story.</div>
+      <h2 class="story-title">The Origin Story.</h2>
     </div>
     <div class="story-count">DAY 0 / 30</div>
   </div>
@@ -1785,10 +1690,12 @@ body {
     <div class="brew-day-body">
       <div class="brew-narrative">
         <div class="brew-narrative-label">· PRE-CAMPAIGN ·</div>
-        <p></p>
+        <p>
           With the working prototype already constructed, when Cris' rig comes online we'll have both founders brewing + collecting data points to run our 30 days of brewing, in hopes to create our Signature Cold Brew Lines
         </p>
-  
+        <p>
+          Once Cris' rig is live, we're running 30 consecutive days of batching. Each batch generates a dispatch — written from sensor logs, published here automatically. No editorial delay. Just the numbers and what they mean.
+        </p>
         <p>
           This section will populate day by day. Subscribe below to get each dispatch in your inbox the morning it drops.
         </p>
@@ -1796,6 +1703,20 @@ body {
           <span class="bot-tag" style="background:rgba(201,168,76,.15);color:#c9a84c;border-color:rgba(201,168,76,.3);">PENDING</span>
           RIG ASSEMBLY IN PROGRESS · CAMPAIGN LAUNCH TBD
         </div>
+
+        <div class="brew-rig-photo">
+          <div class="brew-data-label">· THE RIG ·</div>
+          <image-slot
+            id="story-rig-photo"
+            shape="rect"
+            fit="cover"
+            placeholder="Drop overhead photo — breadboard + ESP32 setup"
+            src="/img/rig-breadboard-overhead.webp"
+            aria-label="BCCB brew rig — ESP32 and breadboard overhead view"
+            loading="lazy"
+          ></image-slot>
+        </div>
+
       </div>
       <div class="brew-data">
         <div class="brew-data-label">· THE PROGRESSION ·</div>
@@ -1842,6 +1763,7 @@ body {
           </div>
 
         </div>
+
       </div>
     </div>
   </div>
@@ -1921,6 +1843,7 @@ body {
           placeholder="Drop photo — light coffee bag (no branding)"
           src="/img/light-bag-unbranded.webp"
           aria-label="Exciting Bright — light roast whole bean coffee bag"
+          loading="lazy"
         ></image-slot>
       </div>
       <div class="gp-name"><em>EXCITING BRIGHT</em>Bright &amp; Smooth Blonde.</div>
@@ -1939,6 +1862,7 @@ body {
           placeholder="Drop photo — dark coffee bag (no branding)"
           src="/img/unbranded-black-bag.webp"
           aria-label="Quality Brown — bold dark roast whole bean coffee bag"
+          loading="lazy"
         ></image-slot>
       </div>
       <div class="gp-name"><em>QUALITY BROWN</em>Bold Dark Roast.</div>
@@ -1958,6 +1882,7 @@ body {
           placeholder="Drop photo — growler (no branding)"
           src="/img/growler-unbranded.webp"
           aria-label="BCCB Cold Brew — 32oz refillable growler"
+          loading="lazy"
         ></image-slot>
       </div>
       <div class="gp-name"><em>COLD BREW</em>Pulled from the rig.</div>
@@ -2103,7 +2028,7 @@ body {
 
 <!-- ── FOOTER ──────────────────────────────────────────── -->
 <footer class="footer">
-  <span>BCCB · LOS ANGELES · BOOTSTRAPPED</span>
+  <span>BCCB · LOS ANGELES</span>
   <div class="footer-social">
     <a href="https://www.tiktok.com/@boldcrewcoldbrew" class="footer-social-link" target="_blank" rel="noopener" aria-label="TikTok">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
@@ -2235,6 +2160,7 @@ body {
     navLinks[id] = document.getElementById('nav-' + id);
   });
 
+  var ticking = false;
   function update() {
     var y = window.scrollY + 80;
     var active = sections[0];
@@ -2246,9 +2172,15 @@ body {
       var link = navLinks[id];
       if (link) link.classList.toggle('active', id === active);
     });
+    ticking = false;
   }
 
-  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      window.requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
   update();
 })();
 </script>
@@ -2291,17 +2223,35 @@ body {
 
   // Show bar when masthead kicker scrolls out of view
   var trigger = document.querySelector('.masthead-kicker');
-  function checkBar() {
-    if (dismissed) return;
-    if (!trigger) return;
-    if (trigger.getBoundingClientRect().bottom < 0) {
-      bar.classList.add('visible');
-    } else {
-      bar.classList.remove('visible');
+  if (trigger && 'IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function (entries) {
+      if (!dismissed && !entries[0].isIntersecting && entries[0].boundingClientRect.bottom < 0) {
+        bar.classList.add('visible');
+      } else {
+        bar.classList.remove('visible');
+      }
+    }, { threshold: 0 });
+    obs.observe(trigger);
+  } else {
+    var ticking = false;
+    function checkBar() {
+      if (dismissed) return;
+      if (!trigger) return;
+      if (trigger.getBoundingClientRect().bottom < 0) {
+        bar.classList.add('visible');
+      } else {
+        bar.classList.remove('visible');
+      }
+      ticking = false;
     }
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        window.requestAnimationFrame(checkBar);
+        ticking = true;
+      }
+    }, { passive: true });
+    checkBar();
   }
-  window.addEventListener('scroll', checkBar, { passive: true });
-  checkBar();
 
   // Dismiss
   function dismiss() {
