@@ -262,23 +262,27 @@ export default function BrewTelemetry({ requestedBatchId }) {
       </div>
 
       <div className={styles.body}>
-        <div className={styles.statusRow}>
-          <span className={[styles.dot, isLive && styles.live].filter(Boolean).join(' ')}
-            style={{ background: isLive || state.status === 'READY' ? GOLD : isReplay ? CREAM : CREAM,
-                     opacity: state.status === 'IDLE' ? .2 : 1 }}/>
-          <span className={[styles.statusText, (isIdle || isReplay) && styles.idle].filter(Boolean).join(' ')}>
-            {statusLabel}{isReplay && state.batch_name ? ` · ${state.batch_name.toUpperCase()}` : ''}
-          </span>
-        </div>
+        <div className={styles.countdownRow}>
+          <div>
+            <div className={styles.statusRow}>
+              <span className={[styles.dot, isLive && styles.live].filter(Boolean).join(' ')}
+                style={{ background: isLive || state.status === 'READY' ? GOLD : isReplay ? CREAM : CREAM,
+                         opacity: state.status === 'IDLE' ? .2 : 1 }}/>
+              <span className={[styles.statusText, (isIdle || isReplay) && styles.idle].filter(Boolean).join(' ')}>
+                {statusLabel}{isReplay && state.batch_name ? ` · ${state.batch_name.toUpperCase()}` : ''}
+              </span>
+            </div>
+            <div className={styles.countdown}>
+              {state.status === 'BREWING' || state.status === 'REPLAY'
+                ? fmtDuration(remaining)
+                : state.status === 'IDLE'
+                ? 'STANDBY'
+                : state.status === 'READY' || state.status === 'COMPLETE'
+                ? 'READY'
+                : fmtDuration(remaining)}
+            </div>
+          </div>
 
-        <div className={styles.countdown}>
-          {state.status === 'BREWING' || state.status === 'REPLAY'
-            ? fmtDuration(remaining)
-            : state.status === 'IDLE'
-            ? 'STANDBY'
-            : state.status === 'READY' || state.status === 'COMPLETE'
-            ? 'READY'
-            : fmtDuration(remaining)}
         </div>
 
         <div className={styles.grid}>

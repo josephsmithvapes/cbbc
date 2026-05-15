@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 24px;
+  padding: 10px var(--pad-x);
   border-bottom: 1px solid rgba(255,255,255,.06);
 }
 .label {
@@ -26,7 +26,7 @@
 }
 
 .body {
-  padding: 32px 24px 36px;
+  padding: 32px var(--pad-x) 36px;
 }
 
 .statusRow {
@@ -56,6 +56,59 @@
   color: var(--red, #c8421f);
 }
 .statusText.idle { color: rgba(255,255,255,.25); }
+
+.countdownRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 8px;
+}
+.sharpieKicker {
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  gap: 8px;
+  padding-top: 4px;
+}
+.sharpieArrow {
+  display: block;
+  flex-shrink: 0;
+  overflow: visible;
+  transform: scaleX(-1);
+  transform-origin: center;
+  margin-top: 6px;
+}
+.sharpieNote {
+  font-family: var(--f-hand, 'Caveat', cursive);
+  font-size: clamp(18px, 2.4vw, 28px);
+  color: var(--gold, #c9a84c);
+  line-height: 1.15;
+  transform: rotate(1.5deg);
+  transform-origin: right center;
+  max-width: 180px;
+  text-align: right;
+  position: relative;
+}
+.sharpieHl {
+  position: relative;
+  display: inline-block;
+  padding: 0 .1em;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.sharpieHl::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -.08em;
+  height: .22em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 380 22' preserveAspectRatio='none'%3E%3Cpath d='M 4 12 C 80 6%2C 180 18%2C 280 10 S 360 14%2C 376 12' fill='none' stroke='%23c9a84c' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+}
+@media (max-width: 480px) {
+  .sharpieKicker { display: none; }
+}
 
 .countdown {
   font-family: var(--font-display, 'Alfa Slab One', serif);
@@ -125,7 +178,7 @@
 }
 
 .connecting {
-  padding: 52px 24px;
+  padding: 52px var(--pad-x);
   text-align: center;
   font-size: var(--t-small, 0.8125rem);
   letter-spacing: .2em;
@@ -177,4 +230,12 @@
 @media (max-width: 600px) {
   .grid { grid-template-columns: repeat(2, 1fr); }
   .body { padding: 24px 16px 28px; }
+}
+@media (max-width: 430px) {
+  .body { padding: 20px 14px 24px; }
+  .countdown { font-size: clamp(2rem, 9vw, 3.5rem); }
+  .metricValue { font-size: clamp(1.1rem, 4vw, 1.4rem); }
+  .metric { padding: 10px 10px; }
+  .header { padding: 8px 14px; }
+  .footer { font-size: 0.5625rem; }
 }

@@ -225,9 +225,14 @@ export default function BatchDetails({ onPlayBatch }) {
         .order('steep_start', { ascending: false })
         .limit(12)
 
-      if (error || !batchMeta?.length) { 
+      if (error) {
+        console.error('[BatchDetails] batches fetch error:', error)
         setBrews([])
-        return 
+        return
+      }
+      if (!batchMeta?.length) {
+        setBrews([])
+        return
       }
       setMetaList(batchMeta)
 
@@ -448,6 +453,12 @@ export default function BatchDetails({ onPlayBatch }) {
         </div>
       )}
       {brews?.length === 0 && <div className={styles.empty}>No batches recorded yet.</div>}
+      {brews?.length > 0 && (
+        <div className={styles.batchLogHeader}>
+          <div className={styles.batchLogEyebrow}>· Brew Log ·</div>
+          <div className={styles.batchLogTitle}>Batch Records</div>
+        </div>
+      )}
       {brews?.length > 0 && (
         <div
           className={styles.carousel}
