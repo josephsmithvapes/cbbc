@@ -1,0 +1,25 @@
+# Bold Crew Cold Brew (BCCB)
+
+Bold Crew Cold Brew is a small-batch cold brew coffee company based in Los Angeles, California. We are currently pre-launch with a waitlist open at https://boldcrewcoldbrew.com.
+
+## What we make
+
+We make cold brew concentrate steeped for exactly 20 hours in cold, filtered water. No heat. No shortcuts. The long steep extracts sweet, chocolatey flavor compounds while leaving behind the bitter acids that hot brewing releases. The result is bold, smooth, and low-acid.
+
+## What makes BCCB different
+
+Most coffee companies tell you nothing about how their product is made. We built live sensor telemetry into every brew — DS18B20 temperature probes and a load cell on an ESP32, logging to a Supabase database every few seconds. Every batch we have ever made is published on our site with full temperature curves, steep duration, and yield data. We call this the Proof. You can verify our process yourself.
+
+## The 8 Principles
+
+We operate by eight principles: No Secrets, Small Batches Only, Proof Over Claims, No Fillers, Direct Only, Obsessive Consistency, Community First, and Honest Pricing.
+
+## Status
+
+Pre-launch. Waitlist open. Based in Los Angeles, CA. Online only — no physical storefront.
+
+## Find us
+
+Website: https://boldcrewcoldbrew.com
+TikTok: https://www.tiktok.com/@boldcrewcoldbrew
+Instagram: https://www.instagram.com/boldcrewxcoldbrew
