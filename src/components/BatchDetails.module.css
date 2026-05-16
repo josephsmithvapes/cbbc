@@ -229,11 +229,14 @@
 
 @media (max-width: 640px) {
   .section { padding: 56px 0 72px; }
+  .inner { padding: 0 20px; }
+  .batchLogHeader { padding: 40px 20px 18px; }
   .card { width: 320px; }
   .stat { padding: 10px 14px 14px; }
 }
 @media (max-width: 430px) {
   .section { padding: 40px 0 56px; }
+  .inner { padding: 0 16px; }
   .batchLogHeader { padding: 32px 16px 16px; }
   .batchLogTitle { font-size: clamp(1.4rem, 5vw, 2rem); }
   .card { width: calc(100vw - 48px); }
