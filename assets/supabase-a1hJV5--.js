@@ -1,1 +1,0 @@
-import{t as e}from"./supabase-CU2Wct4P.js";var t=e(`https://qmzgnbcahcpmntbnmikq.supabase.co`,`sb_publishable_DygPmf-waUWGClCpRyxspw_2022kbOy`,{realtime:{params:{eventsPerSecond:2},reconnectAfterMs:e=>Math.min(e*5e3,6e4)}});export{t};
