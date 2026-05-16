@@ -255,7 +255,14 @@ export default function BrewTelemetry({ requestedBatchId }) {
   return (
     <div id="telemetry" className={styles.wrap}>
       <div className={styles.header}>
-        <span className={styles.label}>Brew Monitor · Lot</span>
+        <div>
+          <span className={styles.label} style={isReplay ? { color: GOLD, opacity: .75 } : undefined}>
+            {isLive ? 'Live Cold Steep · In Progress' : isReplay ? 'Past Batch · Replay' : 'Batch Monitor'}
+          </span>
+          {isLive && (
+            <span className={styles.headerSub}>20h steep · DS18B20 temp probe · Los Angeles</span>
+          )}
+        </div>
         {state.batch_number > 0 && (
           <span className={styles.batchTag}>Batch #{String(state.batch_number).padStart(2,'0')}</span>
         )}
@@ -323,12 +330,24 @@ export default function BrewTelemetry({ requestedBatchId }) {
           </button>
           
           {showNote && (
-            <div style={{ marginTop: '12px', fontSize: '0.8125rem', color: CREAM, opacity: .62, lineHeight: 1.6, fontFamily: "var(--font-body, 'DM Mono', monospace)" }}>
+            <div style={{ marginTop: '12px', fontSize: '0.8125rem', color: CREAM, opacity: .88, lineHeight: 1.6, fontFamily: "var(--font-body, 'DM Mono', monospace)" }}>
               <p style={{ marginBottom: '8px' }}>
-                <strong style={{ color: GOLD, opacity: .85, fontWeight: 500 }}>The 20-Hour Cold Steep:</strong> Instead of using heat to quickly extract flavor (which releases bitter acids and oils), we immerse coarse-ground coffee in cold, filtered water for exactly 20 hours.
+                <strong style={{ color: GOLD, fontWeight: 500 }}>The 20-Hour Cold Steep:</strong> Instead of using heat to quickly extract flavor (which releases bitter acids and oils), we immerse coarse-ground coffee in cold, filtered water for exactly 20 hours. The slow extraction pulls out sweet, chocolatey compounds while leaving harsh bitterness behind.
               </p>
-              <p>
-                This slow, gentle extraction process naturally pulls out the coffee's sweet, chocolatey flavor compounds while leaving the harsh bitterness behind, resulting in a bold and incredibly smooth cup.
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'rgba(255,255,255,.07)', border: '1px solid rgba(255,255,255,.07)', margin: '14px 0' }}>
+                <div style={{ background: '#0d0b08', padding: '10px 14px' }}>
+                  <div style={{ fontSize: '0.5625rem', letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,.35)', marginBottom: 4 }}>Hot Brew · pH</div>
+                  <div style={{ fontFamily: "var(--font-display, 'Alfa Slab One', serif)", fontSize: '1.5rem', color: 'rgba(255,255,255,.4)', lineHeight: 1 }}>5.0</div>
+                  <div style={{ fontSize: '0.5625rem', letterSpacing: '.12em', color: 'rgba(255,255,255,.22)', marginTop: 3 }}>High acid</div>
+                </div>
+                <div style={{ background: '#0d0b08', padding: '10px 14px' }}>
+                  <div style={{ fontSize: '0.5625rem', letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,.35)', marginBottom: 4 }}>Cold Brew · pH</div>
+                  <div style={{ fontFamily: "var(--font-display, 'Alfa Slab One', serif)", fontSize: '1.5rem', color: GOLD, lineHeight: 1 }}>6.5</div>
+                  <div style={{ fontSize: '0.5625rem', letterSpacing: '.12em', color: 'rgba(255,255,255,.22)', marginTop: 3 }}>~65% less acidic</div>
+                </div>
+              </div>
+              <p style={{ opacity: .7, fontSize: '0.75rem' }}>
+                Higher pH = less acid. Cold brew sits close to neutral (7.0) making it significantly easier on your stomach and teeth than hot-brewed coffee.
               </p>
             </div>
           )}
