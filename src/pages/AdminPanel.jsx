@@ -155,13 +155,14 @@ export default function AdminPanel() {
 
   useEffect(() => {
     if (!session) return
-    supabase.from('batch_state').select('*').eq('id', 1).single()
-      .then(({ data }) => { if (data) { setBatch(data); if (data.batch_target) setBatchTarget(data.batch_target) } })
-    const ch = supabase.channel('admin-batch')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'batch_state' },
-        ({ new: row }) => setBatch(row))
-      .subscribe()
-    return () => supabase.removeChannel(ch)
+    let cancelled = false
+    async function poll() {
+      const { data } = await supabase.from('batch_state').select('*').eq('id', 1).single()
+      if (!cancelled && data) { setBatch(data); if (data.batch_target) setBatchTarget(data.batch_target) }
+    }
+    poll()
+    const id = setInterval(poll, 5000)
+    return () => { cancelled = true; clearInterval(id) }
   }, [userId])
 
   useEffect(() => {

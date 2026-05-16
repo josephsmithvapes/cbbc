@@ -293,7 +293,7 @@ export default function HeroSection() {
                 <line x1="400" y1="436" x2="400" y2="452" stroke="#c9a84c" strokeWidth="1.5" opacity="0.6" strokeLinecap="round"/>
                 <line x1="400" y1="508" x2="400" y2="524" stroke="#c9a84c" strokeWidth="1.5" opacity="0.6" strokeLinecap="round"/>
 
-                {/* L-bracket callout */}
+                {/* L- callout */}
                 <polyline points="450,480 580,480 580,560" fill="none" stroke="#c9a84c" strokeWidth="1.5" opacity="0.5" strokeDasharray="6 4"/>
                 <circle cx="580" cy="560" r="3" fill="#c9a84c" opacity="0.7"/>
 
