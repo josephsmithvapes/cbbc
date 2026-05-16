@@ -2138,7 +2138,7 @@ body {
   function renderCount() {
     if (!countEl) return;
     var total = _emailCount + _socialCount;
-    countEl.innerHTML = '<strong>' + total.toLocaleString() + '</strong> crewmembers';
+    countEl.innerHTML = '<strong>' + total.toLocaleString() + '</strong> <span style="color:#7d6214">crew</span>members';
   }
   function fetchEmailCount() {
     fetch(SB_URL + '/rest/v1/waitlist_entries?select=id', {
