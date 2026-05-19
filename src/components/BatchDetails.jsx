@@ -314,24 +314,25 @@ export default function BatchDetails({ onPlayBatch, activeReplayId, isLiveBrew }
 
         const t0 = new Date(meta.steep_start).getTime()
         const t1 = new Date(meta.steep_end).getTime()
-          const temps_f = readings.map(r => r.temp_c * 9 / 5 + 32)
-          const avg = temps_f.reduce((a, b) => a + b, 0) / temps_f.length
+        const temps_f = readings.map(r => r.temp_c * 9 / 5 + 32)
+        const avg = temps_f.reduce((a, b) => a + b, 0) / temps_f.length
 
-          return {
-            id: meta.id || `batch-${meta.batch_number}-${t0}`,
-            date: new Date(meta.steep_start),
-            duration: (t1 - t0) / 1000,
-            tempMin: Math.min(...temps_f),
-            tempMax: Math.max(...temps_f),
-            tempAvg: avg,
-            points: readings.length,
-            meta,
-            chartData: thin(readings.map(r => ({
-              temp_f: r.temp_c * 9 / 5 + 32,
-              elapsed_s: (new Date(r.recorded_at).getTime() - t0) / 1000,
-            })), 200),
-            isLoading: false
-          }
+        return {
+          id: meta.id || `batch-${meta.batch_number}-${t0}`,
+          date: new Date(meta.steep_start),
+          duration: (t1 - t0) / 1000,
+          tempMin: Math.min(...temps_f),
+          tempMax: Math.max(...temps_f),
+          tempAvg: avg,
+          points: readings.length,
+          meta,
+          chartData: thin(readings.map(r => ({
+            temp_f: r.temp_c * 9 / 5 + 32,
+            elapsed_s: (new Date(r.recorded_at).getTime() - t0) / 1000,
+          })), 200),
+          isLoading: false,
+          noData: false,
+        }
       })
 
       const processed = await Promise.all(batchPromises)
