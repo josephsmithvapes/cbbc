@@ -193,7 +193,7 @@ function useReplayBatch(isActive, requestedBatchId) {
   return { replayData, tick }
 }
 
-export default function BrewTelemetry({ requestedBatchId }) {
+export default function BrewTelemetry({ requestedBatchId, suppressCountdown }) {
   const liveState     = useBrewState()
   const liveTelemetry = useTemperatureReadings(120)
   const [liveTick, setLiveTick] = useState(0)
@@ -279,15 +279,17 @@ export default function BrewTelemetry({ requestedBatchId }) {
                 {statusLabel}{isReplay && state.batch_name ? ` · ${state.batch_name.toUpperCase()}` : ''}
               </span>
             </div>
-            <div className={styles.countdown}>
-              {state.status === 'BREWING' || state.status === 'REPLAY'
-                ? fmtDuration(remaining)
-                : state.status === 'IDLE'
-                ? 'STANDBY'
-                : state.status === 'READY' || state.status === 'COMPLETE'
-                ? 'READY'
-                : fmtDuration(remaining)}
-            </div>
+            {!suppressCountdown && (
+              <div className={styles.countdown}>
+                {state.status === 'BREWING' || state.status === 'REPLAY'
+                  ? fmtDuration(remaining)
+                  : state.status === 'IDLE'
+                  ? 'STANDBY'
+                  : state.status === 'READY' || state.status === 'COMPLETE'
+                  ? 'READY'
+                  : fmtDuration(remaining)}
+              </div>
+            )}
           </div>
 
         </div>

@@ -1,4 +1,5 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useState, useEffect } from 'react'
+import { useBatchState } from './lib/hooks'
 
 // The new index.html is fully static for everything ABOVE and BELOW the
 // React mount. The React tree at #brew-mount only renders the three
@@ -21,6 +22,16 @@ export default function App() {
     new URLSearchParams(window.location.search).has('admin')
 
   const [requestedBatchId, setRequestedBatchId] = useState(null)
+  const batchState = useBatchState()
+  const liveStage = batchState?.stage ?? 'idle'
+
+  // BrewStageDisplay owns the countdown during any active live stage
+  const suppressCountdown = liveStage === 'grinding' || liveStage === 'steeping' || liveStage === 'ready'
+
+  // Reset replay when a live brew starts so it doesn't auto-restart when brew ends
+  useEffect(() => {
+    if (suppressCountdown) setRequestedBatchId(null)
+  }, [suppressCountdown])
 
   if (isAdmin) {
     return (
@@ -33,15 +44,20 @@ export default function App() {
   return (
     <Suspense fallback={null}>
       <BrewStageDisplay />
-      <BrewTelemetry requestedBatchId={requestedBatchId} />
+      <BrewTelemetry
+        requestedBatchId={requestedBatchId}
+        suppressCountdown={suppressCountdown}
+      />
       <section id="batches" aria-label="Past batches">
         <BatchDetails
           onPlayBatch={(id) => {
-            setRequestedBatchId(id)
+            setRequestedBatchId(prev => prev === id ? null : id)
             document
               .getElementById('telemetry')
               ?.scrollIntoView({ behavior: 'smooth' })
           }}
+          activeReplayId={requestedBatchId}
+          isLiveBrew={suppressCountdown}
         />
       </section>
     </Suspense>
