@@ -152,6 +152,8 @@ export default function AdminPanel() {
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [batchTarget, setBatchTarget]     = useState(25)
   const [savingTarget, setSavingTarget]   = useState(false)
+  const [grindPopup, setGrindPopup]       = useState(false)
+  const [, setTick]                       = useState(0)
 
   useEffect(() => {
     if (!session) return
@@ -179,6 +181,33 @@ export default function AdminPanel() {
     // Load all past batches
     loadPastBatches()
   }, [userId])
+
+  useEffect(() => {
+    if (batch?.stage !== 'grinding') { setGrindPopup(false); return }
+    const grindStart = batch?.updated_at ? new Date(batch.updated_at).getTime() : Date.now()
+    const GRIND_DURATION = 15 * 60 * 1000
+    let notified = false
+    const id = setInterval(() => {
+      const remaining = GRIND_DURATION - (Date.now() - grindStart)
+      if (remaining <= 0 && !notified) {
+        notified = true
+        setGrindPopup(true)
+      }
+    }, 1000)
+    return () => clearInterval(id)
+  }, [batch?.stage, batch?.updated_at])
+
+  useEffect(() => {
+    if (batch?.stage !== 'grinding') return
+    const id = setInterval(() => setTick(t => t + 1), 1000)
+    return () => clearInterval(id)
+  }, [batch?.stage])
+
+  function grindRemainingSeconds() {
+    if (!batch?.updated_at) return 15 * 60
+    const grindStart = new Date(batch.updated_at).getTime()
+    return Math.max(0, Math.floor((15 * 60 * 1000 - (Date.now() - grindStart)) / 1000))
+  }
 
   function loadPastBatches() {
     supabase.from('batches').select('*').order('steep_start', { ascending: false })
@@ -218,11 +247,16 @@ export default function AdminPanel() {
         name: form.name || null, origin: form.origin || null,
         roast: form.roast || null, process: form.process || null,
         grind_notes: form.grind_notes || null, tasting_notes: form.tasting_notes || null,
-        steep_start: now,
+        steep_start: null,
       }).select().single()
       if (nb) { setActiveBatch(nb); loadPastBatches() }
     }
-    if (stage === 'steeping') update.steep_start = now
+    if (stage === 'steeping') {
+      update.steep_start = now
+      if (activeBatch) {
+        await supabase.from('batches').update({ steep_start: now }).eq('id', activeBatch.id)
+      }
+    }
     if (stage === 'ready' && activeBatch) {
       await supabase.from('batches').update({ steep_end: now }).eq('id', activeBatch.id)
       loadPastBatches()
@@ -237,6 +271,19 @@ export default function AdminPanel() {
       const mappedStatus = statusMap[stage]
       if (mappedStatus) await supabase.from('brew_state').update({ status: mappedStatus }).eq('id', 1)
       flash_('✓ LIVE')
+    } else flash_('✗ ERROR')
+    setSaving(false)
+  }
+
+  async function beginSteep() {
+    setSaving(true)
+    const now = new Date().toISOString()
+    await supabase.from('batches').update({ steep_start: now }).eq('id', activeBatch.id)
+    const { error } = await supabase.from('batch_state').update({ stage: 'steeping', steep_start: now, updated_at: now }).eq('id', 1)
+    if (!error) {
+      await supabase.from('brew_state').update({ status: 'BREWING' }).eq('id', 1)
+      setBatch(prev => ({ ...prev, stage: 'steeping', steep_start: now }))
+      flash_('✓ STEEPING')
     } else flash_('✗ ERROR')
     setSaving(false)
   }
@@ -365,35 +412,99 @@ export default function AdminPanel() {
         </div>
       </div>
 
-      {/* ── new batch metadata form ── */}
-      <div style={{ padding:'28px 24px', borderBottom:'1px solid rgba(201,168,76,.1)', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box' }}>
-        <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4, marginBottom:20, textAlign:'center' }}>
-          {isBrewing ? 'CURRENT BATCH' : 'NEW BATCH DETAILS'}
-        </div>
-        <MetaFields form={form} set={setForm} disabled={isBrewing && current !== 'ready'} />
-        {activeBatch && (
-          <button onClick={saveTastingNotes} disabled={saving} style={{ marginTop:14, width:'100%', padding:'10px', background:'transparent', border:'1px solid rgba(201,168,76,.3)', color:GOLD, cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.25em', opacity: saving ? .4 : .8 }}>
-            SAVE NOTES
-          </button>
-        )}
-      </div>
-
-      {/* ── stage buttons ── */}
-      <div style={{ padding:'28px 24px', borderBottom:'1px solid rgba(201,168,76,.1)', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box' }}>
-        <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4, marginBottom:20, textAlign:'center' }}>SET STAGE</div>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
-          {STAGES.map(s => (
-            <button key={s.key} onClick={() => setStage(s.key)} disabled={saving || current === s.key}
-              style={{ padding:'22px 12px', background: current===s.key ? s.color : 'transparent', border:`2px solid ${current===s.key ? s.color : 'rgba(201,168,76,.2)'}`, cursor: current===s.key ? 'default' : 'pointer', opacity: current===s.key ? 1 : saving ? .4 : .75, transition:'all .2s', display:'flex', flexDirection:'column', alignItems:'center', gap:6 }}>
-              <span style={{ fontFamily:"'Alfa Slab One',serif", fontSize:'1.1rem', letterSpacing:'.04em', color: current===s.key ? s.textColor : CREAM }}>{s.label}</span>
-              <span style={{ fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.18em', color:CREAM, opacity:.45 }}>{s.sub}</span>
+      {/* ── batch metadata (only visible during active brew) ── */}
+      {isBrewing && (
+        <div style={{ padding:'28px 24px', borderBottom:'1px solid rgba(201,168,76,.1)', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box' }}>
+          <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4, marginBottom:20, textAlign:'center' }}>CURRENT BATCH</div>
+          <MetaFields form={form} set={setForm} disabled={current !== 'ready'} />
+          {activeBatch && (
+            <button onClick={saveTastingNotes} disabled={saving} style={{ marginTop:14, width:'100%', padding:'10px', background:'transparent', border:'1px solid rgba(201,168,76,.3)', color:GOLD, cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.25em', opacity: saving ? .4 : .8 }}>
+              SAVE NOTES
             </button>
-          ))}
+          )}
         </div>
-        <div style={{ textAlign:'center', marginTop:24, color:CREAM, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.2em', opacity:.2, lineHeight:1.8 }}>
-          GRINDING → creates batch record · READY → closes it
+      )}
+
+      {/* ── Wizard: idle → Screen 1 (pre-brew) ── */}
+      {current === 'idle' && !isBrewing && (
+        <div style={{ padding:'28px 24px', borderBottom:'1px solid rgba(201,168,76,.1)', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box' }}>
+          <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4, marginBottom:20, textAlign:'center' }}>NEW BATCH</div>
+          <MetaFields form={form} set={setForm} />
+          <button
+            onClick={() => setStage('grinding')}
+            disabled={saving || !form.name.trim()}
+            style={{ marginTop:20, width:'100%', padding:'18px', background: form.name.trim() ? GOLD : 'transparent', border:`2px solid ${form.name.trim() ? GOLD : 'rgba(201,168,76,.2)'}`, cursor: form.name.trim() ? 'pointer' : 'not-allowed', fontFamily:"'Alfa Slab One',serif", fontSize:'1.1rem', letterSpacing:'.06em', color: form.name.trim() ? INK : GOLD, opacity: saving ? .5 : 1, transition:'all .2s' }}
+          >
+            START GRINDING
+          </button>
         </div>
-      </div>
+      )}
+
+      {/* ── Wizard: grinding → Screen 2 (countdown) ── */}
+      {current === 'grinding' && (
+        <div style={{ padding:'28px 24px', borderBottom:'1px solid rgba(201,168,76,.1)', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box', textAlign:'center' }}>
+          <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4, marginBottom:20 }}>GRINDING</div>
+          {activeBatch?.name && (
+            <div style={{ color:CREAM, fontFamily:"'Alfa Slab One',serif", fontSize:'1.1rem', letterSpacing:'.04em', marginBottom:8, opacity:.7 }}>{activeBatch.name}</div>
+          )}
+          <div style={{ fontFamily:"'Alfa Slab One',serif", fontSize:'clamp(3rem,15vw,5rem)', color:GOLD, letterSpacing:'.04em', lineHeight:1, marginBottom:8 }}>
+            {(() => {
+              const s = grindRemainingSeconds()
+              const m = Math.floor(s / 60)
+              const sec = s % 60
+              return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`
+            })()}
+          </div>
+          <div style={{ color:CREAM, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.2em', opacity:.3, marginBottom:28 }}>GRINDING TIMER</div>
+          <button
+            onClick={() => setGrindPopup(true)}
+            style={{ padding:'12px 28px', background:'transparent', border:'1px solid rgba(201,168,76,.3)', cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.25em', color:GOLD, opacity:.6 }}
+          >
+            DONE GRINDING
+          </button>
+        </div>
+      )}
+
+      {/* ── Grinding popup ── */}
+      {grindPopup && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(13,11,8,.92)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:10000, padding:24 }}>
+          <div style={{ maxWidth:380, width:'100%', border:'1px solid rgba(201,168,76,.35)', background:INK, padding:40, textAlign:'center' }}>
+            <div style={{ color:GOLD, fontFamily:"'Alfa Slab One',serif", fontSize:'1.4rem', letterSpacing:'.04em', marginBottom:12 }}>Grind looks good?</div>
+            <div style={{ color:CREAM, fontFamily:"'Cinzel',serif", fontSize:'var(--t-small,.8125rem)', letterSpacing:'.08em', opacity:.55, marginBottom:32 }}>Ready to start steeping.</div>
+            <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+              <button
+                onClick={() => { setGrindPopup(false); beginSteep() }}
+                disabled={saving}
+                style={{ padding:'16px', background:GOLD, border:'none', cursor:'pointer', fontFamily:"'Alfa Slab One',serif", fontSize:'1rem', color:INK, letterSpacing:'.04em', opacity: saving ? .5 : 1 }}
+              >
+                BEGIN STEEP
+              </button>
+              <button
+                onClick={() => setGrindPopup(false)}
+                style={{ padding:'14px', background:'transparent', border:'1px solid rgba(201,168,76,.2)', cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.2em', color:CREAM, opacity:.5 }}
+              >
+                NOT YET — KEEP GRINDING
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Wizard: steeping → Screen 3 placeholder (Task 7) ── */}
+      {current === 'steeping' && (
+        <div style={{ padding:'28px 24px', borderBottom:'1px solid rgba(201,168,76,.1)', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box', textAlign:'center' }}>
+          <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4, marginBottom:20 }}>STEEPING</div>
+          <div style={{ color:CREAM, opacity:.4, fontFamily:"'Cinzel',serif", fontSize:'var(--t-small,.8125rem)', letterSpacing:'.1em' }}>Steeping phase (Task 7)</div>
+        </div>
+      )}
+
+      {/* ── Wizard: ready → placeholder (Task 8) ── */}
+      {current === 'ready' && (
+        <div style={{ padding:'28px 24px', borderBottom:'1px solid rgba(201,168,76,.1)', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box', textAlign:'center' }}>
+          <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4, marginBottom:20 }}>READY</div>
+          <div style={{ color:CREAM, opacity:.4, fontFamily:"'Cinzel',serif", fontSize:'var(--t-small,.8125rem)', letterSpacing:'.1em' }}>Post-batch popup (Task 8)</div>
+        </div>
+      )}
 
       {/* ── past batches ── */}
       <div style={{ padding:'28px 24px', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box' }}>
