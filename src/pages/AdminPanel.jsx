@@ -99,12 +99,14 @@ function MetaFields({ form, set, disabled = false, showDateFields = false }) {
       {showDateFields && <>
         <div>
           <label style={LABEL_STYLE}>Steep Start</label>
-          <input type="datetime-local" style={FIELD} value={form.steep_start}
+          <input type="text" style={FIELD} value={form.steep_start}
+            placeholder="2026-05-05 00:54:57+00"
             onChange={e => set(f => ({ ...f, steep_start: e.target.value }))} />
         </div>
         <div>
           <label style={LABEL_STYLE}>Steep End</label>
-          <input type="datetime-local" style={FIELD} value={form.steep_end}
+          <input type="text" style={FIELD} value={form.steep_end}
+            placeholder="2026-05-05 12:11:43+00"
             onChange={e => set(f => ({ ...f, steep_end: e.target.value }))} />
         </div>
       </>}
