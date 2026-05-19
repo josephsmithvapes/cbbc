@@ -30,7 +30,7 @@ const LABEL_STYLE = {
 
 const EMPTY_FORM = {
   name: '', origin: '', roast: 'Light',
-  process: 'Washed', grind_notes: '', tasting_notes: '',
+  process: 'Washed', filter_type: '', grind_notes: '', tasting_notes: '',
   steep_start: '', steep_end: '',
 }
 
@@ -85,6 +85,14 @@ function MetaFields({ form, set, disabled = false, showDateFields = false }) {
         </select>
       </div>
       <div>
+        <label style={LABEL_STYLE}>Filter Type</label>
+        <select style={FIELD} value={form.filter_type} disabled={disabled}
+          onChange={e => set(f => ({ ...f, filter_type: e.target.value }))}>
+          <option value="">—</option>
+          {['Paper','Metal Mesh','Cloth Bag','Nylon Bag','Other'].map(t => <option key={t}>{t}</option>)}
+        </select>
+      </div>
+      <div>
         <label style={LABEL_STYLE}>Grind Notes</label>
         <input style={FIELD} placeholder="e.g. Coarse, 30 clicks"
           value={form.grind_notes} disabled={disabled}
@@ -124,7 +132,7 @@ function PastBatchRow({ b, onEdit }) {
           {b.name || 'Unnamed'}
         </div>
         <div style={{ color: CREAM, fontFamily: "'Cinzel',serif", fontSize: '0.55rem', letterSpacing: '.2em', opacity: .3, marginTop: 3 }}>
-          {fmtDate(b.steep_start)}{b.origin ? ` · ${b.origin}` : ''}{b.roast ? ` · ${b.roast}` : ''}{dur ? ` · ${dur}` : ''}
+          {fmtDate(b.steep_start)}{b.origin ? ` · ${b.origin}` : ''}{b.roast ? ` · ${b.roast}` : ''}{b.filter_type ? ` · ${b.filter_type}` : ''}{dur ? ` · ${dur}` : ''}
         </div>
       </div>
       <button onClick={onEdit} style={{ background: 'none', border: '1px solid rgba(201,168,76,.2)', color: GOLD, cursor: 'pointer', fontFamily: "'Cinzel',serif", fontSize: '0.55rem', letterSpacing: '.22em', padding: '6px 12px', flexShrink: 0 }}>
@@ -197,7 +205,7 @@ export default function AdminPanel() {
       .then(({ data }) => {
         if (data) {
           setActiveBatch(data)
-          setForm({ name: data.name ?? '', origin: data.origin ?? '', roast: data.roast ?? 'Light', process: data.process ?? 'Washed', grind_notes: data.grind_notes ?? '', tasting_notes: data.tasting_notes ?? '', steep_start: '', steep_end: '' })
+          setForm({ name: data.name ?? '', origin: data.origin ?? '', roast: data.roast ?? 'Light', process: data.process ?? 'Washed', filter_type: data.filter_type ?? '', grind_notes: data.grind_notes ?? '', tasting_notes: data.tasting_notes ?? '', steep_start: '', steep_end: '' })
         }
       })
     // Load all past batches
@@ -287,7 +295,8 @@ export default function AdminPanel() {
         batch_number: update.batch_number,
         name: form.name || null, origin: form.origin || null,
         roast: form.roast || null, process: form.process || null,
-        grind_notes: form.grind_notes || null, tasting_notes: form.tasting_notes || null,
+        filter_type: form.filter_type || null, grind_notes: form.grind_notes || null,
+        tasting_notes: form.tasting_notes || null,
         steep_start: null,
       }).select().single()
       if (nb) { setActiveBatch(nb); loadPastBatches() }
@@ -337,7 +346,7 @@ export default function AdminPanel() {
     setIsAdding(false)
     setEditForm({
       name: b.name ?? '', origin: b.origin ?? '', roast: b.roast ?? 'Light',
-      process: b.process ?? 'Washed', grind_notes: b.grind_notes ?? '',
+      process: b.process ?? 'Washed', filter_type: b.filter_type ?? '', grind_notes: b.grind_notes ?? '',
       tasting_notes: b.tasting_notes ?? '',
       steep_start: toLocal(b.steep_start), steep_end: toLocal(b.steep_end),
     })
@@ -348,7 +357,8 @@ export default function AdminPanel() {
     const { error } = await supabase.from('batches').update({
       name: editForm.name || null, origin: editForm.origin || null,
       roast: editForm.roast || null, process: editForm.process || null,
-      grind_notes: editForm.grind_notes || null, tasting_notes: editForm.tasting_notes || null,
+      filter_type: editForm.filter_type || null, grind_notes: editForm.grind_notes || null,
+      tasting_notes: editForm.tasting_notes || null,
       steep_start: toISO(editForm.steep_start), steep_end: toISO(editForm.steep_end),
     }).eq('id', expandedId)
     if (!error) { flash_('✓ SAVED'); setExpandedId(null); loadPastBatches() }
@@ -368,7 +378,8 @@ export default function AdminPanel() {
     const { data: nb, error } = await supabase.from('batches').insert({
       name: addForm.name || null, origin: addForm.origin || null,
       roast: addForm.roast || null, process: addForm.process || null,
-      grind_notes: addForm.grind_notes || null, tasting_notes: addForm.tasting_notes || null,
+      filter_type: addForm.filter_type || null, grind_notes: addForm.grind_notes || null,
+      tasting_notes: addForm.tasting_notes || null,
       steep_start: steepStart, steep_end: steepEnd,
     }).select().single()
 
