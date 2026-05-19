@@ -111,6 +111,7 @@ function useReplayBatch(isActive, requestedBatchId) {
       return
     }
 
+    setReplayData(null)
     let running = true
     async function fetchBatch() {
       // 1. Get completed batches (from cache or DB)
@@ -148,8 +149,7 @@ function useReplayBatch(isActive, requestedBatchId) {
       if (!processedReadings) {
         const { data: readings, error } = await supabase.from('temperature_readings')
           .select('temp_c, recorded_at')
-          .gte('recorded_at', targetBatch.steep_start)
-          .lte('recorded_at', targetBatch.steep_end)
+          .eq('batch_id', targetBatch.id)
           .order('recorded_at', { ascending: true })
 
         // If query fails or DB is missing telemetry, generate a realistic mock curve
