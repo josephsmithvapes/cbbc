@@ -39,8 +39,8 @@ class QueryBuilder {
     this._prefer = []
   }
 
-  select(cols, opts = {}) {
-    this._params.set('select', cols === '*' ? '*' : cols)
+  select(cols = '*', opts = {}) {
+    this._params.set('select', cols)
     if (opts.count === 'exact') this._count = true
     return this
   }

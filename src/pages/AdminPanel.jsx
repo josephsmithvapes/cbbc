@@ -89,7 +89,7 @@ function MetaFields({ form, set, disabled = false, showDateFields = false }) {
         <select style={FIELD} value={form.filter_type} disabled={disabled}
           onChange={e => set(f => ({ ...f, filter_type: e.target.value }))}>
           <option value="">—</option>
-          {['Paper','Metal Mesh','Cloth Bag','Nylon Bag','Other'].map(t => <option key={t}>{t}</option>)}
+          {['Paper','Metal Mesh','Cloth Bag','Nylon Bag','Other', 'Post-Filter Pour'].map(t => <option key={t}>{t}</option>)}
         </select>
       </div>
       <div>
@@ -263,7 +263,12 @@ export default function AdminPanel() {
       .then(({ data }) => { if (data) setPastBatches(data) })
   }
 
-  function flash_(msg) { setFlash(msg); setTimeout(() => setFlash(''), 2200) }
+  function flash_(msg, err) {
+    const detail = err?.message || err?.details || ''
+    const full = detail ? `${msg}: ${detail}` : msg
+    setFlash(full)
+    setTimeout(() => setFlash(''), 6000)
+  }
 
   async function saveBatchTarget() {
     const n = parseInt(batchTarget)
@@ -322,7 +327,7 @@ export default function AdminPanel() {
       const mappedStatus = statusMap[stage]
       if (mappedStatus) await supabase.from('brew_state').update({ status: mappedStatus }).eq('id', 1)
       flash_('✓ LIVE')
-    } else flash_('✗ ERROR')
+    } else flash_('✗ ERROR', error)
     setSaving(false)
   }
 
@@ -362,7 +367,7 @@ export default function AdminPanel() {
       steep_start: toISO(editForm.steep_start), steep_end: toISO(editForm.steep_end),
     }).eq('id', expandedId)
     if (!error) { flash_('✓ SAVED'); setExpandedId(null); loadPastBatches() }
-    else flash_('✗ ERROR')
+    else flash_('✗ ERROR', error)
     setSaving(false)
   }
 
@@ -384,7 +389,7 @@ export default function AdminPanel() {
     }).select().single()
 
     if (error || !nb) {
-      flash_('✗ ERROR')
+      flash_('✗ ERROR', error)
       setSaving(false)
       return
     }
@@ -408,7 +413,7 @@ export default function AdminPanel() {
       .is('batch_id', null)
     if (countErr) {
       await supabase.from('batches').delete().eq('id', nb.id)
-      flash_('✗ ERROR CHECKING READINGS')
+      flash_('✗ ERROR CHECKING READINGS', countErr)
       setSaving(false)
       return
     }
@@ -440,7 +445,7 @@ export default function AdminPanel() {
     if (!noDataWarning) return
     setSaving(true)
     const { error } = await supabase.from('batches').update({ published: true }).eq('id', noDataWarning.batchId)
-    if (error) { flash_('✗ ERROR'); setSaving(false); return }
+    if (error) { flash_('✗ ERROR', error); setSaving(false); return }
     flash_('✓ ADDED')
     setIsAdding(false)
     setAddForm(EMPTY_FORM)
@@ -453,7 +458,7 @@ export default function AdminPanel() {
     if (!noDataWarning) return
     setSaving(true)
     const { error } = await supabase.from('batches').delete().eq('id', noDataWarning.batchId)
-    if (error) { flash_('✗ ERROR'); setSaving(false); return }
+    if (error) { flash_('✗ ERROR', error); setSaving(false); return }
     setNoDataWarning(null)
     setSaving(false)
   }
@@ -462,7 +467,7 @@ export default function AdminPanel() {
     setSaving(true)
     const { error } = await supabase.from('batches').delete().eq('id', id)
     if (!error) { setExpandedId(null); setConfirmDelete(null); loadPastBatches(); flash_('✓ DELETED') }
-    else flash_('✗ ERROR')
+    else flash_('✗ ERROR', error)
     setSaving(false)
   }
 

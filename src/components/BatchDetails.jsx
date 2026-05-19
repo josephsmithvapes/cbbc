@@ -249,7 +249,7 @@ export default function BatchDetails({ onPlayBatch, activeReplayId, isLiveBrew }
       const { data: batchMeta, error } = await supabase.from('batches')
         .select('*')
         .eq('published', true)
-        .order('steep_start', { ascending: false })
+        .order('steep_end', { ascending: false })
         .limit(12)
 
       if (error) {
@@ -276,7 +276,11 @@ export default function BatchDetails({ onPlayBatch, activeReplayId, isLiveBrew }
         }
       })
       
-      initial.sort((a, b) => b.date - a.date)
+      initial.sort((a, b) => {
+        const bEnd = b.meta.steep_end ? new Date(b.meta.steep_end).getTime() : 0
+        const aEnd = a.meta.steep_end ? new Date(a.meta.steep_end).getTime() : 0
+        return bEnd - aEnd
+      })
       setBrews(initial)
     }
     fetchMeta()
@@ -337,8 +341,12 @@ export default function BatchDetails({ onPlayBatch, activeReplayId, isLiveBrew }
 
       const processed = await Promise.all(batchPromises)
 
-      // Sort newest-first for the carousel
-      processed.sort((a, b) => b.date - a.date)
+      // Sort newest-first by steep_end (when the brew completed)
+      processed.sort((a, b) => {
+        const bEnd = b.meta.steep_end ? new Date(b.meta.steep_end).getTime() : 0
+        const aEnd = a.meta.steep_end ? new Date(a.meta.steep_end).getTime() : 0
+        return bEnd - aEnd
+      })
 
       setBrews(processed)
     }
