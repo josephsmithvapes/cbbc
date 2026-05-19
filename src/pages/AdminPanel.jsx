@@ -221,7 +221,7 @@ export default function AdminPanel() {
       setPublishScreen(false)
       setReadingCount(null)
     }
-  }, [current])
+  }, [current, activeBatch])
 
   function steepElapsedDisplay() {
     if (!batch?.steep_start) return '0h 00m'
@@ -410,6 +410,7 @@ export default function AdminPanel() {
     setPublishScreen(false)
     setPublishing(false)
     setReadingCount(null)
+    setPostBatchForm({ startWeight: '', yieldWeight: '', tastingNotes: '' })
     loadPastBatches()
     flash_('✓ PUBLISHED')
   }
