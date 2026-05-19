@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { fmt, calcRemaining, toTempF, STEEP_HOURS } from '../utils'
+import { fmt, calcRemaining, toTempF, STEEP_HOURS, buildClaimParams } from '../utils'
 
 describe('fmt', () => {
   it('returns --:--:-- for null', () => {
@@ -59,5 +59,31 @@ describe('calcRemaining', () => {
     const result = calcRemaining(justStarted)
     expect(result).toBeGreaterThan(0)
     expect(result).toBeLessThanOrEqual(STEEP_HOURS * 3_600_000)
+  })
+})
+
+describe('buildClaimParams', () => {
+  it('returns filter params for the reading claim window', () => {
+    const result = buildClaimParams('batch-uuid-123', '2026-05-01T08:00:00Z', '2026-05-02T04:00:00Z')
+    expect(result).toEqual({
+      batchId: 'batch-uuid-123',
+      steepStart: '2026-05-01T08:00:00Z',
+      steepEnd: '2026-05-02T04:00:00Z',
+    })
+  })
+
+  it('throws if batchId is missing', () => {
+    expect(() => buildClaimParams(null, '2026-05-01T08:00:00Z', '2026-05-02T04:00:00Z'))
+      .toThrow('batchId required')
+  })
+
+  it('throws if steepStart is missing', () => {
+    expect(() => buildClaimParams('id', null, '2026-05-02T04:00:00Z'))
+      .toThrow('steepStart required')
+  })
+
+  it('throws if steepEnd is missing', () => {
+    expect(() => buildClaimParams('id', '2026-05-01T08:00:00Z', null))
+      .toThrow('steepEnd required')
   })
 })

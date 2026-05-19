@@ -18,3 +18,10 @@ export function calcRemaining(steepStart) {
 export function toTempF(rows) {
   return rows.map(r => ({ temp_f: r.temp_c * 9 / 5 + 32 }))
 }
+
+export function buildClaimParams(batchId, steepStart, steepEnd) {
+  if (!batchId) throw new Error('batchId required')
+  if (!steepStart) throw new Error('steepStart required')
+  if (!steepEnd) throw new Error('steepEnd required')
+  return { batchId, steepStart, steepEnd }
+}
