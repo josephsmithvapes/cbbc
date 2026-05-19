@@ -155,6 +155,14 @@ export default function AdminPanel() {
   const [savingTarget, setSavingTarget]   = useState(false)
   const [grindPopup, setGrindPopup]       = useState(false)
   const [, setTick]                       = useState(0)
+  const [postBatchPopup, setPostBatchPopup] = useState(false)
+  const [postBatchForm, setPostBatchForm] = useState({ startWeight: '', yieldWeight: '', tastingNotes: '' })
+  const [publishScreen, setPublishScreen] = useState(false)
+  const [readingCount, setReadingCount]   = useState(null)
+  const [publishing, setPublishing]       = useState(false)
+
+  const current  = batch?.stage ?? 'idle'
+  const isBrewing = current === 'grinding' || current === 'steeping' || current === 'ready'
 
   useEffect(() => {
     if (!session) return
@@ -203,6 +211,17 @@ export default function AdminPanel() {
     const id = setInterval(() => setTick(t => t + 1), 1000)
     return () => clearInterval(id)
   }, [batch?.stage])
+
+  useEffect(() => {
+    if (current === 'ready') {
+      setPostBatchForm(f => ({ ...f, tastingNotes: activeBatch?.tasting_notes ?? '' }))
+      setPostBatchPopup(true)
+    } else {
+      setPostBatchPopup(false)
+      setPublishScreen(false)
+      setReadingCount(null)
+    }
+  }, [current])
 
   function steepElapsedDisplay() {
     if (!batch?.steep_start) return '0h 00m'
@@ -268,6 +287,7 @@ export default function AdminPanel() {
     }
     if (stage === 'ready' && activeBatch) {
       await supabase.from('batches').update({ steep_end: now }).eq('id', activeBatch.id)
+      setActiveBatch(prev => ({ ...prev, steep_end: now }))
       loadPastBatches()
     }
     if (stage === 'idle') { update.steep_start = null; setActiveBatch(null); setForm(EMPTY_FORM) }
@@ -345,6 +365,55 @@ export default function AdminPanel() {
     setSaving(false)
   }
 
+  async function reviewAndPublish() {
+    if (!activeBatch?.steep_start || !activeBatch?.steep_end) return
+    setSaving(true)
+    const { count } = await supabase.from('temperature_readings')
+      .select('*', { count: 'exact' })
+      .gte('recorded_at', activeBatch.steep_start)
+      .lte('recorded_at', activeBatch.steep_end)
+      .is('batch_id', null)
+    setReadingCount(count ?? 0)
+    setPublishScreen(true)
+    setPostBatchPopup(false)
+    setSaving(false)
+  }
+
+  async function publishBatch() {
+    if (!activeBatch) return
+    setPublishing(true)
+    const now = new Date().toISOString()
+
+    // 1. Claim temperature readings into this batch
+    await supabase.from('temperature_readings')
+      .update({ batch_id: activeBatch.id })
+      .gte('recorded_at', activeBatch.steep_start)
+      .lte('recorded_at', activeBatch.steep_end)
+      .is('batch_id', null)
+
+    // 2. Publish batch with post-batch details
+    await supabase.from('batches').update({
+      published: true,
+      yield_g: postBatchForm.yieldWeight ? parseInt(postBatchForm.yieldWeight, 10) : null,
+      start_weight_g: postBatchForm.startWeight ? parseInt(postBatchForm.startWeight, 10) : null,
+      tasting_notes: postBatchForm.tastingNotes || null,
+    }).eq('id', activeBatch.id)
+
+    // 3. Set batch_state to idle
+    await supabase.from('batch_state').update({ stage: 'idle', steep_start: null, updated_at: now }).eq('id', 1)
+    await supabase.from('brew_state').update({ status: 'IDLE' }).eq('id', 1)
+
+    // 4. Reset local state
+    setBatch(prev => ({ ...prev, stage: 'idle', steep_start: null, updated_at: now }))
+    setActiveBatch(null)
+    setForm(EMPTY_FORM)
+    setPublishScreen(false)
+    setPublishing(false)
+    setReadingCount(null)
+    loadPastBatches()
+    flash_('✓ PUBLISHED')
+  }
+
   async function logout() {
     await supabase.auth.signOut()
   }
@@ -370,9 +439,7 @@ export default function AdminPanel() {
     </div>
   )
 
-  const current  = batch?.stage ?? 'idle'
   const batchNum = batch?.batch_number ?? 0
-  const isBrewing = current === 'grinding' || current === 'steeping' || current === 'ready'
 
   return (
     <div style={{ position:'fixed', inset:0, background:INK, overflowY:'auto', zIndex:9999, fontFamily:"'Cinzel',serif", padding:'0 0 80px' }}>
@@ -533,11 +600,120 @@ export default function AdminPanel() {
         </div>
       )}
 
-      {/* ── Wizard: ready → placeholder (Task 8) ── */}
+      {/* ── Wizard: ready → batch complete ── */}
       {current === 'ready' && (
         <div style={{ padding:'28px 24px', borderBottom:'1px solid rgba(201,168,76,.1)', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box', textAlign:'center' }}>
-          <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4, marginBottom:20 }}>READY</div>
-          <div style={{ color:CREAM, opacity:.4, fontFamily:"'Cinzel',serif", fontSize:'var(--t-small,.8125rem)', letterSpacing:'.1em' }}>Post-batch popup (Task 8)</div>
+          <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4, marginBottom:16 }}>BATCH COMPLETE</div>
+          {activeBatch?.name && (
+            <div style={{ color:CREAM, fontFamily:"'Alfa Slab One',serif", fontSize:'1.1rem', letterSpacing:'.04em', marginBottom:20, opacity:.8 }}>{activeBatch.name}</div>
+          )}
+          {!publishScreen && (
+            <button
+              onClick={() => setPostBatchPopup(true)}
+              style={{ padding:'12px 28px', background:'transparent', border:'1px solid rgba(201,168,76,.3)', cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.25em', color:GOLD, opacity:.7 }}
+            >
+              FILL IN DETAILS
+            </button>
+          )}
+          {publishScreen && (
+            <div style={{ color:CREAM, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.18em', opacity:.4 }}>Review in progress…</div>
+          )}
+        </div>
+      )}
+
+      {/* ── Post-batch popup ── */}
+      {postBatchPopup && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(13,11,8,.92)', display:'flex', alignItems:'flex-end', justifyContent:'center', zIndex:10000, padding:24 }}>
+          <div style={{ maxWidth:420, width:'100%', border:'1px solid rgba(201,168,76,.3)', background:INK, padding:'32px 28px 40px', marginBottom:24 }}>
+            <div style={{ color:GOLD, fontFamily:"'Alfa Slab One',serif", fontSize:'1.2rem', letterSpacing:'.04em', marginBottom:8, textAlign:'center' }}>Batch Complete</div>
+            <div style={{ color:CREAM, fontFamily:"'Cinzel',serif", fontSize:'var(--t-small,.8125rem)', letterSpacing:'.08em', opacity:.45, marginBottom:28, textAlign:'center' }}>Add final details before publishing.</div>
+
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:10 }}>
+              <div>
+                <label style={LABEL_STYLE}>Start Weight (g)</label>
+                <input type="number" style={FIELD} placeholder="e.g. 400"
+                  value={postBatchForm.startWeight}
+                  onChange={e => setPostBatchForm(f => ({ ...f, startWeight: e.target.value }))} />
+              </div>
+              <div>
+                <label style={LABEL_STYLE}>Yield Weight (g)</label>
+                <input type="number" style={FIELD} placeholder="e.g. 1800"
+                  value={postBatchForm.yieldWeight}
+                  onChange={e => setPostBatchForm(f => ({ ...f, yieldWeight: e.target.value }))} />
+              </div>
+            </div>
+            <div style={{ marginBottom:24 }}>
+              <label style={LABEL_STYLE}>Tasting Notes</label>
+              <input style={FIELD} placeholder="e.g. Chocolate, low acid, smooth finish"
+                value={postBatchForm.tastingNotes}
+                onChange={e => setPostBatchForm(f => ({ ...f, tastingNotes: e.target.value }))} />
+            </div>
+
+            <button
+              onClick={reviewAndPublish}
+              disabled={saving}
+              style={{ width:'100%', padding:'16px', background:GOLD, border:'none', cursor:'pointer', fontFamily:"'Alfa Slab One',serif", fontSize:'1rem', color:INK, letterSpacing:'.04em', opacity: saving ? .5 : 1, marginBottom:10 }}
+            >
+              REVIEW & PUBLISH
+            </button>
+            <button
+              onClick={() => setPostBatchPopup(false)}
+              style={{ width:'100%', padding:'12px', background:'transparent', border:'1px solid rgba(201,168,76,.15)', cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.2em', color:CREAM, opacity:.4 }}
+            >
+              LATER
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Screen 4: Review & Publish ── */}
+      {publishScreen && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(13,11,8,.95)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:10000, padding:24, overflowY:'auto' }}>
+          <div style={{ maxWidth:440, width:'100%', border:'1px solid rgba(201,168,76,.3)', background:INK, padding:'36px 28px' }}>
+            <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.5, marginBottom:20, textAlign:'center' }}>REVIEW · BATCH #{batch?.batch_number}</div>
+
+            {/* Batch summary */}
+            {activeBatch?.name && (
+              <div style={{ color:CREAM, fontFamily:"'Alfa Slab One',serif", fontSize:'1.3rem', letterSpacing:'.04em', textAlign:'center', marginBottom:8 }}>{activeBatch.name}</div>
+            )}
+            {activeBatch?.steep_start && activeBatch?.steep_end && (
+              <div style={{ color:CREAM, fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.18em', opacity:.4, textAlign:'center', marginBottom:24 }}>
+                {fmtDate(activeBatch.steep_start)} · {fmtDur(activeBatch.steep_start, activeBatch.steep_end)}
+              </div>
+            )}
+
+            {/* Reading count */}
+            <div style={{ border:'1px solid rgba(201,168,76,.15)', padding:'16px 20px', marginBottom:24, textAlign:'center' }}>
+              {readingCount === 0 ? (
+                <>
+                  <div style={{ color:'#c0392b', fontFamily:"'Alfa Slab One',serif", fontSize:'1.1rem', marginBottom:6 }}>⚠ No sensor data found</div>
+                  <div style={{ color:CREAM, fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.15em', opacity:.5 }}>Batch will publish without a temperature chart.</div>
+                </>
+              ) : (
+                <>
+                  <div style={{ color:GOLD, fontFamily:"'Alfa Slab One',serif", fontSize:'1.3rem', letterSpacing:'.04em', marginBottom:4 }}>
+                    {(readingCount ?? 0).toLocaleString()} readings
+                  </div>
+                  <div style={{ color:CREAM, fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.15em', opacity:.4 }}>Found in steep window</div>
+                </>
+              )}
+            </div>
+
+            <button
+              onClick={publishBatch}
+              disabled={publishing}
+              style={{ width:'100%', padding:'18px', background:GOLD, border:'none', cursor:'pointer', fontFamily:"'Alfa Slab One',serif", fontSize:'1.1rem', color:INK, letterSpacing:'.04em', opacity: publishing ? .5 : 1, marginBottom:10 }}
+            >
+              {publishing ? 'PUBLISHING…' : 'PUBLISH TO SITE'}
+            </button>
+            <button
+              onClick={() => { setPublishScreen(false); setPostBatchPopup(true) }}
+              disabled={publishing}
+              style={{ width:'100%', padding:'12px', background:'transparent', border:'1px solid rgba(201,168,76,.15)', cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.2em', color:CREAM, opacity: publishing ? .2 : .4 }}
+            >
+              BACK
+            </button>
+          </div>
         </div>
       )}
 
