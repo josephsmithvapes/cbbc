@@ -126,19 +126,19 @@ function BrewCard({ brew, onPlayBatch, onEnter, onLeave, isActive, isLiveBrew })
 
       <div className={styles.stats}>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{noValue ? '--' : `${brew.tempMin.toFixed(1)}°F`}</span>
+          <span className={styles.statVal}>{noValue ? '—' : `${brew.tempMin.toFixed(1)}°F`}</span>
           <span className={styles.statLbl}>Low</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{noValue ? '--' : `${brew.tempMax.toFixed(1)}°F`}</span>
+          <span className={styles.statVal}>{noValue ? '—' : `${brew.tempMax.toFixed(1)}°F`}</span>
           <span className={styles.statLbl}>High</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{noValue ? '--' : `${brew.tempAvg.toFixed(1)}°F`}</span>
+          <span className={styles.statVal}>{noValue ? '—' : `${brew.tempAvg.toFixed(1)}°F`}</span>
           <span className={styles.statLbl}>Avg</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{noValue ? '--' : brew.points.toLocaleString()}</span>
+          <span className={styles.statVal}>{noValue ? '—' : brew.points.toLocaleString()}</span>
           <span className={styles.statLbl}>Readings</span>
         </div>
       </div>
