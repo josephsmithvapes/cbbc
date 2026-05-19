@@ -150,6 +150,7 @@ export default function AdminPanel() {
   const [editForm, setEditForm]       = useState(EMPTY_FORM)
   const [isAdding, setIsAdding]       = useState(false)
   const [addForm, setAddForm]         = useState(EMPTY_FORM)
+  const [noDataWarning, setNoDataWarning] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [batchTarget, setBatchTarget]     = useState(25)
   const [savingTarget, setSavingTarget]   = useState(false)
@@ -346,14 +347,83 @@ export default function AdminPanel() {
   async function addBatch() {
     if (!addForm.steep_start) { flash_('✗ NEED START DATE'); return }
     setSaving(true)
-    const { error } = await supabase.from('batches').insert({
+
+    const steepStart = toISO(addForm.steep_start)
+    const steepEnd   = toISO(addForm.steep_end) || null
+    const canClaim   = !!(steepStart && steepEnd)
+
+    // Insert batch — get ID back for claiming
+    const { data: nb, error } = await supabase.from('batches').insert({
       name: addForm.name || null, origin: addForm.origin || null,
       roast: addForm.roast || null, process: addForm.process || null,
       grind_notes: addForm.grind_notes || null, tasting_notes: addForm.tasting_notes || null,
-      steep_start: toISO(addForm.steep_start), steep_end: toISO(addForm.steep_end) || null,
-    })
-    if (!error) { flash_('✓ ADDED'); setIsAdding(false); setAddForm(EMPTY_FORM); loadPastBatches() }
-    else flash_('✗ ERROR')
+      steep_start: steepStart, steep_end: steepEnd,
+    }).select().single()
+
+    if (error || !nb) {
+      flash_('✗ ERROR')
+      setSaving(false)
+      return
+    }
+
+    if (!canClaim) {
+      // No time window — publish without sensor data
+      await supabase.from('batches').update({ published: true }).eq('id', nb.id)
+      flash_('✓ ADDED')
+      setIsAdding(false)
+      setAddForm(EMPTY_FORM)
+      loadPastBatches()
+      setSaving(false)
+      return
+    }
+
+    // Count unclaimed readings in window
+    const { count } = await supabase.from('temperature_readings')
+      .select('*', { count: 'exact' })
+      .gte('recorded_at', steepStart)
+      .lte('recorded_at', steepEnd)
+      .is('batch_id', null)
+
+    if ((count ?? 0) === 0) {
+      // No readings — ask user before publishing
+      setNoDataWarning({ batchId: nb.id, steepStart, steepEnd })
+      setSaving(false)
+      return
+    }
+
+    // Claim readings + publish
+    await supabase.from('temperature_readings')
+      .update({ batch_id: nb.id })
+      .gte('recorded_at', steepStart)
+      .lte('recorded_at', steepEnd)
+      .is('batch_id', null)
+    await supabase.from('batches').update({ published: true }).eq('id', nb.id)
+
+    flash_('✓ ADDED')
+    setIsAdding(false)
+    setAddForm(EMPTY_FORM)
+    setNoDataWarning(null)
+    loadPastBatches()
+    setSaving(false)
+  }
+
+  async function confirmNoData() {
+    if (!noDataWarning) return
+    setSaving(true)
+    await supabase.from('batches').update({ published: true }).eq('id', noDataWarning.batchId)
+    flash_('✓ ADDED')
+    setIsAdding(false)
+    setAddForm(EMPTY_FORM)
+    setNoDataWarning(null)
+    loadPastBatches()
+    setSaving(false)
+  }
+
+  async function cancelNoData() {
+    if (!noDataWarning) return
+    setSaving(true)
+    await supabase.from('batches').delete().eq('id', noDataWarning.batchId)
+    setNoDataWarning(null)
     setSaving(false)
   }
 
@@ -722,7 +792,7 @@ export default function AdminPanel() {
       <div style={{ padding:'28px 24px', maxWidth:520, margin:'0 auto', width:'100%', boxSizing:'border-box' }}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
           <div style={{ color:GOLD, fontSize:'var(--t-micro,.625rem)', letterSpacing:'.3em', opacity:.4 }}>PAST BATCHES</div>
-          <button onClick={() => { setIsAdding(a => !a); setExpandedId(null); setAddForm(EMPTY_FORM) }}
+          <button onClick={() => { setIsAdding(a => !a); setExpandedId(null); setAddForm(EMPTY_FORM); setNoDataWarning(null) }}
             style={{ background:'none', border:'1px solid rgba(201,168,76,.25)', color:GOLD, cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'0.55rem', letterSpacing:'.22em', padding:'6px 12px' }}>
             {isAdding ? 'CANCEL' : '+ ADD'}
           </button>
@@ -732,16 +802,35 @@ export default function AdminPanel() {
         {isAdding && (
           <div style={{ padding:'20px', border:'1px solid rgba(201,168,76,.2)', marginBottom:16, background:'rgba(201,168,76,.03)' }}>
             <MetaFields form={addForm} set={setAddForm} showDateFields />
-            <div style={{ display:'flex', gap:10, marginTop:14 }}>
-              <button onClick={addBatch} disabled={saving}
-                style={{ flex:1, padding:'10px', background:GOLD, border:'none', cursor:'pointer', fontFamily:"'Alfa Slab One',serif", fontSize:'.85rem', color:INK, opacity: saving ? .5 : 1 }}>
-                SAVE BATCH
-              </button>
-              <button onClick={() => setIsAdding(false)}
-                style={{ padding:'10px 16px', background:'none', border:'1px solid rgba(201,168,76,.2)', color:CREAM, cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'0.55rem', letterSpacing:'.2em', opacity:.5 }}>
-                CANCEL
-              </button>
-            </div>
+            {noDataWarning && (
+              <div style={{ marginTop:14, padding:'14px 16px', border:'1px solid rgba(192,57,43,.4)', background:'rgba(192,57,43,.06)' }}>
+                <div style={{ color:'#f08070', fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.2em', marginBottom:10 }}>
+                  NO SENSOR DATA FOUND IN THIS WINDOW — batch will publish without a temperature chart.
+                </div>
+                <div style={{ display:'flex', gap:10 }}>
+                  <button onClick={confirmNoData} disabled={saving}
+                    style={{ flex:1, padding:'10px', background:'#c0392b', border:'none', cursor:'pointer', fontFamily:"'Alfa Slab One',serif", fontSize:'.8rem', color:CREAM, opacity: saving ? .5 : 1 }}>
+                    PUBLISH ANYWAY
+                  </button>
+                  <button onClick={cancelNoData} disabled={saving}
+                    style={{ padding:'10px 16px', background:'none', border:'1px solid rgba(192,57,43,.3)', color:'#f08070', cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'0.55rem', letterSpacing:'.2em', opacity: saving ? .5 : .7 }}>
+                    CANCEL
+                  </button>
+                </div>
+              </div>
+            )}
+            {!noDataWarning && (
+              <div style={{ display:'flex', gap:10, marginTop:14 }}>
+                <button onClick={addBatch} disabled={saving}
+                  style={{ flex:1, padding:'10px', background:GOLD, border:'none', cursor:'pointer', fontFamily:"'Alfa Slab One',serif", fontSize:'.85rem', color:INK, opacity: saving ? .5 : 1 }}>
+                  SAVE BATCH
+                </button>
+                <button onClick={() => setIsAdding(false)}
+                  style={{ padding:'10px 16px', background:'none', border:'1px solid rgba(201,168,76,.2)', color:CREAM, cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'0.55rem', letterSpacing:'.2em', opacity:.5 }}>
+                  CANCEL
+                </button>
+              </div>
+            )}
           </div>
         )}
 
