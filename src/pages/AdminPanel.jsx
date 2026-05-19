@@ -378,11 +378,17 @@ export default function AdminPanel() {
     }
 
     // Count unclaimed readings in window
-    const { count } = await supabase.from('temperature_readings')
+    const { count, error: countErr } = await supabase.from('temperature_readings')
       .select('*', { count: 'exact' })
       .gte('recorded_at', steepStart)
       .lte('recorded_at', steepEnd)
       .is('batch_id', null)
+    if (countErr) {
+      await supabase.from('batches').delete().eq('id', nb.id)
+      flash_('✗ ERROR CHECKING READINGS')
+      setSaving(false)
+      return
+    }
 
     if ((count ?? 0) === 0) {
       // No readings — ask user before publishing
@@ -410,7 +416,8 @@ export default function AdminPanel() {
   async function confirmNoData() {
     if (!noDataWarning) return
     setSaving(true)
-    await supabase.from('batches').update({ published: true }).eq('id', noDataWarning.batchId)
+    const { error } = await supabase.from('batches').update({ published: true }).eq('id', noDataWarning.batchId)
+    if (error) { flash_('✗ ERROR'); setSaving(false); return }
     flash_('✓ ADDED')
     setIsAdding(false)
     setAddForm(EMPTY_FORM)
@@ -422,7 +429,8 @@ export default function AdminPanel() {
   async function cancelNoData() {
     if (!noDataWarning) return
     setSaving(true)
-    await supabase.from('batches').delete().eq('id', noDataWarning.batchId)
+    const { error } = await supabase.from('batches').delete().eq('id', noDataWarning.batchId)
+    if (error) { flash_('✗ ERROR'); setSaving(false); return }
     setNoDataWarning(null)
     setSaving(false)
   }
