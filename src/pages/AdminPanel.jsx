@@ -170,7 +170,17 @@ export default function AdminPanel() {
     let cancelled = false
     async function poll() {
       const { data } = await supabase.from('batch_state').select('*').eq('id', 1).single()
-      if (!cancelled && data) { setBatch(data); if (data.batch_target) setBatchTarget(data.batch_target) }
+      if (!cancelled && data) {
+        setBatch(data)
+        if (data.batch_target) setBatchTarget(data.batch_target)
+        // Reload recovery: if stage=ready and batch_number known, load the active batch
+        // (it has steep_end set so the initial .is('steep_end',null) query won't find it)
+        if (data.stage === 'ready' && data.batch_number) {
+          const { data: b } = await supabase.from('batches').select('*')
+            .eq('batch_number', data.batch_number).limit(1).single()
+          if (!cancelled && b) setActiveBatch(b)
+        }
+      }
     }
     poll()
     const id = setInterval(poll, 5000)
