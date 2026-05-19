@@ -5,7 +5,12 @@ const AUTH_KEY = 'sb_session'
 function getToken() {
   try {
     const s = JSON.parse(localStorage.getItem(AUTH_KEY))
-    return s?.access_token ?? SUPABASE_ANON_KEY
+    if (!s?.access_token) return SUPABASE_ANON_KEY
+    if (s.expires_at && s.expires_at * 1000 < Date.now()) {
+      localStorage.removeItem(AUTH_KEY)
+      return SUPABASE_ANON_KEY
+    }
+    return s.access_token
   } catch { return SUPABASE_ANON_KEY }
 }
 
