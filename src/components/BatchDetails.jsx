@@ -74,17 +74,28 @@ function MiniChart({ data, gradId }) {
   )
 }
 
-function BrewCard({ brew, onPlayBatch, onEnter, onLeave }) {
+function BrewCard({ brew, onPlayBatch, onEnter, onLeave, isActive, isLiveBrew }) {
   const { meta } = brew
   const isL = brew.isLoading
+  const noValue = isL || brew.noData
   return (
-    <div 
-      className={styles.card} 
-      onMouseEnter={onEnter} 
-      onMouseLeave={onLeave} 
-      onClick={() => meta?.id && onPlayBatch?.(meta.id)} 
-      style={{ cursor: onPlayBatch ? 'pointer' : 'default' }} 
-      title={onPlayBatch ? "Play replay" : ""}
+    <div
+      className={styles.card}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      style={{
+        position: 'relative',
+        outline: isActive ? '1.5px solid rgba(201,168,76,0.8)' : undefined,
+        boxShadow: isActive ? '0 0 16px rgba(201,168,76,0.18)' : undefined,
+        opacity: isLiveBrew ? 0.4 : 1,
+        cursor: isLiveBrew ? 'not-allowed' : (onPlayBatch ? 'pointer' : 'default'),
+        transition: 'opacity 0.3s, box-shadow 0.2s',
+      }}
+      title={isLiveBrew ? 'Live brew in progress' : (onPlayBatch ? 'Play replay' : '')}
+      onClick={(e) => {
+        if (isLiveBrew) return
+        if (meta?.id) onPlayBatch?.(meta.id)
+      }}
     >
       <div className={styles.cardHeader}>
         <div>
@@ -104,24 +115,30 @@ function BrewCard({ brew, onPlayBatch, onEnter, onLeave }) {
       )}
 
       <div className={styles.chart}>
-        <MiniChart data={brew.chartData} gradId={brew.id.slice(0, 8)} />
+        {brew.noData ? (
+          <svg viewBox="0 0 600 130" preserveAspectRatio="none" style={{ width: '100%', height: 130, display: 'block' }}>
+            <text x="300" y="72" textAnchor="middle" fontFamily="'Space Grotesk', monospace" fontSize="13" fill="rgba(232,220,200,0.3)" letterSpacing="0.15em">— NO SENSOR DATA —</text>
+          </svg>
+        ) : (
+          <MiniChart data={brew.chartData} gradId={brew.id.slice(0, 8)} />
+        )}
       </div>
 
       <div className={styles.stats}>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{isL ? '--' : `${brew.tempMin.toFixed(1)}°F`}</span>
+          <span className={styles.statVal}>{noValue ? '--' : `${brew.tempMin.toFixed(1)}°F`}</span>
           <span className={styles.statLbl}>Low</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{isL ? '--' : `${brew.tempMax.toFixed(1)}°F`}</span>
+          <span className={styles.statVal}>{noValue ? '--' : `${brew.tempMax.toFixed(1)}°F`}</span>
           <span className={styles.statLbl}>High</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{isL ? '--' : `${brew.tempAvg.toFixed(1)}°F`}</span>
+          <span className={styles.statVal}>{noValue ? '--' : `${brew.tempAvg.toFixed(1)}°F`}</span>
           <span className={styles.statLbl}>Avg</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statVal}>{isL ? '--' : brew.points.toLocaleString()}</span>
+          <span className={styles.statVal}>{noValue ? '--' : brew.points.toLocaleString()}</span>
           <span className={styles.statLbl}>Readings</span>
         </div>
       </div>
@@ -131,11 +148,21 @@ function BrewCard({ brew, onPlayBatch, onEnter, onLeave }) {
           {meta.tasting_notes}
         </div>
       )}
+
+      {isActive && (
+        <div style={{
+          position: 'absolute', top: 10, right: 12,
+          fontFamily: "'Space Grotesk', monospace",
+          fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase',
+          color: 'rgba(201,168,76,0.9)',
+          pointerEvents: 'none',
+        }}>▶ REPLAYING</div>
+      )}
     </div>
   )
 }
 
-export default function BatchDetails({ onPlayBatch }) {
+export default function BatchDetails({ onPlayBatch, activeReplayId, isLiveBrew }) {
   const [brews, setBrews] = useState(null)
   const [metaList, setMetaList] = useState(null)
   const carouselRef = useRef(null)
@@ -221,7 +248,7 @@ export default function BatchDetails({ onPlayBatch }) {
     async function fetchMeta() {
       const { data: batchMeta, error } = await supabase.from('batches')
         .select('*')
-        .not('steep_end', 'is', null)
+        .eq('published', true)
         .order('steep_start', { ascending: false })
         .limit(12)
 
@@ -249,7 +276,7 @@ export default function BatchDetails({ onPlayBatch }) {
         }
       })
       
-      initial.sort((a, b) => a.date - b.date)
+      initial.sort((a, b) => b.date - a.date)
       setBrews(initial)
     }
     fetchMeta()
@@ -263,12 +290,27 @@ export default function BatchDetails({ onPlayBatch }) {
       const batchPromises = metaList.map(async (meta) => {
         const { data: readings } = await supabase.from('temperature_readings')
           .select('temp_c, recorded_at')
-          .gte('recorded_at', meta.steep_start)
-          .lte('recorded_at', meta.steep_end)
+          .eq('batch_id', meta.id)
           .order('recorded_at', { ascending: true })
-          .limit(1000) // Hard cap to prevent API limits draining
+          .limit(1000)
 
-        if (!readings || readings.length < 2) return null
+        if (!readings || readings.length < 2) {
+          const t0 = new Date(meta.steep_start).getTime()
+          const t1 = new Date(meta.steep_end).getTime()
+          return {
+            id: meta.id,
+            date: new Date(meta.steep_start),
+            duration: (t1 - t0) / 1000,
+            tempMin: null,
+            tempMax: null,
+            tempAvg: null,
+            points: 0,
+            meta,
+            chartData: [],
+            isLoading: false,
+            noData: true,
+          }
+        }
 
         const t0 = new Date(meta.steep_start).getTime()
         const t1 = new Date(meta.steep_end).getTime()
@@ -292,10 +334,10 @@ export default function BatchDetails({ onPlayBatch }) {
           }
       })
 
-      const processed = (await Promise.all(batchPromises)).filter(Boolean)
-      
-      // Sort chronologically for the carousel (oldest first, matching original behavior)
-      processed.sort((a, b) => a.date - b.date)
+      const processed = await Promise.all(batchPromises)
+
+      // Sort newest-first for the carousel
+      processed.sort((a, b) => b.date - a.date)
 
       setBrews(processed)
     }
@@ -479,6 +521,8 @@ export default function BatchDetails({ onPlayBatch }) {
                 onPlayBatch={onPlayBatch}
                 onEnter={() => {}}
                 onLeave={() => {}}
+                isActive={activeReplayId === brew.id}
+                isLiveBrew={isLiveBrew}
               />
             ))}
           </div>
