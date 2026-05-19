@@ -275,17 +275,10 @@ export default function AdminPanel() {
     setSaving(false)
   }
 
-  async function beginSteep() {
-    setSaving(true)
+  async function resetGrindTimer() {
     const now = new Date().toISOString()
-    await supabase.from('batches').update({ steep_start: now }).eq('id', activeBatch.id)
-    const { error } = await supabase.from('batch_state').update({ stage: 'steeping', steep_start: now, updated_at: now }).eq('id', 1)
-    if (!error) {
-      await supabase.from('brew_state').update({ status: 'BREWING' }).eq('id', 1)
-      setBatch(prev => ({ ...prev, stage: 'steeping', steep_start: now }))
-      flash_('✓ STEEPING')
-    } else flash_('✗ ERROR')
-    setSaving(false)
+    await supabase.from('batch_state').update({ updated_at: now }).eq('id', 1)
+    setBatch(prev => ({ ...prev, updated_at: now }))
   }
 
   async function saveTastingNotes() {
@@ -473,14 +466,14 @@ export default function AdminPanel() {
             <div style={{ color:CREAM, fontFamily:"'Cinzel',serif", fontSize:'var(--t-small,.8125rem)', letterSpacing:'.08em', opacity:.55, marginBottom:32 }}>Ready to start steeping.</div>
             <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
               <button
-                onClick={() => { setGrindPopup(false); beginSteep() }}
+                onClick={() => { setGrindPopup(false); setStage('steeping') }}
                 disabled={saving}
                 style={{ padding:'16px', background:GOLD, border:'none', cursor:'pointer', fontFamily:"'Alfa Slab One',serif", fontSize:'1rem', color:INK, letterSpacing:'.04em', opacity: saving ? .5 : 1 }}
               >
                 BEGIN STEEP
               </button>
               <button
-                onClick={() => setGrindPopup(false)}
+                onClick={() => { setGrindPopup(false); resetGrindTimer() }}
                 style={{ padding:'14px', background:'transparent', border:'1px solid rgba(201,168,76,.2)', cursor:'pointer', fontFamily:"'Cinzel',serif", fontSize:'var(--t-micro,.625rem)', letterSpacing:'.2em', color:CREAM, opacity:.5 }}
               >
                 NOT YET — KEEP GRINDING
