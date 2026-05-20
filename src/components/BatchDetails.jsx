@@ -91,9 +91,10 @@ function BrewCard({ brew, onPlayBatch, onEnter, onLeave, isActive, isLiveBrew })
         cursor: isLiveBrew ? 'not-allowed' : (onPlayBatch ? 'pointer' : 'default'),
         transition: 'opacity 0.3s, box-shadow 0.2s',
       }}
-      title={isLiveBrew ? 'Live brew in progress' : (onPlayBatch ? 'Play replay' : '')}
+      title={isLiveBrew ? 'Live brew in progress' : brew.noData ? 'No sensor data — replay unavailable' : (onPlayBatch ? 'Play replay' : '')}
       onClick={(e) => {
         if (isLiveBrew) return
+        if (brew.noData) return
         if (meta?.id) onPlayBatch?.(meta.id)
       }}
     >

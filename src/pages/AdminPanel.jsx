@@ -359,15 +359,29 @@ export default function AdminPanel() {
 
   async function saveEdit() {
     setSaving(true)
+    const steepStart = toISO(editForm.steep_start)
+    const steepEnd   = toISO(editForm.steep_end)
     const { error } = await supabase.from('batches').update({
       name: editForm.name || null, origin: editForm.origin || null,
       roast: editForm.roast || null, process: editForm.process || null,
       filter_type: editForm.filter_type || null, grind_notes: editForm.grind_notes || null,
       tasting_notes: editForm.tasting_notes || null,
-      steep_start: toISO(editForm.steep_start), steep_end: toISO(editForm.steep_end),
+      steep_start: steepStart, steep_end: steepEnd,
     }).eq('id', expandedId)
-    if (!error) { flash_('✓ SAVED'); setExpandedId(null); loadPastBatches() }
-    else flash_('✗ ERROR', error)
+    if (error) { flash_('✗ ERROR', error); setSaving(false); return }
+
+    // Claim any unclaimed readings in the time window
+    if (steepStart && steepEnd) {
+      await supabase.from('temperature_readings')
+        .update({ batch_id: expandedId })
+        .gte('recorded_at', steepStart)
+        .lte('recorded_at', steepEnd)
+        .is('batch_id', null)
+    }
+
+    flash_('✓ SAVED')
+    setExpandedId(null)
+    loadPastBatches()
     setSaving(false)
   }
 

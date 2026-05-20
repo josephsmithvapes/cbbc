@@ -152,11 +152,8 @@ function useReplayBatch(isActive, requestedBatchId) {
           .eq('batch_id', targetBatch.id)
           .order('recorded_at', { ascending: true })
 
-        // If query fails or DB is missing telemetry, generate a realistic mock curve
         if (error || !readings || readings.length < 2) {
-          processedReadings = Array.from({ length: 120 }).map((_, i) => ({
-            temp_f: 36 + (Math.sin(i / 10) * 0.5) + (i / 120) * 4
-          }))
+          processedReadings = []
         } else {
           processedReadings = thin(readings, 120).map(r => ({ temp_f: r.temp_c * 9 / 5 + 32 }))
         }
@@ -165,12 +162,15 @@ function useReplayBatch(isActive, requestedBatchId) {
       
       if (!running) return
 
-      const durationS = Math.max(1, Math.floor((new Date(targetBatch.steep_end) - new Date(targetBatch.steep_start)) / 1000)) || 72000
+      const durationS = (targetBatch.steep_start && targetBatch.steep_end)
+        ? Math.max(1, Math.floor((new Date(targetBatch.steep_end) - new Date(targetBatch.steep_start)) / 1000))
+        : 72000
 
       setReplayData({
         batch: targetBatch,
         readings: processedReadings,
-        durationS
+        durationS,
+        noData: processedReadings.length === 0,
       })
       setTick(0)
     }
@@ -225,7 +225,7 @@ export default function BrewTelemetry({ requestedBatchId, suppressCountdown }) {
     target_duration_seconds: replayData.durationS,
     current_weight_g: REPLAY_MASS_G + (REPLAY_YIELD_G * (replayTick / replayData.durationS)),
     initial_weight_g: REPLAY_MASS_G,
-    current_temp_f: replayData.readings[currentReadingIdx]?.temp_f ?? 0,
+    current_temp_f: replayData.readings.length > 0 ? (replayData.readings[currentReadingIdx]?.temp_f ?? null) : null,
     last_update: new Date().toISOString()
   } : {
     batch_number: 0,
