@@ -34,14 +34,22 @@ const EMPTY_FORM = {
   steep_start: '', steep_end: '',
 }
 
+// Matches "YYYY-MM-DDTHH:MM" or "YYYY-MM-DDTHH:MM:SS[.sss]" — no timezone suffix.
+// toLocal() always produces this format stripped of UTC context, so toISO() must
+// re-attach Z before parsing or JS treats it as local time (ECMA-262).
+const BARE_DATETIME_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/
+
 function toLocal(iso) {
   if (!iso) return ''
-  // datetime-local needs "YYYY-MM-DDTHH:MM"
   return new Date(iso).toISOString().slice(0, 16)
 }
 function toISO(local) {
   if (!local) return null
-  return new Date(local).toISOString()
+  let s = local.trim()
+  if (BARE_DATETIME_RE.test(s)) return new Date(s + 'Z').toISOString()
+  // Supabase dashboard format "YYYY-MM-DD HH:MM:SS+00" → strict ISO
+  s = s.replace(' ', 'T').replace(/([+-]\d{2})$/, '$1:00')
+  return new Date(s).toISOString()
 }
 function fmtDate(iso) {
   if (!iso) return '—'
@@ -370,16 +378,21 @@ export default function AdminPanel() {
     }).eq('id', expandedId)
     if (error) { flash_('✗ ERROR', error); setSaving(false); return }
 
-    // Claim any unclaimed readings in the time window
+    // Claim unclaimed readings in the window, plus re-claim any already on THIS batch
+    // (so re-editing with corrected timestamps still works)
     if (steepStart && steepEnd) {
-      await supabase.from('temperature_readings')
-        .update({ batch_id: expandedId })
+      const { error: claimErr, count: claimCount } = await supabase.from('temperature_readings')
+        .update({ batch_id: expandedId }, { count: 'exact' })
         .gte('recorded_at', steepStart)
         .lte('recorded_at', steepEnd)
-        .is('batch_id', null)
+        .or(`batch_id.is.null,batch_id.eq.${expandedId}`)
+      if (claimErr) flash_('✗ READINGS CLAIM FAILED', claimErr)
+      else if (claimCount === 0) flash_('✓ SAVED — no readings found in window')
+      else flash_(`✓ SAVED · ${claimCount} readings claimed`)
+    } else {
+      flash_('✓ SAVED')
     }
 
-    flash_('✓ SAVED')
     setExpandedId(null)
     loadPastBatches()
     setSaving(false)
