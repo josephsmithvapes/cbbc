@@ -1674,10 +1674,10 @@ body {
   .sticky-bar { transition: none; }
 }
 </style>
-  <script type="module" crossorigin src="/assets/index-GJYYGwGb.js"></script>
+  <script type="module" crossorigin src="/assets/index-iKSs_dZG.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Cr0BHlHC.js">
-  <link rel="modulepreload" crossorigin href="/assets/react-DRmcoaL4.js">
-  <link rel="modulepreload" crossorigin href="/assets/supabase-BfCN3skl.js">
+  <link rel="modulepreload" crossorigin href="/assets/react-BzOLi8R_.js">
+  <link rel="modulepreload" crossorigin href="/assets/supabase-etCemVyl.js">
 </head>
 
 <body>
@@ -2178,12 +2178,12 @@ body {
 <footer class="footer">
   <span>BCCB · LOS ANGELES</span>
   <div class="footer-social">
-    <a href="https://www.tiktok.com/@boldcrewcoldbrew" class="footer-social-link" target="_blank" rel="noopener" aria-label="TikTok">
+    <a href="https://www.tiktok.com/@boldcrewcoldbrew" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
       TIKTOK
     </a>
     <span class="footer-social-sep">·</span>
-    <a href="https://www.instagram.com/boldcrewxcoldbrew" class="footer-social-link" target="_blank" rel="noopener" aria-label="Instagram">
+    <a href="https://www.instagram.com/boldcrewxcoldbrew" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
       INSTAGRAM
     </a>
@@ -2234,7 +2234,26 @@ body {
   fetchCount();
 
   // ── Shared insert ───────────────────────────────────────
+  // Client-side cooldown: one submit per 60s per browser. Server-side
+  // protection (unique email + insert throttle) lives in
+  // supabase/waitlist_protection.sql.
+  var WL_COOLDOWN_KEY = 'wl_last_submit';
+  var WL_COOLDOWN_MS = 60000;
+  function wlOnCooldown() {
+    try {
+      var t = parseInt(localStorage.getItem(WL_COOLDOWN_KEY), 10);
+      return !isNaN(t) && (Date.now() - t) < WL_COOLDOWN_MS;
+    } catch (_) { return false; }
+  }
+  function wlMarkSubmit() {
+    try { localStorage.setItem(WL_COOLDOWN_KEY, String(Date.now())); } catch (_) {}
+  }
+  window.__wlOnCooldown = wlOnCooldown;
+  window.__wlMarkSubmit = wlMarkSubmit;
+
   function submitEmail(email, onDone) {
+    if (wlOnCooldown()) { onDone(); return; }
+    wlMarkSubmit();
     fetch(SB_URL + '/rest/v1/waitlist_entries', {
       method: 'POST',
       headers: Object.assign({}, HEADERS, { 'Prefer': 'return=minimal' }),
@@ -2421,6 +2440,14 @@ body {
     input.classList.remove('error');
     btn.disabled = true;
     btn.textContent = '…';
+    // Respect the shared 60s cooldown (defined in the signup script above)
+    if (window.__wlOnCooldown && window.__wlOnCooldown()) {
+      btn.textContent = 'SENT ✓';
+      btn.classList.add('done');
+      setTimeout(dismiss, 2000);
+      return;
+    }
+    if (window.__wlMarkSubmit) window.__wlMarkSubmit();
     fetch('https://qmzgnbcahcpmntbnmikq.supabase.co/rest/v1/waitlist_entries', {
       method: 'POST',
       headers: {
