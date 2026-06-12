@@ -24,6 +24,14 @@
   color: var(--gold, #c9a84c);
   text-transform: uppercase;
 }
+.headerSub {
+  display: block;
+  font-size: 0.5625rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.2);
+  margin-top: 3px;
+}
 
 .body {
   padding: 32px var(--pad-x) 36px;
